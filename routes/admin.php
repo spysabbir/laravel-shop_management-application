@@ -85,16 +85,6 @@ Route::prefix('admin')->group(function(){
             Route::get('administrator-status/{id}', [AdminController::class, 'administratorStatus'])->name('administrator.status');
             Route::get('administrator-edit/{id}', [AdminController::class, 'administratoreEdit'])->name('administrator.edit');
             Route::patch('administrator-update/{id}', [AdminController::class, 'administratoreUpdate'])->name('administrator.update');
-            
-            Route::resource('staff', StaffController::class);
-            Route::get('staff-trashed', [StaffController::class, 'trashed'])->name('staff.trashed');
-            Route::get('staff-restore/{id}', [StaffController::class, 'restore'])->name('staff.restore');
-            Route::get('staff-forcedelete/{id}', [StaffController::class, 'forceDelete'])->name('staff.forcedelete');
-            Route::get('staff-status/{id}', [StaffController::class, 'status'])->name('staff.status');
-            Route::get('staff-salary', [StaffController::class, 'staffSalary'])->name('staff.salary');
-            Route::get('staff-salary-payment-form/{id}', [StaffController::class, 'staffSalaryPaymentForm'])->name('staff.salary.payment.form');
-            Route::post('staff-salary-payment-store/{id}', [StaffController::class, 'staffSalaryPaymentStore'])->name('staff.salary.payment.store');
-            Route::get('staff-salary-payment-details/{id}', [StaffController::class, 'staffSalaryPaymentDetails'])->name('staff.salary.payment.details');
 
             Route::get('all-contact-message', [Contact_messageController::class, 'allContactMessage'])->name('all.contact.message');
             Route::get('contact-message-view/{id}', [Contact_messageController::class, 'contactMessageView'])->name('contact.message.view');
@@ -106,11 +96,7 @@ Route::prefix('admin')->group(function(){
             Route::get('expense-category-forcedelete/{id}', [Expense_categoryController::class, 'forceDelete'])->name('expense-category.forcedelete');
             Route::get('expense-category-status/{id}', [Expense_categoryController::class, 'status'])->name('expense-category.status');
 
-            Route::resource('expense', ExpenseController::class);
-            Route::get('expense-trashed', [ExpenseController::class, 'trashed'])->name('expense.trashed');
-            Route::get('expense-restore/{id}', [ExpenseController::class, 'restore'])->name('expense.restore');
-            Route::get('expense-forcedelete/{id}', [ExpenseController::class, 'forceDelete'])->name('expense.forcedelete');
-            Route::get('expense-status/{id}', [ExpenseController::class, 'status'])->name('expense.status');
+            Route::get('all-expense', [AdminController::class, 'allExpense'])->name('all.expense');
 
             Route::resource('branch', BranchController::class);
             Route::get('branch-trashed', [BranchController::class, 'trashed'])->name('branch.trashed');
@@ -120,11 +106,27 @@ Route::prefix('admin')->group(function(){
         });
 
         Route::middleware(['manager'])->group(function () {
+            Route::resource('staff', StaffController::class);
+            Route::get('staff-trashed', [StaffController::class, 'trashed'])->name('staff.trashed');
+            Route::get('staff-restore/{id}', [StaffController::class, 'restore'])->name('staff.restore');
+            Route::get('staff-forcedelete/{id}', [StaffController::class, 'forceDelete'])->name('staff.forcedelete');
+            Route::get('staff-status/{id}', [StaffController::class, 'status'])->name('staff.status');
+            Route::get('staff-salary', [StaffController::class, 'staffSalary'])->name('staff.salary');
+            Route::get('staff-salary-payment-form/{id}', [StaffController::class, 'staffSalaryPaymentForm'])->name('staff.salary.payment.form');
+            Route::post('staff-salary-payment-store/{id}', [StaffController::class, 'staffSalaryPaymentStore'])->name('staff.salary.payment.store');
+            Route::get('staff-salary-payment-details/{id}', [StaffController::class, 'staffSalaryPaymentDetails'])->name('staff.salary.payment.details');
+
             Route::resource('supplier', SupplierController::class);
             Route::get('supplier-trashed', [SupplierController::class, 'trashed'])->name('supplier.trashed');
             Route::get('supplier-restore/{id}', [SupplierController::class, 'restore'])->name('supplier.restore');
             Route::get('supplier-forcedelete/{id}', [SupplierController::class, 'forceDelete'])->name('supplier.forcedelete');
             Route::get('supplier-status/{id}', [SupplierController::class, 'status'])->name('supplier.status');
+
+            Route::resource('expense', ExpenseController::class);
+            Route::get('expense-trashed', [ExpenseController::class, 'trashed'])->name('expense.trashed');
+            Route::get('expense-restore/{id}', [ExpenseController::class, 'restore'])->name('expense.restore');
+            Route::get('expense-forcedelete/{id}', [ExpenseController::class, 'forceDelete'])->name('expense.forcedelete');
+            Route::get('expense-status/{id}', [ExpenseController::class, 'status'])->name('expense.status');
 
             Route::resource('customer', CustomerController::class);
             Route::get('customer-trashed', [CustomerController::class, 'trashed'])->name('customer.trashed');

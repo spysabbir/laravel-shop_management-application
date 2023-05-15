@@ -21,6 +21,15 @@
                         @csrf
                         <div class="row mb-3">
                             <div class="col-lg-3">
+                                <label class="form-label">Branch Name</label>
+                                <select class="form-control filter_data" name="branch_id" id="branch_id">
+                                    <option value="">All</option>
+                                    @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
                                 <label class="form-label">Category Name</label>
                                 <select class="form-control filter_data" name="category_id" id="category_id">
                                     <option value="">All</option>
@@ -80,6 +89,7 @@
             ajax: {
                 url: "{{ route('stock.report') }}",
                 "data":function(e){
+                    e.branch_id = $('#branch_id').val();
                     e.category_id = $('#category_id').val();
                     e.brand_id = $('#brand_id').val();
                 },

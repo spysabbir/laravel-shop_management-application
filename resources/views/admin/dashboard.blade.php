@@ -365,7 +365,7 @@
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
-                    @foreach ($purchase_summaries->take(6) as $purchase_summary)
+                    @forelse ($purchase_summaries->take(6) as $purchase_summary)
                     <li class="d-flex mb-4 pb-1">
                         <div class="avatar flex-shrink-0 me-3">
                             <img src="{{ asset('admin') }}/img/icons/unicons/paypal.png" alt="User" class="rounded" />
@@ -381,7 +381,11 @@
                             </div>
                         </div>
                     </li>
-                    @endforeach
+                    @empty
+                    <div class="alert alert-danger">
+                        <strong>Not Found</strong>
+                    </div>
+                    @endforelse
                 </ul>
             </div>
         </div>
@@ -396,7 +400,7 @@
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
-                    @foreach ($selling_summaries->take(6) as $selling_summary)
+                    @forelse ($selling_summaries->take(6) as $selling_summary)
                     <li class="d-flex mb-4 pb-1">
                         <div class="avatar flex-shrink-0 me-3">
                             <img src="{{ asset('admin') }}/img/icons/unicons/paypal.png" alt="User" class="rounded" />
@@ -412,7 +416,11 @@
                             </div>
                         </div>
                     </li>
-                    @endforeach
+                    @empty
+                    <div class="alert alert-danger">
+                        <strong>Not Found</strong>
+                    </div>
+                    @endforelse
                 </ul>
             </div>
         </div>

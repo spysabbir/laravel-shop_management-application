@@ -23,40 +23,178 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PurchaseController extends Controller
 {
-    public function purchaseProduct ()
+    public function purchaseProduct (Request $request)
     {
+        if ($request->ajax()) {
+            $purchase_carts = "";
+            $query = Purchase_cart::where('purchase_invoice_no', $request->purchase_invoice_no)
+                ->where('purchase_date', $request->purchase_date)
+                ->where('supplier_id', $request->supplier_id)
+                ->leftJoin('products', 'purchase_carts.product_id', 'products.id');
+
+            $purchase_carts = $query->select('purchase_carts.*', 'products.product_name', 'products.unit_id', 'products.brand_id')->get();
+
+            return Datatables::of($purchase_carts)
+                    ->addIndexColumn()
+                    ->editColumn('brand_name', function($row){
+                        return'
+                        <span class="badge bg-success">'.$row->relationtobrand->brand_name.'</span>
+                        ';
+                    })
+                    ->editColumn('unit_name', function($row){
+                        return'
+                        <span class="badge bg-success">'.$row->relationtounit->unit_name.'</span>
+                        ';
+                    })
+                    ->editColumn('purchase_quantity', function($row){
+                        return'
+                        <input type="text" value="'.$row->purchase_quantity.'" class="form-control purchase_quantity" id="'.$row->id.'"/>
+                        ';
+                    })
+                    ->editColumn('purchase_price', function($row){
+                        return'
+                        <input type="text" value="'.$row->purchase_price.'" class="form-control purchase_price" id="'.$row->id.'"/>
+                        ';
+                    })
+                    ->editColumn('total_price', function($row){
+                        return'
+                        <span class="badge bg-success">'.$row->purchase_quantity * $row->purchase_price.'</span>
+                        ';
+                    })
+                    ->addColumn('action', function($row){
+                        $btn = '
+                            <button type="button" id="'.$row->id.'" class="btn btn-danger btn-sm deleteBtn"><i class="fa-solid fa-trash-can"></i></button>
+                        ';
+                        return $btn;
+                    })
+                    ->rawColumns(['purchase_quantity', 'unit_name', 'brand_name', 'purchase_price', 'total_price', 'action'])
+                    ->make(true);
+        }
+
         $suppliers = Supplier::where('status', 'Active')->get();
         $categories = Category::where('status', 'Active')->get();
         return view('admin.purchase.create', compact('suppliers', 'categories'));
     }
 
+    public function purchaseCartDelete()
+    {
+        Purchase_cart::truncate();
+        return back();
+    }
+
     public function getProducts(Request $request)
     {
-        $send_products = "";
+        $send_products = "<option>--Select Product--</option>";
         $products = Product::where('category_id', $request->category_id)->get();
-        if($products->count() <= 0){
-            $send_products .= '
-            <div class="col-lg-12 mb-3 text-center" >
-                <span class="text-danger">Not Found</span>
-            </div>
-            ';
-        }else{
-            foreach ($products as $product) {
-                $send_products .= '
-                <div class="col-lg-4 col-12 mb-3" >
-                    <div class="card ">
-                        <img src="'.asset('uploads/product_photo')."/".$product->product_photo.'" class="card-img-top" height="100px" alt="Product Photo">
-                        <div class="card-body p-2">
-                            <p class="card-title">'.$product->product_name.'</p>
-                            <h6 class="card-subtitle">Price: '.$product->selling_price.'</h6>
-                        </div>
-                        <button class="btn btn-primary mt-2 add_item_btn" id="'.$product->product_name.'" type="button"><i class="fa-solid fa-plus"></i></button>
-                    </div>
-                </div>
-                ';
-            }
+        foreach ($products as $product) {
+            $send_products .= "<option value='$product->id'>$product->product_name</option>";
         }
         return response()->json($send_products);
+    }
+
+    public function purchaseProductDetails(Request $request)
+    {
+        $product = Product::where('id', $request->product_id)->first();
+        $purchase_price = $product->purchase_price;
+        $product_stock = ($product->purchase_quantity-$product->selling_quantity);
+        return response()->json([
+            'product_stock' => $product_stock,
+            'purchase_price' => $purchase_price,
+        ]);
+    }
+
+    public function purchaseCartStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            '*' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => 400,
+                'error'=> $validator->errors()->toArray()
+            ]);
+        }else{
+            $exists = Purchase_cart::where('purchase_invoice_no', $request->purchase_invoice_no)
+                ->where('purchase_date', $request->purchase_date)
+                ->where('supplier_id', $request->supplier_id)->where('product_id', $request->product_id)->exists();
+            if($exists){
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Purchase product already added.',
+                ]);
+            }else{
+                Purchase_cart::insert([
+                    'purchase_invoice_no' => $request->purchase_invoice_no,
+                    'purchase_date' => $request->purchase_date,
+                    'supplier_id' => $request->supplier_id,
+                    'product_id' => $request->product_id,
+                    'created_at' => Carbon::now(),
+                ]);
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Purchase product added successfully.',
+                ]);
+            }
+        }
+    }
+
+    public function purchaseCartItemDelete(Request $request)
+    {
+        Purchase_cart::where('id', $request->cart_id)->delete();
+
+        $sub_total = 0;
+        foreach(Purchase_cart::where('purchase_invoice_no', $request->purchase_invoice_no)
+                    ->where('purchase_date', $request->purchase_date)
+                    ->where('supplier_id', $request->supplier_id)->get() as $cart){
+            $sub_total += ($cart->purchase_quantity*$cart->purchase_price);
+        };
+
+        return response()->json([
+            'sub_total' => $sub_total,
+            'message' => 'Purchase cart item delete successfully.',
+        ]);
+    }
+
+    public function changePurchaseQuantity(Request $request)
+    {
+        Purchase_cart::where('id', $request->cart_id)->update([
+            'purchase_quantity' => $request->purchase_quantity,
+        ]);
+
+        $sub_total = 0;
+        foreach(Purchase_cart::where('purchase_invoice_no', $request->purchase_invoice_no)
+                    ->where('purchase_date', $request->purchase_date)
+                    ->where('supplier_id', $request->supplier_id)->get() as $cart){
+            $sub_total += ($cart->purchase_quantity*$cart->purchase_price);
+        };
+        return response()->json($sub_total);
+    }
+
+    public function changePurchasePrice(Request $request)
+    {
+        Purchase_cart::where('id', $request->cart_id)->update([
+            'purchase_price' => $request->purchase_price,
+        ]);
+        $sub_total = 0;
+        foreach(Purchase_cart::where('purchase_invoice_no', $request->purchase_invoice_no)
+                    ->where('purchase_date', $request->purchase_date)
+                    ->where('supplier_id', $request->supplier_id)->get() as $cart){
+            $sub_total += ($cart->purchase_quantity*$cart->purchase_price);
+        };
+        return response()->json($sub_total);
+    }
+
+    public function getSubTotal(Request $request)
+    {
+        $sub_total = 0;
+        foreach(Purchase_cart::where('purchase_invoice_no', $request->purchase_invoice_no)
+                    ->where('purchase_date', $request->purchase_date)
+                    ->where('supplier_id', $request->supplier_id)->get() as $cart){
+            $sub_total += ($cart->purchase_quantity*$cart->purchase_price);
+        };
+        return response()->json($sub_total);
     }
 
     public function purchaseProductStore(Request $request)
@@ -73,57 +211,72 @@ class PurchaseController extends Controller
                 'error'=> $validator->errors()->toArray()
             ]);
         }else{
-            if($request->payment_status != 'Unpaid' && $request->payment_method == NULL){
+            $products_data =  Purchase_cart::where('purchase_invoice_no', $request->purchase_invoice_no)
+                        ->where('purchase_date', $request->purchase_date)
+                        ->where('supplier_id', $request->supplier_id);
+            if(!$products_data->exists()){
                 return response()->json([
-                    'status' => 402,
-                    'message' => 'The payment_method field is required.',
+                    'status' => 401,
+                    'message' => 'Purchase product not added.',
                 ]);
             }else{
-                $purchase_summery_id = Purchase_summary::insertGetId([
-                    'purchase_invoice_no' => $request->purchase_invoice_no,
-                    'purchase_date' => $request->purchase_date,
-                    'supplier_id' => $request->supplier_id,
-                    'sub_total' => $request->sub_total,
-                    'discount' => $request->discount,
-                    'grand_total' => $request->grand_total,
-                    'payment_status' => $request->payment_status,
-                    'payment_amount' => $request->payment_amount,
-                    'purchase_agent_id' => Auth::user()->id,
-                    // 'branch_id' => Auth::user()->branch_id,
-                    'branch_id' => 1,
-                    'created_at' => Carbon::now(),
-                ]);
-
-                Suppliers_payment_summary::insert([
-                    'supplier_id' => $request->supplier_id,
-                    'purchase_invoice_no' => $request->purchase_invoice_no,
-                    'grand_total' => $request->grand_total,
-                    'payment_status' => $request->payment_status,
-                    'payment_method' => $request->payment_method,
-                    'payment_amount' => $request->payment_amount,
-                    'payment_agent_id' => Auth::user()->id,
-                    'created_at' => Carbon::now(),
-                ]);
-
-                foreach($request->inputs as $value){
-                    Purchase_details::insert($value+[
+                if($request->payment_status != 'Unpaid' && $request->payment_method == NULL){
+                    return response()->json([
+                        'status' => 402,
+                        'message' => 'The payment_method field is required.',
+                    ]);
+                }else{
+                    $purchase_summery_id = Purchase_summary::insertGetId([
                         'purchase_invoice_no' => $request->purchase_invoice_no,
-                        'created_at' => Carbon::now()
+                        'purchase_date' => $request->purchase_date,
+                        'supplier_id' => $request->supplier_id,
+                        'sub_total' => $request->sub_total,
+                        'discount' => $request->discount,
+                        'grand_total' => $request->grand_total,
+                        'payment_status' => $request->payment_status,
+                        'payment_amount' => $request->payment_amount,
+                        'purchase_agent_id' => Auth::user()->id,
+                        'branch_id' => Auth::user()->branch_id,
+                        'created_at' => Carbon::now(),
+                    ]);
+
+                    Suppliers_payment_summary::insert([
+                        'supplier_id' => $request->supplier_id,
+                        'purchase_invoice_no' => $request->purchase_invoice_no,
+                        'grand_total' => $request->grand_total,
+                        'payment_status' => $request->payment_status,
+                        'payment_method' => $request->payment_method,
+                        'payment_amount' => $request->payment_amount,
+                        'payment_agent_id' => Auth::user()->id,
+                        'created_at' => Carbon::now(),
+                    ]);
+
+                    $cart_products = $products_data->get();
+                    foreach($cart_products as $cart_product){
+                        Purchase_details::insert([
+                            'purchase_invoice_no' => $cart_product->purchase_invoice_no,
+                            'product_id' => $cart_product->product_id,
+                            'purchase_quantity' => $cart_product->purchase_quantity,
+                            'purchase_price' => $cart_product->purchase_price,
+                            'created_at' => Carbon::now(),
+                        ]);
+
+                        Product::where('id', $cart_product->product_id)->update([
+                            'purchase_price' => $cart_product->purchase_price,
+                        ]);
+                        Product::where('id', $cart_product->product_id)->increment('purchase_quantity', $cart_product->purchase_quantity);
+                        $cart_product->truncate();
+                    }
+
+                    // $purchase_summary = Purchase_summary::find($purchase_summery_id);
+                    // Mail::to(Supplier::find($request->supplier_id)->supplier_email)
+                    // ->send(new Purchase_successfullyMail($purchase_summary));
+
+                    return response()->json([
+                        'status' => 200,
+                        'message' => 'Product purchase successfully.',
                     ]);
                 }
-                Product::where('product_name', $value->product_id)->update([
-                        'purchase_price' => $value->purchase_price,
-                    ]);
-                Product::where('product_name', $value->product_id)->increment('purchase_quantity', $value->purchase_quantity);
-
-                // $purchase_summary = Purchase_summary::find($purchase_summery_id);
-                // Mail::to(Supplier::find($request->supplier_id)->supplier_email)
-                // ->send(new Purchase_successfullyMail($purchase_summary));
-
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Product purchase successfully.',
-                ]);
             }
         }
     }

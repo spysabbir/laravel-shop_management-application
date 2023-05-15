@@ -32,11 +32,19 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if ($request->role == "Admin") {
+            $branch_id = 'nullable';
+        } else {
+            $branch_id = 'required';
+        }
+
         $request->validate([
+            'branch_id' => $branch_id,
             'role' => ['required', 'string'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'indisposable', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password_confirmation' => ['required', Rules\Password::defaults()],
         ]);
 
         $user = User::create([

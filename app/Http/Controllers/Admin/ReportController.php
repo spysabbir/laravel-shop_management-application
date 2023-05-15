@@ -7,6 +7,7 @@ use App\Exports\PurchaseExport;
 use App\Exports\SellingExport;
 use App\Exports\StockExport;
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Customer;
@@ -26,6 +27,10 @@ class ReportController extends Controller
         if ($request->ajax()) {
             $products = "";
             $query = Product::select('products.*');
+
+            if($request->branch_id){
+                $query->where('products.branch_id', $request->branch_id);
+            }
 
             if($request->category_id){
                 $query->where('products.category_id', $request->category_id);
@@ -69,23 +74,28 @@ class ReportController extends Controller
 
         $categories = Category::all();
         $brands = Brand::all();
-        return view('admin.report.stock', compact('categories', 'brands'));
+        $branches = Branch::all();
+        return view('admin.report.stock', compact('categories', 'brands', 'branches'));
     }
 
     public function stockReportExport(Request $request)
     {
         $products = "";
-            $query = Product::select('products.*');
+        $query = Product::select('products.*');
 
-            if($request->category_id){
-                $query->where('products.category_id', $request->category_id);
-            }
+        if($request->category_id){
+            $query->where('products.category_id', $request->category_id);
+        }
 
-            if($request->brand_id){
-                $query->where('products.brand_id', $request->brand_id);
-            }
+        if($request->branch_id){
+            $query->where('products.branch_id', $request->branch_id);
+        }
 
-            $products = $query->get();
+        if($request->brand_id){
+            $query->where('products.brand_id', $request->brand_id);
+        }
+
+        $products = $query->get();
 
         return Excel::download(new StockExport($products), 'stock.xlsx');
     }
@@ -108,6 +118,10 @@ class ReportController extends Controller
                 $query->where('expenses.expense_category_id', $request->expense_category_id);
             }
 
+            if($request->branch_id){
+                $query->where('expenses.branch_id', $request->branch_id);
+            }
+
             $expenses = $query->select('expenses.*', 'expense_categories.expense_category_name');
 
             return Datatables::of($expenses->get())
@@ -122,7 +136,8 @@ class ReportController extends Controller
         }
 
         $expense_categories = Expense_category::all();
-        return view('admin.report.expense', compact('expense_categories'));
+        $branches = Branch::all();
+        return view('admin.report.expense', compact('expense_categories', 'branches'));
     }
 
     public function expenseReportExport(Request $request)
@@ -143,6 +158,10 @@ class ReportController extends Controller
             $query->where('expenses.expense_category_id', $request->expense_category_id);
         }
 
+        if($request->branch_id){
+            $query->where('expenses.branch_id', $request->branch_id);
+        }
+
         $expenses = $query->select('expenses.*', 'expense_categories.expense_category_name')->get();
 
         return Excel::download(new ExpenseExport($expenses), 'expense.xlsx');
@@ -155,9 +174,14 @@ class ReportController extends Controller
                 ->leftJoin('suppliers', 'purchase_summaries.supplier_id', 'suppliers.id')
                 ->leftJoin('users', 'purchase_summaries.purchase_agent_id', 'users.id');
 
+            if($request->branch_id){
+                $query->where('purchase_summaries.branch_id', $request->branch_id);
+            }
+
             if($request->supplier_id){
                 $query->where('purchase_summaries.supplier_id', $request->supplier_id);
             }
+
             if($request->payment_status){
                 $query->where('purchase_summaries.payment_status', $request->payment_status);
             }
@@ -201,32 +225,38 @@ class ReportController extends Controller
         }
 
         $suppliers = Supplier::all();
-        return view('admin.report.purchase', compact('suppliers'));
+        $branches = Branch::all();
+        return view('admin.report.purchase', compact('suppliers', 'branches'));
     }
 
     public function purchaseReportExport(Request $request)
     {
         $purchase_summaries = "";
-            $query = Purchase_summary::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')
-                ->leftJoin('suppliers', 'purchase_summaries.supplier_id', 'suppliers.id')
-                ->leftJoin('users', 'purchase_summaries.purchase_agent_id', 'users.id');
+        $query = Purchase_summary::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')
+            ->leftJoin('suppliers', 'purchase_summaries.supplier_id', 'suppliers.id')
+            ->leftJoin('users', 'purchase_summaries.purchase_agent_id', 'users.id');
 
-            if($request->supplier_id){
-                $query->where('purchase_summaries.supplier_id', $request->supplier_id);
-            }
-            if($request->payment_status){
-                $query->where('purchase_summaries.payment_status', $request->payment_status);
-            }
+        if($request->branch_id){
+            $query->where('purchase_summaries.branch_id', $request->branch_id);
+        }
 
-            if($request->purchase_date_start){
-                $query->whereDate('purchase_summaries.purchase_date', '>=', $request->purchase_date_start);
-            }
+        if($request->supplier_id){
+            $query->where('purchase_summaries.supplier_id', $request->supplier_id);
+        }
 
-            if($request->purchase_date_end){
-                $query->whereDate('purchase_summaries.purchase_date', '<=', $request->purchase_date_end);
-            }
+        if($request->payment_status){
+            $query->where('purchase_summaries.payment_status', $request->payment_status);
+        }
 
-            $purchase_summaries = $query->select('purchase_summaries.*', 'suppliers.supplier_name', 'users.name')->get();
+        if($request->purchase_date_start){
+            $query->whereDate('purchase_summaries.purchase_date', '>=', $request->purchase_date_start);
+        }
+
+        if($request->purchase_date_end){
+            $query->whereDate('purchase_summaries.purchase_date', '<=', $request->purchase_date_end);
+        }
+
+        $purchase_summaries = $query->select('purchase_summaries.*', 'suppliers.supplier_name', 'users.name')->get();
 
         return Excel::download(new PurchaseExport($purchase_summaries), 'purchase.xlsx');
     }
@@ -237,6 +267,10 @@ class ReportController extends Controller
             $query = Selling_summary::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')
                 ->leftJoin('customers', 'selling_summaries.customer_id', 'customers.id')
                 ->leftJoin('users', 'selling_summaries.selling_agent_id', 'users.id');
+
+            if($request->branch_id){
+                $query->where('selling_summaries.branch_id', $request->branch_id);
+            }
 
             if($request->customer_id){
                 $query->where('selling_summaries.customer_id', $request->customer_id);
@@ -285,34 +319,39 @@ class ReportController extends Controller
         }
 
         $customers = Customer::all();
-        return view('admin.report.selling', compact('customers'));
+        $branches = Branch::all();
+        return view('admin.report.selling', compact('customers', 'branches'));
     }
 
     public function sellingReportExport(Request $request)
     {
         $selling_summaries = "";
-            $query = Selling_summary::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')
-                ->leftJoin('customers', 'selling_summaries.customer_id', 'customers.id')
-                ->leftJoin('users', 'selling_summaries.selling_agent_id', 'users.id');
 
-            if($request->customer_id){
-                $query->where('selling_summaries.customer_id', $request->customer_id);
-            }
+        $query = Selling_summary::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')
+            ->leftJoin('customers', 'selling_summaries.customer_id', 'customers.id')
+            ->leftJoin('users', 'selling_summaries.selling_agent_id', 'users.id');
 
-            if($request->payment_status){
-                $query->where('selling_summaries.payment_status', $request->payment_status);
-            }
+        if($request->branch_id){
+            $query->where('selling_summaries.branch_id', $request->branch_id);
+        }
 
-            if($request->selling_date_start){
-                $query->whereDate('selling_summaries.selling_date', '>=', $request->selling_date_start);
-            }
+        if($request->customer_id){
+            $query->where('selling_summaries.customer_id', $request->customer_id);
+        }
 
-            if($request->selling_date_end){
-                $query->whereDate('selling_summaries.selling_date', '<=', $request->selling_date_end);
-            }
+        if($request->payment_status){
+            $query->where('selling_summaries.payment_status', $request->payment_status);
+        }
 
-            $selling_summaries = $query->select('selling_summaries.*', 'customers.customer_name', 'users.name')->get();
+        if($request->selling_date_start){
+            $query->whereDate('selling_summaries.selling_date', '>=', $request->selling_date_start);
+        }
 
+        if($request->selling_date_end){
+            $query->whereDate('selling_summaries.selling_date', '<=', $request->selling_date_end);
+        }
+
+        $selling_summaries = $query->select('selling_summaries.*', 'customers.customer_name', 'users.name')->get();
 
         return Excel::download(new SellingExport($selling_summaries), 'selling.xlsx');
     }

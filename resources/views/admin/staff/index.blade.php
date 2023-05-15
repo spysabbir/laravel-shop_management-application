@@ -27,16 +27,6 @@
                                     <form action="#" method="POST" id="create_form" enctype="multipart/form-data">
                                         @csrf
                                         <div class="mb-3">
-                                            <label class="form-label">Branch</label>
-                                            <select class="form-select" name="branch_id">
-                                                <option value="">Select Branch</option>
-                                                @foreach ($branches as $branch)
-                                                <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <span class="text-danger error-text branch_id_error"></span>
-                                        </div>
-                                        <div class="mb-3">
                                             <label class="form-label">Staff Profile Photo</label>
                                             <input type="file" name="profile_photo" class="form-control" />
                                             <span class="text-danger error-text profile_photo_error"></span>
@@ -161,15 +151,6 @@
                                 <option value="Other">Other</option>
                             </select>
                         </div>
-                        <div class="col-lg-3">
-                            <label class="form-label">Branch</label>
-                            <select class="form-select filter_data" id="branch_id">
-                                <option value="">All</option>
-                                @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -179,7 +160,6 @@
                                 <th>Sl No</th>
                                 <th>Join Date</th>
                                 <th>Profile Photo</th>
-                                <th>Branch Name</th>
                                 <th>Name</th>
                                 <th>Position</th>
                                 <th>Email</th>
@@ -221,16 +201,6 @@
                                                 @csrf
                                                 @method('PATCH')
                                                 <input type="hidden" name="" id="staff_id">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Branch</label>
-                                                    <select class="form-select" name="branch_id">
-                                                        <option value="">Select Branch</option>
-                                                        @foreach ($branches as $branch)
-                                                        <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <span class="text-danger error-text update_branch_id_error"></span>
-                                                </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Staff Profile Photo</label>
                                                     <input type="file" name="profile_photo" class="form-control" />
@@ -331,14 +301,12 @@
                 "data":function(e){
                     e.status = $('#status').val();
                     e.staff_gender = $('#staff_gender').val();
-                    e.branch_id = $('#branch_id').val();
                 },
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'created_at', name: 'created_at'},
                 {data: 'profile_photo', name: 'profile_photo'},
-                {data: 'branch_name', name: 'branch_name'},
                 {data: 'staff_name', name: 'staff_name'},
                 {data: 'staff_position', name: 'staff_position'},
                 {data: 'staff_email', name: 'staff_email'},

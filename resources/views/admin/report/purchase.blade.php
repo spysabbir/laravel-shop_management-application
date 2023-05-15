@@ -20,6 +20,15 @@
                     <form action="{{ route('purchase.report.export') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
+                            <div class="col-lg-2">
+                                <label class="form-label">Branch Name</label>
+                                <select class="form-control filter_data" name="branch_id" id="branch_id">
+                                    <option value="">All</option>
+                                    @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="col-lg-3">
                                 <label class="form-label">Supplier Name</label>
                                 <select class="form-control filter_data" name="supplier_id" id="supplier_id">
@@ -38,11 +47,11 @@
                                     <option value="Partially Paid">Partially Paid</option>
                                 </select>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <label class="form-label">Purchase Date Start</label>
                                 <input type="date" class="form-control filter_data" name="purchase_date_start" id="purchase_date_start">
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-2">
                                 <label class="form-label">Purchase Date End</label>
                                 <input type="date" class="form-control filter_data" name="purchase_date_end" id="purchase_date_end">
                             </div>
@@ -87,6 +96,7 @@
             ajax: {
                 url: "{{ route('purchase.report') }}",
                 "data":function(e){
+                    e.branch_id = $('#branch_id').val();
                     e.supplier_id = $('#supplier_id').val();
                     e.payment_status = $('#payment_status').val();
                     e.purchase_date_start = $('#purchase_date_start').val();

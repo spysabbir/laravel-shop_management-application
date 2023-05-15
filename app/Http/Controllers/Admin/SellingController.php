@@ -7,9 +7,8 @@ use App\Mail\Selling_successfullyMail;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Customers_payment_summary;
-use App\Models\Default_setting;
+use App\Models\DefaultSetting;
 use App\Models\Product;
-use App\Models\Purchase_cart;
 use App\Models\Selling_cart;
 use App\Models\Selling_details;
 use App\Models\Selling_summary;
@@ -396,7 +395,7 @@ class SellingController extends Controller
     }
 
     public function sellingInvoice($selling_invoice_no){
-        $default_setting = Default_setting::first();
+        $default_setting = DefaultSetting::first();
         $selling_invoice_no = Crypt::decrypt($selling_invoice_no);
         $selling_summary = Selling_summary::where('selling_invoice_no', $selling_invoice_no)->first();
         $selling_details = Selling_details::where('selling_invoice_no', $selling_invoice_no)->get();
@@ -405,7 +404,7 @@ class SellingController extends Controller
     }
 
     public function sellingInvoiceDownload($selling_invoice_no){
-        $default_setting = Default_setting::first();
+        $default_setting = DefaultSetting::first();
         $selling_invoice_no = Crypt::decrypt($selling_invoice_no);
         $selling_summary = Selling_summary::where('selling_invoice_no', $selling_invoice_no)->first();
         $selling_details = Selling_details::where('selling_invoice_no', $selling_invoice_no)->get();

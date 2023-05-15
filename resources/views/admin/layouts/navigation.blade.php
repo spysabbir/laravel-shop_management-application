@@ -11,7 +11,7 @@
     <li class="menu-header small text-uppercase">
         <span class="menu-header-text">Super Admin Panel</span>
     </li>
-    <li class="menu-item {{(Route::currentRouteName() == 'default.setting' || Route::currentRouteName() == 'mail.setting') ? 'active open' : ''}}">
+    <li class="menu-item {{(Route::currentRouteName() == 'default.setting' || Route::currentRouteName() == 'mail.setting' || Route::currentRouteName() == 'sms.setting') ? 'active open' : ''}}">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-dock-top"></i>
             <div data-i18n="Account Settings">Settings</div>
@@ -86,6 +86,41 @@
             </li>
         </ul>
     </li>
+    <li class="menu-item {{(Route::currentRouteName() == 'all.contact.message') ? 'active' : ''}}">
+        <a href="{{ route('all.contact.message') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <div data-i18n="All Contact Message">All Contact Message</div>
+        </a>
+    </li>
+    <li class="menu-item {{(Route::currentRouteName() == 'expense-category.index' || Route::currentRouteName() == 'all.expense') ? 'active open' : ''}}">
+        <a href="javascript:void(0)" class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons bx bx-box"></i>
+            <div data-i18n="Expense Interface">Expense Interface</div>
+        </a>
+        <ul class="menu-sub">
+            <li class="menu-item {{(Route::currentRouteName() == 'expense-category.index') ? 'active' : ''}}">
+                <a href="{{ route('expense-category.index') }}" class="menu-link">
+                    <div data-i18n="Expense Category">Expense Category</div>
+                </a>
+            </li>
+            <li class="menu-item {{(Route::currentRouteName() == 'all.expense') ? 'active' : ''}}">
+                <a href="{{ route('all.expense') }}" class="menu-link">
+                    <div data-i18n="Expense">All Expense</div>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="menu-item {{(Route::currentRouteName() == 'branch.index') ? 'active' : ''}}">
+        <a href="{{ route('branch.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <div data-i18n="Branch">Branch</div>
+        </a>
+    </li>
+    @endif
+    <!-- Branch Panel -->
+    <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">Branch Panel</span>
+    </li>
     <li class="menu-item {{(Route::currentRouteName() == 'staff.index' || Route::currentRouteName() == 'staff.salary') ? 'active open' : ''}}">
         <a href="javascript:void(0)" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-box"></i>
@@ -104,41 +139,6 @@
             </li>
         </ul>
     </li>
-    <li class="menu-item {{(Route::currentRouteName() == 'all.contact.message') ? 'active' : ''}}">
-        <a href="{{ route('all.contact.message') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
-            <div data-i18n="All Contact Message">All Contact Message</div>
-        </a>
-    </li>
-    <li class="menu-item {{(Route::currentRouteName() == 'expense-category.index' || Route::currentRouteName() == 'expense.index') ? 'active open' : ''}}">
-        <a href="javascript:void(0)" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-box"></i>
-            <div data-i18n="Expense Interface">Expense Interface</div>
-        </a>
-        <ul class="menu-sub">
-            <li class="menu-item {{(Route::currentRouteName() == 'expense-category.index') ? 'active' : ''}}">
-                <a href="{{ route('expense-category.index') }}" class="menu-link">
-                    <div data-i18n="Expense Category">Expense Category</div>
-                </a>
-            </li>
-            <li class="menu-item {{(Route::currentRouteName() == 'expense.index') ? 'active' : ''}}">
-                <a href="{{ route('expense.index') }}" class="menu-link">
-                    <div data-i18n="Expense">Expense</div>
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li class="menu-item {{(Route::currentRouteName() == 'branch.index') ? 'active' : ''}}">
-        <a href="{{ route('branch.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
-            <div data-i18n="Branch">Branch</div>
-        </a>
-    </li>
-    @endif
-    <!-- Branch Panel -->
-    <li class="menu-header small text-uppercase">
-        <span class="menu-header-text">Branch Panel</span>
-    </li>
     <li class="menu-item {{(Route::currentRouteName() == 'supplier.index') ? 'active' : ''}}">
         <a href="{{ route('supplier.index') }}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-collection"></i>
@@ -149,6 +149,12 @@
         <a href="{{ route('customer.index') }}" class="menu-link">
             <i class="menu-icon tf-icons bx bx-collection"></i>
             <div data-i18n="Customer">Customer</div>
+        </a>
+    </li>
+    <li class="menu-item {{(Route::currentRouteName() == 'expense.index') ? 'active' : ''}}">
+        <a href="{{ route('expense.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <div data-i18n="Expense">Expense</div>
         </a>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'category.index' || Route::currentRouteName() == 'brand.index' || Route::currentRouteName() == 'unit.index' || Route::currentRouteName() == 'product.index') ? 'active open' : ''}}">

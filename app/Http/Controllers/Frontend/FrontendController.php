@@ -7,7 +7,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Contact_message;
 use App\Models\Customer;
-use App\Models\Default_setting;
+use App\Models\DefaultSetting;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,12 +20,12 @@ class FrontendController extends Controller
         $categories = Category::where('status', 'Active')->get();
         $brands = Brand::where('status', 'Active')->get();
         $products = Product::where('status', 'Active')->latest()->get();
-        $default_setting = Default_setting::first();
+        $default_setting = DefaultSetting::first();
         return view('frontend.index', compact('categories', 'brands', 'products', 'default_setting'));
     }
     public function contactUs ()
     {
-        $default_setting = Default_setting::first();
+        $default_setting = DefaultSetting::first();
         return view('frontend.contact', compact('default_setting'));
     }
     public function contactMessageSend(Request $request)

@@ -21,7 +21,7 @@ class StaffController extends Controller
     {
         if ($request->ajax()) {
             $all_staff = "";
-            $query = Staff::select('staff.*');
+            $query = Staff::where('branch_id', Auth::user()->branch_id);
 
             if($request->status){
                 $query->where('staff.status', $request->status);
@@ -35,7 +35,7 @@ class StaffController extends Controller
                 $query->where('staff.branch_id', $request->branch_id);
             }
 
-            $all_staff = $query->get();
+            $all_staff = $query->select('staff.*')->get();
 
             return Datatables::of($all_staff)
                     ->addIndexColumn()
@@ -101,7 +101,6 @@ class StaffController extends Controller
     {
         $validator = Validator::make($request->all(), [
             '*' => 'required',
-            'branch_id' => 'required',
             'staff_gender' => 'required',
             'profile_photo' => 'nullable|image|mimes:png,jpg,jpeg,webp,svg'
         ]);
@@ -113,7 +112,7 @@ class StaffController extends Controller
             ]);
         }else{
             $staff_id = Staff::insertGetId([
-                'branch_id' => $request->branch_id,
+                'branch_id' => Auth::user()->branch_id,
                 'staff_name' => $request->staff_name,
                 'staff_position' => $request->staff_position,
                 'staff_email' => $request->staff_email,
@@ -174,7 +173,7 @@ class StaffController extends Controller
             ]);
         }else{
             $staff->update([
-                'branch_id' => $request->branch_id,
+                'branch_id' => Auth::user()->branch_id,
                 'staff_name' => $request->staff_name,
                 'staff_position' => $request->staff_position,
                 'staff_email' => $request->staff_email,
@@ -298,13 +297,13 @@ class StaffController extends Controller
     {
         if ($request->ajax()) {
             $all_staff = "";
-            $query = Staff::select('staff.*');
+            $query = Staff::where('branch_id', Auth::user()->branch_id);
 
             if($request->status){
                 $query->where('staff.status', $request->status);
             }
 
-            $all_staff = $query->get();
+            $all_staff = $query->select('staff.*')->get();
 
             return Datatables::of($all_staff)
                     ->addIndexColumn()
@@ -378,6 +377,7 @@ class StaffController extends Controller
                         Expense::where('expense_title', $request->salary_year." ".$request->salary_month." Salary")->increment('expense_cost', $request->payment_salary);
                     }else{
                         Expense::insert([
+                            'branch_id' => $staff->branch_id,
                             'expense_category_id' => 1,
                             'expense_date' => date('Y-m-d'),
                             'expense_title' => $request->salary_year." ".$request->salary_month." Salary",

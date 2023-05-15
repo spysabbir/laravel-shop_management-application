@@ -54,20 +54,26 @@
         @csrf
         <div class="mb-3">
             <label class="form-label">Role</label>
-            <select class="form-select" name="role">
-                <option >Select Role</option>
+            <select class="form-select" name="role" id="role">
+                <option value="">Select Role</option>
                 <option value="Admin" @selected(old('role') == "Admin")>Admin</option>
                 <option value="Manager" @selected(old('role') == "Manager")>Manager</option>
             </select>
+            @error('role')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
-        <div class="mb-3">
+        <div class="mb-3" id="branch_div">
             <label class="form-label">Branch</label>
-            <select class="form-select" name="branch_id">
+            <select class="form-select" name="branch_id" >
                 <option value="">Select Branch</option>
                 @foreach ($branches as $branch)
                 <option value="{{ $branch->id }}" @selected(old('branch_id') == $branch->id)>{{ $branch->branch_name }}</option>
                 @endforeach
             </select>
+            @error('branch_id')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
         </div>
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
@@ -104,7 +110,7 @@
             @enderror
         </div>
         <button class="btn btn-primary d-grid w-100">Sign up</button>
-        <a href="{{ route('dashboard') }}" class="btn btn-warning d-grid w-100 mt-3">Back</a>
+        <a href="{{ route('dashboard') }}" class="btn btn-warning d-grid w-100 mt-3">Go to Dashboard</a>
     </form>
     </div>
 </div>
@@ -113,6 +119,21 @@
 
 @section('script')
 <script>
-
+    $(document).ready(function() {
+        // Branch Status
+        if($('#role').find(":selected").val() == 'Manager'){
+            $('#branch_div').show();
+        }else{
+            $('#branch_div').hide();
+        }
+        $(document).on('change', '#role', function(e){
+            e.preventDefault();
+            if($('#role').find(":selected").val() == 'Manager'){
+                $('#branch_div').show();
+            }else{
+                $('#branch_div').hide();
+            }
+        })
+    })
 </script>
 @endsection

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('status')->default('Active');
             $table->timestamp('last_active')->useCurrent();
             $table->string('password');
-            $table->string('branch_id')->nullable();
+            $table->integer('branch_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

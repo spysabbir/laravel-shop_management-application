@@ -17,7 +17,7 @@ class ExpenseController extends Controller
     {
         if ($request->ajax()) {
             $expenses = "";
-            $query = Expense::select('expenses.*');
+            $query = Expense::where('branch_id', Auth::user()->branch_id);
 
             if($request->status){
                 $query->where('expenses.status', $request->status);
@@ -27,7 +27,7 @@ class ExpenseController extends Controller
                 $query->where('expenses.expense_category_id', $request->expense_category_id);
             }
 
-            $expenses = $query->get();
+            $expenses = $query->select('expenses.*')->get();
 
             return Datatables::of($expenses)
                     ->addIndexColumn()
@@ -72,6 +72,7 @@ class ExpenseController extends Controller
             ]);
         }else{
             Expense::insert([
+                'branch_id' => Auth::user()->branch_id,
                 'expense_category_id' => $request->expense_category_id,
                 'expense_date' => $request->expense_date,
                 'expense_title' => $request->expense_title,
@@ -109,6 +110,7 @@ class ExpenseController extends Controller
             ]);
         }else{
             $expense->update([
+                'branch_id' => Auth::user()->branch_id,
                 'expense_category_id' => $request->expense_category_id,
                 'expense_date' => $request->expense_date,
                 'expense_title' => $request->expense_title,

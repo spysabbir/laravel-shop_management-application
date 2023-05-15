@@ -70,14 +70,14 @@
                                                 <input type="hidden" name="" id="administrator_id">
                                                 <div class="mb-3">
                                                     <label class="form-label">Role</label>
-                                                    <select class="form-select" name="role" id="role">
+                                                    <select class="form-select role_status" name="role" id="role">
                                                         <option value="">Select Role</option>
                                                         <option value="Admin">Admin</option>
                                                         <option value="Manager">Manager</option>
                                                     </select>
                                                     <span class="text-danger error-text update_role_error"></span>
                                                 </div>
-                                                <div class="mb-3">
+                                                <div class="mb-3" id="branch_div">
                                                     <label class="form-label">Branch</label>
                                                     <select class="form-select" name="branch_id" id="branch_id">
                                                         <option value="">Select Branch</option>
@@ -159,8 +159,23 @@
                     $("#role").val(response.role);
                     $("#branch_id").val(response.branch_id);
                     $('#administrator_id').val(response.id)
+                    if(response.role == 'Manager'){
+                        $('#branch_div').show();
+                    }else{
+                        $('#branch_div').hide();
+                    }
                 }
             });
+        })
+
+        // Select Branch
+        $(document).on('change', '.role_status', function(e){
+            e.preventDefault();
+            if($('.role_status').find(":selected").val() == 'Manager'){
+                $('#branch_div').show();
+            }else{
+                $('#branch_div').hide();
+            }
         })
 
         // Update Data

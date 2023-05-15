@@ -16,16 +16,16 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-6 col-12 mb-3">
-                            <label class="form-label" for="mailer">Mailer</label>
-                            <input id="mailer" class="form-control" type="text" name="mailer" value="{{ $sms_setting->mailer }}" />
-                            @error('mailer')
+                            <label class="form-label" for="api_key">Api Key</label>
+                            <input id="api_key" class="form-control" type="text" name="api_key" value="{{ $sms_setting->api_key }}" />
+                            @error('api_key')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="col-md-6 col-12 mb-3">
-                            <label class="form-label" for="host">Host</label>
-                            <input id="host" class="form-control" type="text" name="host" value="{{ $sms_setting->host }}" />
-                            @error('host')
+                            <label class="form-label" for="sender_id">Sender Id</label>
+                            <input id="sender_id" class="form-control" type="text" name="sender_id" value="{{ $sms_setting->sender_id }}" />
+                            @error('sender_id')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>

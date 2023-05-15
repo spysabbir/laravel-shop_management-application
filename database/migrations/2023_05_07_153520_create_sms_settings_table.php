@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('sms_settings', function (Blueprint $table) {
             $table->id();
+            $table->text('api_key');
+            $table->text('sender_id');
+            $table->integer('created_by');
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

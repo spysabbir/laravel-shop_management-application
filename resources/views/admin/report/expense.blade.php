@@ -19,13 +19,14 @@
                     <form action="{{  route('expense.report.export')  }}" method="POST">
                         @csrf
                         <div class="row mb-3">
-                            <div class="col-lg-3">
-                                <label class="form-label">Expense Date Start</label>
-                                <input type="date" class="form-control filter_data" name="expense_date_start" id="expense_date_start">
-                            </div>
-                            <div class="col-lg-3">
-                                <label class="form-label">Expense Date End</label>
-                                <input type="date" class="form-control filter_data" name="expense_date_end" id="expense_date_end">
+                            <div class="col-lg-2">
+                                <label class="form-label">Branch Name</label>
+                                <select class="form-control filter_data" name="branch_id" id="branch_id">
+                                    <option value="">All</option>
+                                    @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-lg-3">
                                 <label class="form-label">Expense Category Name</label>
@@ -35,6 +36,14 @@
                                     <option value="{{ $expense_category->id }}">{{ $expense_category->expense_category_name }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Expense Date Start</label>
+                                <input type="date" class="form-control filter_data" name="expense_date_start" id="expense_date_start">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Expense Date End</label>
+                                <input type="date" class="form-control filter_data" name="expense_date_end" id="expense_date_end">
                             </div>
                             <div class="col-lg-1 pt-3">
                                 <button class="btn btn-sm btn-success mt-3" type="submit">Export</button>
@@ -75,6 +84,7 @@
             ajax: {
                 url: "{{ route('expense.report') }}",
                 "data":function(e){
+                    e.branch_id = $('#branch_id').val();
                     e.expense_date_start = $('#expense_date_start').val();
                     e.expense_date_end = $('#expense_date_end').val();
                     e.expense_category_id = $('#expense_category_id').val();

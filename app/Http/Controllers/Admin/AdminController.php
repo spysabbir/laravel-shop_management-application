@@ -109,8 +109,15 @@ class AdminController extends Controller
     {
         $administratore = User::where('id', $id)->first();
 
+        if ($request->role == "Admin") {
+            $branch_id = 'nullable';
+        } else {
+            $branch_id = 'required';
+        }
+
         $validator = Validator::make($request->all(), [
             'role' => 'required',
+            'branch_id' => $branch_id,
         ]);
 
         if($validator->fails()){
@@ -122,7 +129,6 @@ class AdminController extends Controller
             $administratore->update([
                 'role' => $request->role,
                 'branch_id' => $request->branch_id,
-                'updated_by' => Auth::user()->id,
             ]);
             return response()->json([
                 'status' => 200,
