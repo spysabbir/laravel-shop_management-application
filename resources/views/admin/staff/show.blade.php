@@ -8,8 +8,8 @@
         </thead>
         <tbody>
             <tr>
-                <td>Staff Position</td>
-                <td>{{ $staff->staff_position }}</td>
+                <td>Staff Designation</td>
+                <td>{{ $staff->relationtostaffdesignation->designation_name }}</td>
             </tr>
             <tr>
                 <td>Staff Email</td>

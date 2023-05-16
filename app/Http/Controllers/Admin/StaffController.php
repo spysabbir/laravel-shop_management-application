@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Expense;
 use App\Models\Staff;
 use App\Models\Staff_salary;
+use App\Models\StaffDesignation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -52,6 +53,11 @@ class StaffController extends Controller
                         <span class="badge bg-primary">'.$row->relationtobranch->branch_name.'</span>
                         ';
                     })
+                    ->editColumn('staff_designation', function($row){
+                        return'
+                        <span class="badge bg-primary">'.$row->relationtostaffdesignation->designation_name.'</span>
+                        ';
+                    })
                     ->editColumn('staff_gender', function($row){
                         if($row->staff_gender == "Male"){
                             return'
@@ -89,12 +95,12 @@ class StaffController extends Controller
                         ';
                         return $btn;
                     })
-                    ->rawColumns(['created_at', 'profile_photo', 'branch_name', 'staff_gender', 'status', 'action'])
+                    ->rawColumns(['created_at', 'profile_photo', 'branch_name', 'staff_designation', 'staff_gender', 'status', 'action'])
                     ->make(true);
         }
 
-        $branches = Branch::whereStatus('Active')->get();
-        return view('admin.staff.index', compact('branches'));
+        $staff_designations = StaffDesignation::whereStatus('Active')->get();
+        return view('admin.staff.index', compact('staff_designations'));
     }
 
     public function store(Request $request)
@@ -114,7 +120,7 @@ class StaffController extends Controller
             $staff_id = Staff::insertGetId([
                 'branch_id' => Auth::user()->branch_id,
                 'staff_name' => $request->staff_name,
-                'staff_position' => $request->staff_position,
+                'staff_designation_id' => $request->staff_designation_id,
                 'staff_email' => $request->staff_email,
                 'staff_phone_number' => $request->staff_phone_number,
                 'staff_gender' => $request->staff_gender,
@@ -175,7 +181,7 @@ class StaffController extends Controller
             $staff->update([
                 'branch_id' => Auth::user()->branch_id,
                 'staff_name' => $request->staff_name,
-                'staff_position' => $request->staff_position,
+                'staff_designation_id' => $request->staff_designation_id,
                 'staff_email' => $request->staff_email,
                 'staff_phone_number' => $request->staff_phone_number,
                 'staff_gender' => $request->staff_gender,

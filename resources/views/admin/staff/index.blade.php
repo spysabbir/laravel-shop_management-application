@@ -37,9 +37,14 @@
                                             <span class="text-danger error-text staff_name_error"></span>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">Staff Position</label>
-                                            <input type="text" name="staff_position" class="form-control" placeholder="Enter staff position" />
-                                            <span class="text-danger error-text staff_position_error"></span>
+                                            <label class="form-label">Staff Designation</label>
+                                            <select class="form-select" name="staff_designation_id">
+                                                <option value="">-- Select Designation --</option>
+                                                @foreach ($staff_designations as $designation)
+                                                    <option value="{{ $designation->id }}">{{ $designation->designation_name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <span class="text-danger error-text staff_designation_id_error"></span>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Staff Email</label>
@@ -212,9 +217,14 @@
                                                     <span class="text-danger error-text update_staff_name_error"></span>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Staff Position</label>
-                                                    <input type="text" name="staff_position" id="staff_position" class="form-control" />
-                                                    <span class="text-danger error-text update_staff_position_error"></span>
+                                                    <label class="form-label">Staff Designation</label>
+                                                    <select class="form-select" name="staff_designation_id" id="staff_designation_id">
+                                                        <option value="">-- Select Designation --</option>
+                                                        @foreach ($staff_designations as $designation)
+                                                            <option value="{{ $designation->id }}">{{ $designation->designation_name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <span class="text-danger error-text update_staff_designation_id_error"></span>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Staff Email</label>
@@ -308,7 +318,7 @@
                 {data: 'created_at', name: 'created_at'},
                 {data: 'profile_photo', name: 'profile_photo'},
                 {data: 'staff_name', name: 'staff_name'},
-                {data: 'staff_position', name: 'staff_position'},
+                {data: 'staff_designation', name: 'staff_designation'},
                 {data: 'staff_email', name: 'staff_email'},
                 {data: 'staff_gender', name: 'staff_gender'},
                 {data: 'staff_phone_number', name: 'staff_phone_number'},
@@ -379,7 +389,7 @@
                 method: 'GET',
                 success: function(response) {
                     $("#staff_name").val(response.staff_name);
-                    $("#staff_position").val(response.staff_position);
+                    $("#staff_designation_id").val(response.staff_designation_id);
                     $("#staff_email").val(response.staff_email);
                     $("#staff_phone_number").val(response.staff_phone_number);
                     $("#staff_nid_no").val(response.staff_nid_no);

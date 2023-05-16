@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SellingController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\StaffDesignationController;
 use App\Http\Controllers\Admin\Stock_managementController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\UnitController;
@@ -96,7 +97,11 @@ Route::prefix('admin')->group(function(){
             Route::get('expense-category-forcedelete/{id}', [Expense_categoryController::class, 'forceDelete'])->name('expense-category.forcedelete');
             Route::get('expense-category-status/{id}', [Expense_categoryController::class, 'status'])->name('expense-category.status');
 
-            Route::get('all-expense', [AdminController::class, 'allExpense'])->name('all.expense');
+            Route::resource('staff-designation', StaffDesignationController::class);
+            Route::get('staff-designation-trashed', [StaffDesignationController::class, 'trashed'])->name('staff-designation.trashed');
+            Route::get('staff-designation-restore/{id}', [StaffDesignationController::class, 'restore'])->name('staff-designation.restore');
+            Route::get('staff-designation-forcedelete/{id}', [StaffDesignationController::class, 'forceDelete'])->name('staff-designation.forcedelete');
+            Route::get('staff-designation-status/{id}', [StaffDesignationController::class, 'status'])->name('staff-designation.status');
 
             Route::resource('branch', BranchController::class);
             Route::get('branch-trashed', [BranchController::class, 'trashed'])->name('branch.trashed');

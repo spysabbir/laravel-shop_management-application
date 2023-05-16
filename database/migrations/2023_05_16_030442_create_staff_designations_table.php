@@ -13,19 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('staff', function (Blueprint $table) {
+        Schema::create('staff_designations', function (Blueprint $table) {
             $table->id();
-            $table->integer('branch_id');
-            $table->string('profile_photo')->default('default_profile_photo.png');
-            $table->string('staff_name');
-            $table->integer('staff_designation_id');
-            $table->string('staff_email');
-            $table->string('staff_phone_number');
-            $table->string('staff_gender');
-            $table->string('staff_nid_no')->nullable();
-            $table->date('staff_date_of_birth')->nullable();
-            $table->text('staff_address');
-            $table->float('staff_salary');
+            $table->string('designation_name');
             $table->string('status')->default('Active');
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
@@ -42,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('staff');
+        Schema::dropIfExists('staff_designations');
     }
 };

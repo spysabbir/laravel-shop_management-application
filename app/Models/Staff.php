@@ -15,4 +15,8 @@ class Staff extends Model
     function relationtobranch(){
         return $this->hasOne(Branch::class, 'id', 'branch_id');
     }
+
+    function relationtostaffdesignation(){
+        return $this->hasOne(StaffDesignation::class, 'id', 'staff_designation_id');
+    }
 }

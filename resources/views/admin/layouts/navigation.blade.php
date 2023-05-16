@@ -92,23 +92,17 @@
             <div data-i18n="All Contact Message">All Contact Message</div>
         </a>
     </li>
-    <li class="menu-item {{(Route::currentRouteName() == 'expense-category.index' || Route::currentRouteName() == 'all.expense') ? 'active open' : ''}}">
-        <a href="javascript:void(0)" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-box"></i>
-            <div data-i18n="Expense Interface">Expense Interface</div>
+    <li class="menu-item {{(Route::currentRouteName() == 'expense-category.index') ? 'active' : ''}}">
+        <a href="{{ route('expense-category.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <div data-i18n="Expense Category">Expense Category</div>
         </a>
-        <ul class="menu-sub">
-            <li class="menu-item {{(Route::currentRouteName() == 'expense-category.index') ? 'active' : ''}}">
-                <a href="{{ route('expense-category.index') }}" class="menu-link">
-                    <div data-i18n="Expense Category">Expense Category</div>
-                </a>
-            </li>
-            <li class="menu-item {{(Route::currentRouteName() == 'all.expense') ? 'active' : ''}}">
-                <a href="{{ route('all.expense') }}" class="menu-link">
-                    <div data-i18n="Expense">All Expense</div>
-                </a>
-            </li>
-        </ul>
+    </li>
+    <li class="menu-item {{(Route::currentRouteName() == 'staff-designation.index') ? 'active' : ''}}">
+        <a href="{{ route('staff-designation.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <div data-i18n="Staff Designation">Staff Designation</div>
+        </a>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'branch.index') ? 'active' : ''}}">
         <a href="{{ route('branch.index') }}" class="menu-link">
