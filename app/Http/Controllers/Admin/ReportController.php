@@ -14,6 +14,7 @@ use App\Models\Customer;
 use App\Models\Expense;
 use App\Models\Expense_category;
 use App\Models\Product;
+use App\Models\Purchase_details;
 use App\Models\Purchase_summary;
 use App\Models\Selling_summary;
 use App\Models\Supplier;
@@ -21,15 +22,19 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
+use DB;
 class ReportController extends Controller
 {
     public function stockReport(Request $request){
         if ($request->ajax()) {
             $products = "";
-            $query = Product::select('products.*');
+
+            $query = Product::leftJoin('purchase_details', 'products.id', 'purchase_details.product_id')
+                ->leftJoin('selling_details', 'products.id', 'selling_details.product_id')
+                    ->select('products.*', 'purchase_details.purchase_quantity', 'selling_details.selling_quantity');
 
             if($request->branch_id){
-                $query->where('products.branch_id', $request->branch_id);
+                $query->where('purchase_details.branch_id', $request->branch_id);
             }
 
             if($request->category_id){
@@ -41,6 +46,7 @@ class ReportController extends Controller
             }
 
             $products = $query->get();
+
             return Datatables::of($products)
                     ->addIndexColumn()
                     ->editColumn('category_name', function($row){
@@ -58,17 +64,12 @@ class ReportController extends Controller
                         <span class="badge bg-info">'.$row->relationtounit->unit_name.'</span>
                         ';
                     })
-                    ->editColumn('profit', function($row){
-                        return'
-                        <span class="badge bg-success">'.$row->selling_price - $row->purchase_price.'</span>
-                        ';
-                    })
                     ->editColumn('stock', function($row){
                         return'
                         <span class="badge bg-success">'.$row->purchase_quantity - $row->selling_quantity.'</span>
                         ';
                     })
-                    ->rawColumns(['category_name', 'brand_name', 'unit_name', 'profit', 'stock'])
+                    ->rawColumns(['category_name', 'brand_name', 'unit_name', 'stock'])
                     ->make(true);
         }
 

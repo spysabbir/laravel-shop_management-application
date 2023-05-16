@@ -8,7 +8,9 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\Purchase_details;
 use App\Models\Purchase_summary;
+use App\Models\Selling_details;
 use App\Models\Selling_summary;
 use App\Models\Supplier;
 use App\Models\User;
@@ -191,17 +193,26 @@ class AdminController extends Controller
                         <span class="badge bg-info">'.$row->relationtounit->unit_name.'</span>
                         ';
                     })
-                    ->editColumn('profit', function($row){
+                    ->editColumn('purchase_quantity', function($row){
+                        $purchase_quantity = Purchase_details::where('product_id', $row->id)->where('branch_id', Auth::user()->branch_id)->sum('purchase_quantity');
                         return'
-                        <span class="badge bg-success">'.$row->selling_price - $row->purchase_price.'</span>
+                        <span class="badge bg-success">'.$purchase_quantity.'</span>
+                        ';
+                    })
+                    ->editColumn('selling_quantity', function($row){
+                        $selling_quantity = Selling_details::where('product_id', $row->id)->where('branch_id', Auth::user()->branch_id)->sum('selling_quantity');
+                        return'
+                        <span class="badge bg-success">'.$selling_quantity.'</span>
                         ';
                     })
                     ->editColumn('stock', function($row){
+                        $purchase_quantity = Purchase_details::where('product_id', $row->id)->where('branch_id', Auth::user()->branch_id)->sum('purchase_quantity');
+                        $selling_quantity = Selling_details::where('product_id', $row->id)->where('branch_id', Auth::user()->branch_id)->sum('selling_quantity');
                         return'
-                        <span class="badge bg-success">'.$row->purchase_quantity - $row->selling_quantity.'</span>
+                        <span class="badge bg-success">'.$purchase_quantity - $selling_quantity.'</span>
                         ';
                     })
-                    ->rawColumns(['category_name', 'brand_name', 'unit_name', 'profit', 'stock'])
+                    ->rawColumns(['category_name', 'brand_name', 'unit_name', 'purchase_quantity', 'selling_quantity', 'stock'])
                     ->make(true);
         }
 

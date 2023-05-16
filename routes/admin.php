@@ -169,8 +169,7 @@ Route::prefix('admin')->group(function(){
             Route::post('purchase-product-details', [PurchaseController::class, 'purchaseProductDetails'])->name('purchase.product.details');
             Route::post('add-purchase-cart', [PurchaseController::class, 'purchaseCartStore'])->name('add.purchase.cart');
             Route::post('purchase-cart-item-delete', [PurchaseController::class, 'purchaseCartItemDelete'])->name('purchase.cart.item.delete');
-            Route::post('change-purchase-quantity', [PurchaseController::class, 'changePurchaseQuantity'])->name('change.purchase.quantity');
-            Route::post('change-purchase-price', [PurchaseController::class, 'changePurchasePrice'])->name('change.purchase.price');
+            Route::post('change-purchase-cart-data', [PurchaseController::class, 'changePurchaseCartData'])->name('change.purchase.cart.data');
             Route::post('purchase-sub-total', [PurchaseController::class, 'getSubTotal'])->name('purchase.subtotal');
             Route::post('store-purchase-product', [PurchaseController::class, 'purchaseProductStore'])->name('store.purchase.product');
 
@@ -186,8 +185,7 @@ Route::prefix('admin')->group(function(){
             Route::post('selling-product-details', [SellingController::class, 'sellingProductDetails'])->name('selling.product.details');
             Route::post('add-selling-cart', [SellingController::class, 'sellingCartStore'])->name('add.selling.cart');
             Route::post('selling-cart-item-delete', [SellingController::class, 'sellingCartItemDelete'])->name('selling.cart.item.delete');
-            Route::post('change-selling-quantity', [SellingController::class, 'changeSellingQuantity'])->name('change.selling.quantity');
-            Route::post('change-selling-price', [SellingController::class, 'changeSellingPrice'])->name('change.selling.price');
+            Route::post('change-selling-cart-data', [SellingController::class, 'changeSellingCartData'])->name('change.selling.cart.data');
             Route::post('selling-subtotal', [SellingController::class, 'getSubTotal'])->name('selling.subtotal');
             Route::post('store-selling-product', [SellingController::class, 'sellingProductStore'])->name('store.selling.product');
 

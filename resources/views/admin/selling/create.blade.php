@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label text-dark">Product Stock</label>
-                            <input type="text" id="get_product_stock" style="width: 150px" disabled>
+                            <input type="text" id="get_product_stock" style="width: 150px" readonly>
                         </div>
                         <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label text-dark">Selling Price</label>
@@ -264,17 +264,17 @@
         });
 
         // Change Selling Quantity
-        $(document).on('keyup', '.selling_quantity', function(e){
-            e.preventDefault();
-            var selling_quantity = $(this).val();
+        $(document).on("change", ".selling_quantity, .selling_price", function () {
+            var selling_quantity = $('.selling_quantity').val();
+            var selling_price = $('.selling_price').val();
             var cart_id = $(this).attr('id');
             var selling_invoice_no = $('#selling_invoice_no').val();
             var selling_date = $('#selling_date').val();
             var customer_id = $('#customer_id').val();
             $.ajax({
-                url: '{{ route('change.selling.quantity') }}',
+                url: '{{ route('change.selling.cart.data') }}',
                 method: 'POST',
-                data: {cart_id:cart_id, selling_quantity:selling_quantity, selling_invoice_no:selling_invoice_no, selling_date:selling_date, customer_id:customer_id},
+                data: {cart_id:cart_id, selling_quantity:selling_quantity, selling_price:selling_price, selling_invoice_no:selling_invoice_no, selling_date:selling_date, customer_id:customer_id},
                 success: function(response) {
                     if(response.status == 400){
                         toastr.error(response.message);
@@ -284,27 +284,6 @@
                         $('#grand_total').val(response);
                         $('#payment_amount').val(response);
                     }
-                }
-            });
-        })
-
-        // Change Selling Price
-        $(document).on('keyup', '.selling_price', function(e){
-            e.preventDefault();
-            var selling_price = $(this).val();
-            var cart_id = $(this).attr('id');
-            var selling_invoice_no = $('#selling_invoice_no').val();
-            var selling_date = $('#selling_date').val();
-            var customer_id = $('#customer_id').val();
-            $.ajax({
-                url: '{{ route('change.selling.price') }}',
-                method: 'POST',
-                data: {cart_id:cart_id, selling_price:selling_price, selling_invoice_no:selling_invoice_no, selling_date:selling_date, customer_id:customer_id},
-                success: function(response) {
-                    $('#selling_carts_table').DataTable().ajax.reload();
-                    $('#sub_total').val(response);
-                    $('#grand_total').val(response);
-                    $('#payment_amount').val(response);
                 }
             });
         })

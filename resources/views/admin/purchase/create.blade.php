@@ -62,11 +62,11 @@
                         </div>
                         <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label text-dark">Product Stoct</label>
-                            <input type="text" id="get_product_stock" style="width: 150px" disabled>
+                            <input type="text" id="get_product_stock" style="width: 150px" readonly>
                         </div>
                         <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label text-dark">Purchase Price</label>
-                            <input type="text" id="get_purchase_price" style="width: 150px" disabled>
+                            <input type="text" id="get_purchase_price" name="purchase_price" style="width: 150px" readonly>
                         </div>
                         <div class="col-lg-1 pt-3">
                             <button class="btn btn-primary mt-2" id="purchase_cart_btn" type="Submit"><i class="fa-solid fa-plus"></i></button>
@@ -264,38 +264,17 @@
         });
 
         // Change Purchase Quantity
-        $(document).on('keyup', '.purchase_quantity', function(e){
-            e.preventDefault();
-            var purchase_quantity = $(this).val();
+        $(document).on("change", ".purchase_quantity, .purchase_price", function () {
+            var purchase_quantity = $('.purchase_quantity').val();
+            var purchase_price = $('.purchase_price').val();
             var cart_id = $(this).attr('id');
             var purchase_invoice_no = $('#purchase_invoice_no').val();
             var purchase_date = $('#purchase_date').val();
             var supplier_id = $('#supplier_id').val();
             $.ajax({
-                url: '{{ route('change.purchase.quantity') }}',
+                url: '{{ route('change.purchase.cart.data') }}',
                 method: 'POST',
-                data: {cart_id:cart_id, purchase_quantity:purchase_quantity, purchase_invoice_no:purchase_invoice_no, purchase_date:purchase_date, supplier_id:supplier_id},
-                success: function(response) {
-                    $('#purchase_carts_table').DataTable().ajax.reload();
-                    $('#sub_total').val(response);
-                    $('#grand_total').val(response);
-                    $('#payment_amount').val(response);
-                }
-            });
-        })
-
-        // Change Purchase Price
-        $(document).on('keyup', '.purchase_price', function(e){
-            e.preventDefault();
-            var purchase_price = $(this).val();
-            var cart_id = $(this).attr('id');
-            var purchase_invoice_no = $('#purchase_invoice_no').val();
-            var purchase_date = $('#purchase_date').val();
-            var supplier_id = $('#supplier_id').val();
-            $.ajax({
-                url: '{{ route('change.purchase.price') }}',
-                method: 'POST',
-                data: {cart_id:cart_id, purchase_price:purchase_price, purchase_invoice_no:purchase_invoice_no, purchase_date:purchase_date, supplier_id:supplier_id},
+                data: {cart_id:cart_id, purchase_quantity:purchase_quantity, purchase_price:purchase_price, purchase_invoice_no:purchase_invoice_no, purchase_date:purchase_date, supplier_id:supplier_id},
                 success: function(response) {
                     $('#purchase_carts_table').DataTable().ajax.reload();
                     $('#sub_total').val(response);

@@ -129,6 +129,7 @@ class PurchaseController extends Controller
                     'purchase_date' => $request->purchase_date,
                     'supplier_id' => $request->supplier_id,
                     'product_id' => $request->product_id,
+                    'purchase_price' => $request->purchase_price,
                     'created_at' => Carbon::now(),
                 ]);
 
@@ -157,26 +158,13 @@ class PurchaseController extends Controller
         ]);
     }
 
-    public function changePurchaseQuantity(Request $request)
+    public function changePurchaseCartData(Request $request)
     {
         Purchase_cart::where('id', $request->cart_id)->update([
             'purchase_quantity' => $request->purchase_quantity,
-        ]);
-
-        $sub_total = 0;
-        foreach(Purchase_cart::where('purchase_invoice_no', $request->purchase_invoice_no)
-                    ->where('purchase_date', $request->purchase_date)
-                    ->where('supplier_id', $request->supplier_id)->get() as $cart){
-            $sub_total += ($cart->purchase_quantity*$cart->purchase_price);
-        };
-        return response()->json($sub_total);
-    }
-
-    public function changePurchasePrice(Request $request)
-    {
-        Purchase_cart::where('id', $request->cart_id)->update([
             'purchase_price' => $request->purchase_price,
         ]);
+
         $sub_total = 0;
         foreach(Purchase_cart::where('purchase_invoice_no', $request->purchase_invoice_no)
                     ->where('purchase_date', $request->purchase_date)
@@ -258,6 +246,7 @@ class PurchaseController extends Controller
                             'product_id' => $cart_product->product_id,
                             'purchase_quantity' => $cart_product->purchase_quantity,
                             'purchase_price' => $cart_product->purchase_price,
+                            'branch_id' => Auth::user()->branch_id,
                             'created_at' => Carbon::now(),
                         ]);
 

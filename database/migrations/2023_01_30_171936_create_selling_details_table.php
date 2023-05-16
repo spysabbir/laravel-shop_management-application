@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('product_id');
             $table->integer('selling_quantity');
             $table->float('selling_price');
+            $table->integer('branch_id');
             $table->timestamps();
         });
     }

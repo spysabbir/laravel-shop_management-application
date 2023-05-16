@@ -9,6 +9,8 @@ use App\Models\Customer;
 use App\Models\Customers_payment_summary;
 use App\Models\DefaultSetting;
 use App\Models\Product;
+use App\Models\Purchase_details;
+use App\Models\Purchase_summary;
 use App\Models\Selling_cart;
 use App\Models\Selling_details;
 use App\Models\Selling_summary;
@@ -96,7 +98,11 @@ class SellingController extends Controller
     {
         $product = Product::where('id', $request->product_id)->first();
         $selling_price = $product->selling_price;
-        $product_stock = ($product->purchase_quantity-$product->selling_quantity);
+
+        $product_purchase_quantity = Purchase_details::where('product_id', $product->id)->where('branch_id', Auth::user()->branch_id)->sum('purchase_quantity');
+        $product_selling_quantity = Selling_details::where('product_id', $product->id)->where('branch_id', Auth::user()->branch_id)->sum('selling_quantity');
+        $product_stock = $product_purchase_quantity - $product_selling_quantity;
+
         return response()->json([
             'product_stock' => $product_stock,
             'selling_price' => $selling_price,
@@ -158,12 +164,13 @@ class SellingController extends Controller
         ]);
     }
 
-    public function changeSellingQuantity(Request $request)
+    public function changeSellingCartData(Request $request)
     {
         $selling_cart = Selling_cart::where('id', $request->cart_id)->first();
-        $product = Product::where('id', $selling_cart->product_id)->first();
 
-        $stock_quantity = $product->purchase_quantity - $product->selling_quantity;
+        $product_purchase_quantity = Purchase_details::where('product_id', $selling_cart->product_id)->where('branch_id', Auth::user()->branch_id)->sum('purchase_quantity');
+        $product_selling_quantity = Selling_details::where('product_id', $selling_cart->product_id)->where('branch_id', Auth::user()->branch_id)->sum('selling_quantity');
+        $stock_quantity = $product_purchase_quantity - $product_selling_quantity;
         if($request->selling_quantity > $stock_quantity){
             return response()->json([
                 'status' => 400,
@@ -172,6 +179,7 @@ class SellingController extends Controller
         }else{
             $selling_cart->update([
                 'selling_quantity' => $request->selling_quantity,
+                'selling_price' => $request->selling_price,
             ]);
 
             $sub_total = 0;
@@ -182,20 +190,6 @@ class SellingController extends Controller
             };
             return response()->json($sub_total);
         }
-    }
-
-    public function changeSellingPrice(Request $request)
-    {
-        Selling_cart::where('id', $request->cart_id)->update([
-            'selling_price' => $request->selling_price,
-        ]);
-        $sub_total = 0;
-        foreach(Selling_cart::where('selling_invoice_no', $request->selling_invoice_no)
-                    ->where('selling_date', $request->selling_date)
-                    ->where('customer_id', $request->customer_id)->get() as $cart){
-            $sub_total += ($cart->selling_quantity*$cart->selling_price);
-        };
-        return response()->json($sub_total);
     }
 
     public function getSubTotal(Request $request)
@@ -270,6 +264,7 @@ class SellingController extends Controller
                             'product_id' => $cart_product->product_id,
                             'selling_quantity' => $cart_product->selling_quantity,
                             'selling_price' => $cart_product->selling_price,
+                            'branch_id' => Auth::user()->branch_id,
                             'created_at' => Carbon::now(),
                         ]);
 

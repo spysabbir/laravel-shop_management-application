@@ -62,6 +62,11 @@
                                             <span class="text-danger error-text unit_id_error"></span>
                                         </div>
                                         <div class="mb-3">
+                                            <label class="form-label">Purchase Price</label>
+                                            <input type="text" name="purchase_price" value="0" class="form-control" placeholder="Enter Purchase Price" />
+                                            <span class="text-danger error-text purchase_price_error"></span>
+                                        </div>
+                                        <div class="mb-3">
                                             <label class="form-label">Selling Price</label>
                                             <input type="text" name="selling_price" value="0" class="form-control" placeholder="Enter Selling Price" />
                                             <span class="text-danger error-text selling_price_error"></span>
@@ -210,7 +215,12 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Selling Price</label>
-                                                    <input type="text" name="selling_price" id="selling_price" class="form-control" placeholder="Enter Selling Price" />
+                                                    <input type="text" name="purchase_price" id="purchase_price" class="form-control"/>
+                                                    <span class="text-danger error-text update_purchase_price_error"></span>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Selling Price</label>
+                                                    <input type="text" name="selling_price" id="selling_price" class="form-control" />
                                                     <span class="text-danger error-text update_selling_price_error"></span>
                                                 </div>
                                                 <div class="mb-3">
@@ -306,8 +316,8 @@
             });
         });
 
-            // View Details
-            $(document).on('click', '.viewBtn', function(e){
+        // View Details
+        $(document).on('click', '.viewBtn', function(e){
             e.preventDefault();
             var id = $(this).attr('id');
             var url = "{{ route('product.show', ":id") }}";
@@ -335,6 +345,7 @@
                     $("#product_name").val(response.product_name);
                     $("#brand_id").val(response.brand_id);
                     $("#unit_id").val(response.unit_id);
+                    $("#purchase_price").val(response.purchase_price);
                     $("#selling_price").val(response.selling_price);
                     $('#product_id').val(response.id)
                 }

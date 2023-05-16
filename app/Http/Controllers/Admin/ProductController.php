@@ -85,6 +85,7 @@ class ProductController extends Controller
                 'product_code' => $product_code,
                 'brand_id' => $request->brand_id,
                 'unit_id' => $request->unit_id,
+                'purchase_price' => $request->purchase_price,
                 'selling_price' => $request->selling_price,
                 'created_by' => Auth::user()->id,
                 'created_at' => Carbon::now(),
@@ -147,6 +148,7 @@ class ProductController extends Controller
                     'product_code' => $product_code,
                     'brand_id' => $request->brand_id,
                     'unit_id' => $request->unit_id,
+                    'purchase_price' => $request->purchase_price,
                     'selling_price' => $request->selling_price,
                     'updated_by' => Auth::user()->id,
                 ]);
