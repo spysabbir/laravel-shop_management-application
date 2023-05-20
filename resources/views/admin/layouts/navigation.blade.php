@@ -111,6 +111,7 @@
         </a>
     </li>
     @endif
+    @if (Auth::user()->role == 'Manager')
     <!-- Branch Panel -->
     <li class="menu-header small text-uppercase">
         <span class="menu-header-text">Branch Panel</span>
@@ -221,4 +222,5 @@
             <div data-i18n="Stock Products">Stock Products</div>
         </a>
     </li>
+    @endif
 </ul>

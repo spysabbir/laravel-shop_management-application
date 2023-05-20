@@ -20,7 +20,7 @@
                     <form action="{{ route('stock.report.export') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
-                            <div class="col-lg-3">
+                            {{-- <div class="col-lg-3">
                                 <label class="form-label">Branch Name</label>
                                 <select class="form-control filter_data" name="branch_id" id="branch_id">
                                     <option value="">All</option>
@@ -28,7 +28,7 @@
                                     <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-3">
                                 <label class="form-label">Category Name</label>
                                 <select class="form-control filter_data" name="category_id" id="category_id">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2023 at 01:15 PM
+-- Generation Time: May 20, 2023 at 01:52 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -174,6 +174,13 @@ CREATE TABLE `customers_payment_summaries` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `customers_payment_summaries`
+--
+
+INSERT INTO `customers_payment_summaries` (`id`, `customer_id`, `selling_invoice_no`, `grand_total`, `payment_status`, `payment_method`, `payment_amount`, `payment_agent_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 'SI-1', 24500.00, 'Paid', 'Online', 24500.00, 3, '2023-05-15 23:08:55', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -311,7 +318,7 @@ CREATE TABLE `mail_settings` (
 --
 
 INSERT INTO `mail_settings` (`id`, `mailer`, `host`, `port`, `username`, `password`, `encryption`, `from_address`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 'smtp', 'sandbox.smtp.mailtrap.io', '2525', '071aa50653a80d', '8dd8b67f9819e0', 'tls', 'info@gmail.com', 1, NULL, '2023-05-15 06:21:35', '2023-05-15 06:21:35');
+(1, 'smtp', 'sandbox.smtp.mailtrap.io', '2525', '071aa50653a80d', '8dd8b67f9819e0', 'tls', 'info@gmail.com', 1, 1, '2023-05-15 06:21:35', '2023-05-20 05:31:28');
 
 -- --------------------------------------------------------
 
@@ -356,7 +363,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (24, '2023_05_07_111325_create_branches_table', 1),
 (25, '2023_05_07_153520_create_sms_settings_table', 1),
 (26, '2023_05_07_153605_create_mail_settings_table', 1),
-(27, '2023_05_07_153648_create_default_settings_table', 1);
+(27, '2023_05_07_153648_create_default_settings_table', 1),
+(28, '2023_05_16_030442_create_staff_designations_table', 2);
 
 -- --------------------------------------------------------
 
@@ -421,7 +429,7 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `product_name`, `product_code`, `brand_id`, `unit_id`, `purchase_quantity`, `selling_quantity`, `purchase_price`, `selling_price`, `product_photo`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'A Product', 'cINR5NnJj8', 1, 1, 0, 0, 0.00, 500.00, 'default_product_photo.jpg', 'Active', 3, NULL, NULL, '2023-05-15 05:12:33', NULL, NULL);
+(1, 1, 'A Product', '1WNppmftsd', 1, 1, 50, 49, 450.00, 500.00, 'default_product_photo.jpg', 'Active', 3, 3, NULL, '2023-05-15 05:12:33', '2023-05-15 23:08:55', NULL);
 
 -- --------------------------------------------------------
 
@@ -453,9 +461,18 @@ CREATE TABLE `purchase_details` (
   `product_id` int(11) NOT NULL,
   `purchase_quantity` int(11) NOT NULL,
   `purchase_price` double(8,2) NOT NULL,
+  `branch_id` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `purchase_details`
+--
+
+INSERT INTO `purchase_details` (`id`, `purchase_invoice_no`, `product_id`, `purchase_quantity`, `purchase_price`, `branch_id`, `created_at`, `updated_at`) VALUES
+(1, 'PI-1', 1, 40, 450.00, 1, '2023-05-15 22:26:10', NULL),
+(2, 'PI-1', 1, 40, 450.00, 2, '2023-05-15 22:26:10', NULL);
 
 -- --------------------------------------------------------
 
@@ -478,6 +495,13 @@ CREATE TABLE `purchase_summaries` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `purchase_summaries`
+--
+
+INSERT INTO `purchase_summaries` (`id`, `purchase_invoice_no`, `purchase_date`, `supplier_id`, `sub_total`, `discount`, `grand_total`, `payment_status`, `payment_amount`, `purchase_agent_id`, `branch_id`, `created_at`, `updated_at`) VALUES
+(1, 'PI-1', '2023-05-16', 1, 22500.00, 0.00, 22500.00, 'Paid', 22500.00, 3, 1, '2023-05-15 22:26:10', NULL);
 
 -- --------------------------------------------------------
 
@@ -509,9 +533,18 @@ CREATE TABLE `selling_details` (
   `product_id` int(11) NOT NULL,
   `selling_quantity` int(11) NOT NULL,
   `selling_price` double(8,2) NOT NULL,
+  `branch_id` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `selling_details`
+--
+
+INSERT INTO `selling_details` (`id`, `selling_invoice_no`, `product_id`, `selling_quantity`, `selling_price`, `branch_id`, `created_at`, `updated_at`) VALUES
+(1, 'SI-1', 1, 20, 500.00, 1, '2023-05-15 23:08:55', NULL),
+(2, 'SI-1', 1, 20, 500.00, 2, '2023-05-15 23:08:55', NULL);
 
 -- --------------------------------------------------------
 
@@ -535,6 +568,13 @@ CREATE TABLE `selling_summaries` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `selling_summaries`
+--
+
+INSERT INTO `selling_summaries` (`id`, `selling_invoice_no`, `selling_date`, `customer_id`, `sub_total`, `discount`, `grand_total`, `payment_status`, `payment_amount`, `selling_agent_id`, `branch_id`, `created_at`, `updated_at`) VALUES
+(1, 'SI-1', '2023-05-16', 1, 24500.00, 0.00, 24500.00, 'Paid', 24500.00, 3, 1, '2023-05-15 23:08:54', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -556,7 +596,7 @@ CREATE TABLE `sms_settings` (
 --
 
 INSERT INTO `sms_settings` (`id`, `api_key`, `sender_id`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 'VjkIEblFGYFP7yH5NyOk', '8809601004416', 1, 1, '2023-05-15 06:21:35', '2023-05-15 00:34:16');
+(1, 'VjkIEblFGYFP7yH5NyOk', '8809601004416', 1, 1, '2023-05-15 06:21:35', '2023-05-20 05:31:35');
 
 -- --------------------------------------------------------
 
@@ -569,7 +609,7 @@ CREATE TABLE `staff` (
   `branch_id` int(11) NOT NULL,
   `profile_photo` varchar(255) NOT NULL DEFAULT 'default_profile_photo.png',
   `staff_name` varchar(255) NOT NULL,
-  `staff_position` varchar(255) NOT NULL,
+  `staff_designation_id` int(11) NOT NULL,
   `staff_email` varchar(255) NOT NULL,
   `staff_phone_number` varchar(255) NOT NULL,
   `staff_gender` varchar(255) NOT NULL,
@@ -590,12 +630,38 @@ CREATE TABLE `staff` (
 -- Dumping data for table `staff`
 --
 
-INSERT INTO `staff` (`id`, `branch_id`, `profile_photo`, `staff_name`, `staff_position`, `staff_email`, `staff_phone_number`, `staff_gender`, `staff_nid_no`, `staff_date_of_birth`, `staff_address`, `staff_salary`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'default_profile_photo.png', 'Julie Anthony', 'Ipsum consequat Et', 'ragybe@mailinator.com', '+1 (804) 105-6977', 'Male', '33', '1996-10-11', 'Quasi odit sit a es', 87.00, 'Active', 3, 3, 3, '2023-05-15 04:47:22', '2023-05-15 04:51:45', '2023-05-15 04:51:45'),
-(2, 1, 'default_profile_photo.png', 'Carson Reyes', 'Consectetur mollit', 'bugyheban@mailinator.com', '+1 (234) 958-9983', 'Other', '8', '1989-04-30', 'Labore vel nihil et', 57.00, 'Active', 3, 3, 3, '2023-05-15 04:49:29', '2023-05-15 04:51:50', '2023-05-15 04:51:50'),
-(3, 1, 'default_profile_photo.png', 'Evan Ward', 'Corrupti quia est f', 'xory@mailinator.com', '+1 (217) 842-1935', 'Female', '51', '2016-12-30', 'Voluptas incididunt', 73.00, 'Active', 3, 3, 3, '2023-05-15 04:50:29', '2023-05-15 04:51:48', '2023-05-15 04:51:48'),
-(4, 1, 'default_profile_photo.png', 'Sobon', 'Piyon', 'sovon@email.com', '01864-599325', 'Male', '5115752545', '1979-02-18', 'Maiores esse elit d', 29000.00, 'Active', 3, 3, NULL, '2023-05-15 04:50:46', '2023-05-15 04:52:48', NULL),
-(5, 1, 'default_profile_photo.png', 'Alif', 'Executive', 'alif@email.com', '01583-613495', 'Male', '7975154535', '1988-03-01', 'Quis ex et recusanda', 64000.00, 'Active', 3, 3, NULL, '2023-05-15 04:51:34', '2023-05-15 04:53:47', NULL);
+INSERT INTO `staff` (`id`, `branch_id`, `profile_photo`, `staff_name`, `staff_designation_id`, `staff_email`, `staff_phone_number`, `staff_gender`, `staff_nid_no`, `staff_date_of_birth`, `staff_address`, `staff_salary`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 'default_profile_photo.png', 'Julie Anthony', 1, 'ragybe@mailinator.com', '+1 (804) 105-6977', 'Male', '33', '1996-10-11', 'Quasi odit sit a es', 87.00, 'Active', 3, 3, NULL, '2023-05-15 04:47:22', '2023-05-15 21:39:57', NULL),
+(2, 1, 'default_profile_photo.png', 'Carson Reyes', 1, 'bugyheban@mailinator.com', '+1 (234) 958-9983', 'Other', '8', '1989-04-30', 'Labore vel nihil et', 57.00, 'Active', 3, 3, NULL, '2023-05-15 04:49:29', '2023-05-15 21:40:08', NULL),
+(3, 1, 'default_profile_photo.png', 'Evan Ward', 1, 'xory@mailinator.com', '+1 (217) 842-1935', 'Female', '51', '2016-12-30', 'Voluptas incididunt', 73.00, 'Active', 3, 3, NULL, '2023-05-15 04:50:29', '2023-05-15 21:40:14', NULL),
+(4, 1, 'default_profile_photo.png', 'Sobon', 1, 'sovon@email.com', '01864-599325', 'Male', '5115752545', '1979-02-18', 'Maiores esse elit d', 29000.00, 'Active', 3, 3, NULL, '2023-05-15 04:50:46', '2023-05-15 21:40:18', NULL),
+(5, 1, 'default_profile_photo.png', 'Alif', 1, 'alif@email.com', '01583-613495', 'Male', '7975154535', '1988-03-01', 'Quis ex et recusanda', 64000.00, 'Active', 3, 3, NULL, '2023-05-15 04:51:34', '2023-05-15 21:40:23', NULL),
+(6, 1, 'default_profile_photo.png', 'Irene Estes', 1, 'jygunoric@mailinator.com', '+1 (984) 722-9684', 'Other', '41', '2021-06-23', 'Aut quasi omnis eos', 25.00, 'Active', 3, NULL, NULL, '2023-05-15 21:46:27', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_designations`
+--
+
+CREATE TABLE `staff_designations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `designation_name` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'Active',
+  `created_by` int(11) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `deleted_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `staff_designations`
+--
+
+INSERT INTO `staff_designations` (`id`, `designation_name`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Supervisor', 'Active', 1, 1, NULL, '2023-05-15 21:27:02', '2023-05-15 21:27:45', NULL);
 
 -- --------------------------------------------------------
 
@@ -667,6 +733,13 @@ CREATE TABLE `suppliers_payment_summaries` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `suppliers_payment_summaries`
+--
+
+INSERT INTO `suppliers_payment_summaries` (`id`, `supplier_id`, `purchase_invoice_no`, `grand_total`, `payment_status`, `payment_method`, `payment_amount`, `payment_agent_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 'PI-1', 22500.00, 'Paid', 'Hand Cash', 22500.00, 3, '2023-05-15 22:26:10', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -723,9 +796,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role`, `name`, `email`, `phone_number`, `gender`, `date_of_birth`, `address`, `profile_photo`, `status`, `last_active`, `password`, `branch_id`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Super Admin', 'Super Admin', 'superadmin@email.com', '01878136530', 'Male', '2023-05-15', 'Dhaka, BD', 'default_profile_photo.png', 'Active', '2023-05-15 04:34:05', '$2y$10$r2pYwcGnBhRuPKpgQMHUj..f/KoPRDWNBl9cJu.z6ncB6Qr0D4Vti', NULL, '8noo3EtMGbODUIrIW4UQt6L2JJlMPMgOxyDpjdVO0ItBAlceihnT3FYD1zcj', '2023-05-15 06:21:36', '2023-05-15 04:34:05'),
-(2, 'Admin', 'Admin', 'admin@email.com', NULL, NULL, NULL, NULL, 'default_profile_photo.png', 'Active', '2023-05-15 04:38:16', '$2y$10$qM5IJZbPpdUq8hB5j00FIe1Aem6I0tQU/oyzXtweMVVWFtztkpm1S', NULL, NULL, '2023-05-15 06:21:36', '2023-05-15 04:38:16'),
-(3, 'Manager', 'Manager', 'manager@email.com', '01878136530', 'Male', '2023-05-09', 'Dhaka BD', 'default_profile_photo.png', 'Active', '2023-05-15 05:13:22', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 1, NULL, '2023-05-15 06:21:36', '2023-05-15 05:13:22');
+(1, 'Super Admin', 'Super Admin', 'superadmin@email.com', '01878136530', 'Male', '2023-05-15', 'Dhaka, BD', 'default_profile_photo.png', 'Active', '2023-05-20 05:44:06', '$2y$10$r2pYwcGnBhRuPKpgQMHUj..f/KoPRDWNBl9cJu.z6ncB6Qr0D4Vti', NULL, 'qfQ5x1SBCAkGkaGTJRH3Sp4N51Bzw3vX8m8WpjN39R5WkHHy29jGq1eCQ45T', '2023-05-15 06:21:36', '2023-05-20 05:44:06'),
+(2, 'Admin', 'Admin', 'admin@email.com', NULL, NULL, NULL, NULL, 'default_profile_photo.png', 'Active', '2023-05-20 05:44:21', '$2y$10$qM5IJZbPpdUq8hB5j00FIe1Aem6I0tQU/oyzXtweMVVWFtztkpm1S', NULL, NULL, '2023-05-15 06:21:36', '2023-05-20 05:44:21'),
+(3, 'Manager', 'Manager', 'manager@email.com', '01878136530', 'Male', '2023-05-09', 'Dhaka BD', 'default_profile_photo.png', 'Active', '2023-05-20 05:52:15', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 1, 'GcEVMSDgxZOEFoCj0c0dyluBjg5m300moXHbB596TkFGJMbedTFXnssj7EHK', '2023-05-15 06:21:36', '2023-05-20 05:52:15');
 
 --
 -- Indexes for dumped tables
@@ -873,6 +946,12 @@ ALTER TABLE `staff`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `staff_designations`
+--
+ALTER TABLE `staff_designations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `staff_salaries`
 --
 ALTER TABLE `staff_salaries`
@@ -941,7 +1020,7 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT for table `customers_payment_summaries`
 --
 ALTER TABLE `customers_payment_summaries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `default_settings`
@@ -977,7 +1056,7 @@ ALTER TABLE `mail_settings`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -1001,31 +1080,31 @@ ALTER TABLE `purchase_carts`
 -- AUTO_INCREMENT for table `purchase_details`
 --
 ALTER TABLE `purchase_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `purchase_summaries`
 --
 ALTER TABLE `purchase_summaries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `selling_carts`
 --
 ALTER TABLE `selling_carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `selling_details`
 --
 ALTER TABLE `selling_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `selling_summaries`
 --
 ALTER TABLE `selling_summaries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sms_settings`
@@ -1037,7 +1116,13 @@ ALTER TABLE `sms_settings`
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `staff_designations`
+--
+ALTER TABLE `staff_designations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `staff_salaries`
@@ -1055,7 +1140,7 @@ ALTER TABLE `suppliers`
 -- AUTO_INCREMENT for table `suppliers_payment_summaries`
 --
 ALTER TABLE `suppliers_payment_summaries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `units`

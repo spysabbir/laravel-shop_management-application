@@ -111,6 +111,11 @@
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
                     </div>
+                    <div class="col-lg-2">
+                        @if (Auth::user()->role == 'Manager')
+                        <strong class="badge bg-info">{{ App\Models\Branch::find(Auth::user()->branch_id)->branch_name }}</strong>
+                        @endif
+                    </div>
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <!-- User -->

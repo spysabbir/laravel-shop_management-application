@@ -29,13 +29,14 @@ class ReportController extends Controller
         if ($request->ajax()) {
             $products = "";
 
-            $query = Product::leftJoin('purchase_details', 'products.id', 'purchase_details.product_id')
-                ->leftJoin('selling_details', 'products.id', 'selling_details.product_id')
-                    ->select('products.*', 'purchase_details.purchase_quantity', 'selling_details.selling_quantity');
+            // $query = Product::leftJoin('purchase_details', 'products.id', 'purchase_details.product_id')
+            //     ->leftJoin('selling_details', 'products.id', 'selling_details.product_id')
+            //         ->select('products.*', 'purchase_details.purchase_quantity', 'selling_details.selling_quantity');
+            // if($request->branch_id){
+            //     $query->where('purchase_details.branch_id', $request->branch_id);
+            // }
 
-            if($request->branch_id){
-                $query->where('purchase_details.branch_id', $request->branch_id);
-            }
+            $query = Product::select('products.*');
 
             if($request->category_id){
                 $query->where('products.category_id', $request->category_id);
@@ -88,9 +89,9 @@ class ReportController extends Controller
             $query->where('products.category_id', $request->category_id);
         }
 
-        if($request->branch_id){
-            $query->where('products.branch_id', $request->branch_id);
-        }
+        // if($request->branch_id){
+        //     $query->where('products.branch_id', $request->branch_id);
+        // }
 
         if($request->brand_id){
             $query->where('products.brand_id', $request->brand_id);
