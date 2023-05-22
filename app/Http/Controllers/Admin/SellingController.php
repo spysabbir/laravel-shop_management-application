@@ -275,9 +275,34 @@ class SellingController extends Controller
                         $cart_product->truncate();
                     }
 
-                    // $selling_summary = Selling_summary::find($selling_summery_id);
-                    // Mail::to(Customer::find($request->customer_id)->customer_email)
-                    // ->send(new Selling_successfullyMail($selling_summary));
+                    // Send SMS
+                    $customer = Customer::find($request->customer_id);
+
+                    $url = "https://bulksmsbd.net/api/smsapi";
+                    $api_key = env('SMS_API_KEY');
+                    $senderid = env('SMS_SENDER_ID');
+                    $number = "$customer->customer_phone_number";
+                    $message = "Hello $customer->customer_name.
+                                Your invoice no $request->selling_invoice_no.
+                                Your shopping cost $request->grand_total.
+                                Your payment amount $request->payment_amount, Your payment method $request->payment_method.
+                                Thanks for shopping from our store.
+                                ";
+                    $data = [
+                        "api_key" => $api_key,
+                        "senderid" => $senderid,
+                        "number" => $number,
+                        "message" => $message
+                    ];
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    $response = curl_exec($ch);
+                    curl_close($ch);
+                    // return $response;
 
                     return response()->json([
                         'status' => 200,
@@ -380,6 +405,38 @@ class SellingController extends Controller
                     'payment_agent_id' => Auth::user()->id,
                     'created_at' => Carbon::now(),
                 ]);
+
+                // Send SMS
+                $customer = Customer::find($request->customer_id);
+                $before_payment_amount = $selling_summary->first()->payment_amount;
+
+                $url = "https://bulksmsbd.net/api/smsapi";
+                $api_key = env('SMS_API_KEY');
+                $senderid = env('SMS_SENDER_ID');
+                $number = "$customer->customer_phone_number";
+                $message = "Hello $customer->customer_name.
+                            Your invoice no $request->selling_invoice_no.
+                            Your shopping cost $request->grand_total.
+                            Your before payment amount $before_payment_amount.
+                            Your due amount $due_amount.
+                            Now your payment amount $request->payment_amount, Your payment method $request->payment_method.
+                            Thanks for payment your due amount.
+                            ";
+                $data = [
+                    "api_key" => $api_key,
+                    "senderid" => $senderid,
+                    "number" => $number,
+                    "message" => $message
+                ];
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                // return $response;
 
                 return response()->json([
                     'status' => 200,

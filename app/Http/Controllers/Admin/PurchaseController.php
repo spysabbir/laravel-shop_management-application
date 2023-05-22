@@ -257,9 +257,34 @@ class PurchaseController extends Controller
                         $cart_product->truncate();
                     }
 
-                    // $purchase_summary = Purchase_summary::find($purchase_summery_id);
-                    // Mail::to(Supplier::find($request->supplier_id)->supplier_email)
-                    // ->send(new Purchase_successfullyMail($purchase_summary));
+                    // Send SMS
+                    $supplier = Supplier::find($request->supplier_id);
+
+                    $url = "https://bulksmsbd.net/api/smsapi";
+                    $api_key = env('SMS_API_KEY');
+                    $senderid = env('SMS_SENDER_ID');
+                    $number = "$supplier->supplier_phone_number";
+                    $message = "Hello $supplier->supplier_name.
+                                Your invoice no $request->purchase_invoice_no.
+                                Your selling cost $request->grand_total.
+                                Our payment amount $request->payment_amount, Our payment method $request->payment_method.
+                                Thanks for selling to our store.
+                                ";
+                    $data = [
+                        "api_key" => $api_key,
+                        "senderid" => $senderid,
+                        "number" => $number,
+                        "message" => $message
+                    ];
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    $response = curl_exec($ch);
+                    curl_close($ch);
+                    // return $response;
 
                     return response()->json([
                         'status' => 200,
@@ -361,6 +386,38 @@ class PurchaseController extends Controller
                     'payment_agent_id' => Auth::user()->id,
                     'created_at' => Carbon::now(),
                 ]);
+
+                // Send SMS
+                $supplier = Supplier::find($request->supplier_id);
+                $before_payment_amount = $purchase_summary->first()->payment_amount;
+
+                $url = "https://bulksmsbd.net/api/smsapi";
+                $api_key = env('SMS_API_KEY');
+                $senderid = env('SMS_SENDER_ID');
+                $number = "$supplier->supplier_phone_number";
+                $message = "Hello $supplier->supplier_name.
+                            Your invoice no $request->purchase_invoice_no.
+                            Your selling cost $request->grand_total.
+                            Our before payment amount $before_payment_amount.
+                            Our due amount $due_amount.
+                            Now our payment amount $request->payment_amount, Our payment method $request->payment_method.
+                            Thanks for Selling to our store.
+                            ";
+                $data = [
+                    "api_key" => $api_key,
+                    "senderid" => $senderid,
+                    "number" => $number,
+                    "message" => $message
+                ];
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                // return $response;
 
                 return response()->json([
                     'status' => 200,
