@@ -8,20 +8,14 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div class="text">
-                    <h4 class="card-title">Purchase</h4>
-                    <p class="card-text">Create</p>
-                </div>
-                <div class="action">
-                    @if (Auth::user()->role == "Super Admin")
-                    <a class="btn btn-danger" href="{{ route('purchase.cart.delete') }}"><i class="fa-solid fa-trash-can"></i></a>
-                    @endif
+                    <h4 class="card-title">Purchase Product</h4>
                 </div>
             </div>
             <div class="card-body">
                 <form action="#" method="POST" id="purchase_cart_form">
                     @csrf
                     <div class="row mb-3 bg-dark py-2">
-                        <div class="col-lg-3 col-12 mb-3">
+                        <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label text-white">Purchase Invoice No</label>
                             <input type="text" name="purchase_invoice_no" value="PI-{{ App\Models\Purchase_summary::max('id')+1 }}" id="purchase_invoice_no" class="form-control filter_data">
                             <span class="text-danger error-text purchase_invoice_no_error"></span>
@@ -31,12 +25,12 @@
                             <input type="date" name="purchase_date" id="purchase_date" class="form-control filter_data">
                             <span class="text-danger error-text purchase_date_error"></span>
                         </div>
-                        <div class="col-lg-3 col-12 mb-3">
+                        <div class="col-lg-4 col-12 mb-3">
                             <label class="form-label text-white">Supplier Name</label>
                             <select class="form-select filter_data select_supplier" name="supplier_id" id="supplier_id">
                                 <option value="">Select Supplier</option>
                                 @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
+                                <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }} ({{ $supplier->supplier_phone_number }})</option>
                                 @endforeach
                             </select>
                             <span class="text-danger error-text supplier_id_error"></span>

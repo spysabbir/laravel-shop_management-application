@@ -48,6 +48,7 @@
                                 <th>Gender</th>
                                 <th>Phone Number</th>
                                 <th>Role</th>
+                                <th>Branch</th>
                                 <th>Last Active</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -134,6 +135,7 @@
                 {data: 'gender', name: 'gender'},
                 {data: 'phone_number', name: 'phone_number'},
                 {data: 'role', name: 'role'},
+                {data: 'branch_name', name: 'branch_name'},
                 {data: 'last_active', name: 'last_active'},
                 {data: 'status', name: 'status'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},

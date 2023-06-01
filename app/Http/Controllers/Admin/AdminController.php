@@ -82,6 +82,11 @@ class AdminController extends Controller
                             ';
                         }
                     })
+                    ->addColumn('branch_name', function($row){
+                        return'
+                        <span class="badge bg-warning">'.($row->branch_id ? $row->relationtobranch->branch_name : 'N/A').'</span>
+                        ';
+                    })
                     ->addColumn('last_active', function($row){
                         return'
                         <span class="badge bg-primary">'.date('d-M-Y h:m:s A', strtotime($row->last_active)).'</span>
@@ -93,7 +98,7 @@ class AdminController extends Controller
                         ';
                         return $btn;
                     })
-                    ->rawColumns(['created_at', 'profile_photo', 'status', 'role', 'last_active', 'action'])
+                    ->rawColumns(['created_at', 'profile_photo', 'status', 'role', 'branch_name', 'last_active', 'action'])
                     ->make(true);
         }
 

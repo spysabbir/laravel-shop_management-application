@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\Contact_messageController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\Expense_categoryController;
 use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PurchaseController;
@@ -196,6 +197,8 @@ Route::prefix('admin')->group(function(){
             Route::get('selling-invoice-download/{selling_invoice_no}', [SellingController::class, 'sellingInvoiceDownload'])->name('selling.invoice.download');
 
             Route::get('stock-products', [AdminController::class, 'stockProducts'])->name('stock.products');
+
+            Route::get('pos', [PosController::class, 'pos'])->name('pos');
         });
         });
     });

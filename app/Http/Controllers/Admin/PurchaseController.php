@@ -299,8 +299,8 @@ class PurchaseController extends Controller
     {
         if ($request->ajax()) {
             $purchase_summaries = "";
-            $query = Purchase_summary::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->leftJoin('suppliers', 'purchase_summaries.supplier_id', 'suppliers.id')
-                ->leftJoin('users', 'purchase_summaries.purchase_agent_id', 'users.id');
+            $query = Purchase_summary::where('branch_id', Auth::user()->branch_id)
+                                    ->leftJoin('suppliers', 'purchase_summaries.supplier_id', 'suppliers.id');
 
             if($request->supplier_id){
                 $query->where('purchase_summaries.supplier_id', $request->supplier_id);
@@ -309,7 +309,8 @@ class PurchaseController extends Controller
                 $query->where('purchase_summaries.payment_status', $request->payment_status);
             }
 
-            $purchase_summaries = $query->select('purchase_summaries.*', 'suppliers.supplier_name', 'users.name')->get();
+            $purchase_summaries = $query->select('purchase_summaries.*', 'suppliers.supplier_name')
+                                    ->orderBy('created_at', 'DESC')->get();
 
             return Datatables::of($purchase_summaries)
                     ->addIndexColumn()

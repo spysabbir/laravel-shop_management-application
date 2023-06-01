@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class PosController extends Controller
 {
-    public function purchaseProduct ()
+    public function pos()
     {
         $suppliers = Supplier::where('status', 'Active')->get();
         $categories = Category::where('status', 'Active')->get();
-        return view('admin.purchase.create', compact('suppliers', 'categories'));
+        return view('admin.pos.index', compact('suppliers', 'categories'));
     }
 
     public function getProducts(Request $request)

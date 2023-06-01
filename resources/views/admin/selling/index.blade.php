@@ -49,7 +49,6 @@
                                 <th>Grand Total</th>
                                 <th>Payment Amount</th>
                                 <th>Payment Status</th>
-                                <th>Selling Agent</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -67,7 +66,7 @@
                                             <form action="#" method="POST" id="payment_form">
                                                 @csrf
                                                 <input type="hidden" name="selling_invoice_no" id="selling_invoice_no">
-                                                <input type="hidden" name="customer_id" id="customer_id">
+                                                <input type="hidden" name="customer_id" id="payment_customer_id">
                                                 <input type="hidden" name="grand_total" id="grand_total">
                                                 <div class="mb-3">
                                                     <label class="form-label">Payment Status</label>
@@ -133,7 +132,6 @@
                 {data: 'grand_total', name: 'grand_total'},
                 {data: 'payment_amount', name: 'payment_amount'},
                 {data: 'payment_status', name: 'payment_status'},
-                {data: 'name', name: 'name'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
         });
@@ -155,7 +153,7 @@
                 method: 'GET',
                 success: function(response) {
                     $("#selling_invoice_no").val(response.selling_invoice_no);
-                    $("#customer_id").val(response.customer_id);
+                    $("#payment_customer_id").val(response.customer_id);
                     $("#grand_total").val(response.grand_total);
                     $("#payment_amount").val(response.grand_total - response.payment_amount);
                 }

@@ -37,4 +37,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    function relationtobranch(){
+        return $this->hasOne(Branch::class, 'id', 'branch_id');
+    }
 }

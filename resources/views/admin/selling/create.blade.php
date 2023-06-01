@@ -8,41 +8,58 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div class="text">
-                    <h4 class="card-title">Selling</h4>
-                    <p class="card-text">Create</p>
-                </div>
-                <div class="action">
-                    @if (Auth::user()->role == "Super Admin")
-                    <a class="btn btn-danger" href="{{ route('selling.cart.delete') }}"><i class="fa-solid fa-trash-can"></i></a>
-                    @endif
+                    <h4 class="card-title">Selling Product</h4>
                 </div>
             </div>
             <div class="card-body">
                 <form action="#" method="POST" id="selling_cart_form">
                     @csrf
-                    <div class="row mb-3 bg-dark py-2">
-                        <div class="col-lg-3 col-12 mb-3">
-                            <label class="form-label text-white">Selling Invoice No</label>
+                    <div class="row">
+                        <div class="col-lg-2 col-12 mb-3">
+                            <label class="form-label">Selling Invoice No</label>
                             <input type="text" name="selling_invoice_no" value="SI-{{ App\Models\Selling_summary::max('id')+1 }}" id="selling_invoice_no" class="form-control filter_data">
                             <span class="text-danger error-text selling_invoice_no_error"></span>
                         </div>
                         <div class="col-lg-3 col-12 mb-3">
-                            <label class="form-label text-white">Selling Date</label>
+                            <label class="form-label">Selling Date</label>
                             <input type="date" name="selling_date" id="selling_date" class="form-control filter_data">
                             <span class="text-danger error-text selling_date_error"></span>
                         </div>
-                        <div class="col-lg-3 col-12 mb-3">
-                            <label class="form-label text-white">Customer Name</label>
+                        <div class="col-lg-4 col-12 mb-3">
+                            <label class="form-label">Customer Name</label>
                             <select class="form-select filter_data select_customer" name="customer_id" id="customer_id">
                                 <option value="">Select Customer</option>
                                 @foreach ($customers as $customer)
-                                <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
+                                <option value="New Customer">New Customer</option>
+                                <option value="{{ $customer->id }}">{{ $customer->customer_name }} ({{ $customer->customer_phone_number }})</option>
                                 @endforeach
                             </select>
                             <span class="text-danger error-text customer_id_error"></span>
                         </div>
                     </div>
-                    <div class="row mb-3 bg-info py-2">
+                    <div class="row" id="newCustomerDiv">
+                        <div class="col-3 mb-3">
+                            <label class="form-label">Customer Name</label>
+                            <input type="text" name="customer_name" class="form-control" placeholder="Enter customer name" />
+                            <span class="text-danger error-text customer_name_error"></span>
+                        </div>
+                        <div class="col-3 mb-3">
+                            <label class="form-label">Customer Email</label>
+                            <input type="text" name="customer_email" class="form-control" placeholder="Enter customer email" />
+                            <span class="text-danger error-text customer_email_error"></span>
+                        </div>
+                        <div class="col-3 mb-3">
+                            <label class="form-label">Customer Phone Number</label>
+                            <input type="text" name="customer_phone_number" class="form-control" placeholder="Enter customer phone number" />
+                            <span class="text-danger error-text customer_phone_number_error"></span>
+                        </div>
+                        <div class="col-3 mb-3">
+                            <label class="form-label">Customer Address</label>
+                            <textarea name="customer_address" class="form-control" rows="1" placeholder="Enter customer address"></textarea>
+                            <span class="text-danger error-text customer_address_error"></span>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-3 col-12 mb-3">
                             <label class="form-label text-dark">Category Name</label>
                             <select name="category_id" class="form-select select_category" >
@@ -101,7 +118,7 @@
                     <input type="hidden" name="selling_invoice_no" id="set_selling_invoice_no">
                     <input type="hidden" name="selling_date" id="set_selling_date">
                     <input type="hidden" name="customer_id" id="set_customer_id">
-                    <div class="row bg-dark py-2 d-flex justify-content-end">
+                    <div class="row d-flex justify-content-end">
                         <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label">Sub Total</label>
                             <input type="text" name="sub_total" value="00" class="form-control" id="sub_total" readonly/>
@@ -175,6 +192,17 @@
             }
         });
 
+        // Change New Customer Div
+        $('#newCustomerDiv').hide();
+        $(document).on('change', '#customer_id', function(e){
+            e.preventDefault();
+            if($('#customer_id').find(":selected").val() == 'New Customer'){
+                $('#newCustomerDiv').show();
+            }else{
+                $('#newCustomerDiv').hide();
+            }
+        })
+
         // Get Product
         $(document).on('change', '.select_category', function(e){
             e.preventDefault();
@@ -227,11 +255,16 @@
                         })
                     }else{
                         if(response.status == 401){
-                            toastr.warning(response.message);
+                            $.each(response.error, function(prefix, val){
+                                $('span.'+prefix+'_error').text(val[0]);
+                            })
                         }else{
-                            $("#selling_cart_btn").text('Created');
-                            table.ajax.reload();
-                            toastr.success(response.message);
+                            if(response.status == 402){
+                                toastr.warning(response.message);
+                            }else{
+                                $("#selling_cart_btn").text('Created');
+                                toastr.success(response.message);
+                            }
                         }
                     }
                 }

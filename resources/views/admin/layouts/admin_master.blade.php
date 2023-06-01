@@ -171,7 +171,7 @@
     <!-- / Layout wrapper -->
 
     <div class="buy-now">
-      <a href="{{ route('index') }}" target="_blank" class="btn btn-info btn-buy-now" >Go Landing Page</a>
+      <a href="{{ route('pos') }}" target="_blank" class="btn btn-info btn-buy-now" >Go to Pos</a>
     </div>
 
     <!-- Core JS -->

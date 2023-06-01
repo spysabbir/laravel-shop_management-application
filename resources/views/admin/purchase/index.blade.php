@@ -49,7 +49,6 @@
                                 <th>Grand Total</th>
                                 <th>Payment Amount</th>
                                 <th>Payment Status</th>
-                                <th>Purchase Agent</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -133,7 +132,6 @@
                 {data: 'grand_total', name: 'grand_total'},
                 {data: 'payment_amount', name: 'payment_amount'},
                 {data: 'payment_status', name: 'payment_status'},
-                {data: 'name', name: 'name'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
         });
