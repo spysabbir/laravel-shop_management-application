@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label">Selling Invoice No</label>
-                            <input type="text" name="selling_invoice_no" value="SI-{{ App\Models\Selling_summary::max('id')+1 }}" id="selling_invoice_no" class="form-control filter_data">
+                            <input type="text" name="selling_invoice_no" value="SI{{ App\Models\Selling_summary::max('id')+1 }}" id="selling_invoice_no" class="form-control filter_data" readonly>
                             <span class="text-danger error-text selling_invoice_no_error"></span>
                         </div>
                         <div class="col-lg-3 col-12 mb-3">
@@ -29,11 +29,12 @@
                             <label class="form-label">Customer Name</label>
                             <select class="form-select filter_data select_customer" name="customer_id" id="customer_id">
                                 <option value="">Select Customer</option>
+                                <option value="New Customer">---New Customer--</option>
                                 @foreach ($customers as $customer)
-                                <option value="New Customer">New Customer</option>
                                 <option value="{{ $customer->id }}">{{ $customer->customer_name }} ({{ $customer->customer_phone_number }})</option>
                                 @endforeach
                             </select>
+                            <input type="hidden" id="get_customer_id" class="filter_data">
                             <span class="text-danger error-text customer_id_error"></span>
                         </div>
                     </div>
@@ -63,7 +64,7 @@
                         <div class="col-lg-3 col-12 mb-3">
                             <label class="form-label text-dark">Category Name</label>
                             <select name="category_id" class="form-select select_category" >
-                                <option value="">Select Category</option>
+                                <option value="">-- Select Category --</option>
                                 @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->category_name }}</option>
                                 @endforeach
@@ -73,7 +74,7 @@
                         <div class="col-lg-3 col-12 mb-3">
                             <label class="form-label text-dark">Product Name</label>
                             <select name="product_id" class="form-select select_product" id="all_product">
-                                <option value="">Select Category First</option>
+                                <option value="" >-- Select Category First --</option>
                             </select>
                             <span class="text-danger error-text product_id_error"></span>
                         </div>
@@ -86,7 +87,7 @@
                             <input type="text" id="get_selling_price" name="selling_price" style="width: 150px" readonly>
                         </div>
                         <div class="col-lg-1 pt-3">
-                            <button class="btn btn-primary mt-2" id="selling_cart_btn" type="Submit"><i class="fa-solid fa-plus"></i></button>
+                            <button class="btn btn-primary mt-2" type="Submit"><i class="fa-solid fa-plus"></i></button>
                         </div>
                     </div>
                 </form>
@@ -115,9 +116,9 @@
                 </div>
                 <form action="#" method="POST" id="selling_product_form">
                     @csrf
-                    <input type="hidden" name="selling_invoice_no" id="set_selling_invoice_no">
-                    <input type="hidden" name="selling_date" id="set_selling_date">
-                    <input type="hidden" name="customer_id" id="set_customer_id">
+                    <input type="text" name="selling_invoice_no" id="set_selling_invoice_no">
+                    <input type="text" name="selling_date" id="set_selling_date">
+                    <input type="text" name="customer_id" id="set_customer_id">
                     <div class="row d-flex justify-content-end">
                         <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label">Sub Total</label>
@@ -183,7 +184,7 @@
         });
 
         $('.select_product').select2({
-            placeholder: 'Select category first'
+            // placeholder: 'Select category first'
         });
 
         $.ajaxSetup({
@@ -195,6 +196,7 @@
         // Change New Customer Div
         $('#newCustomerDiv').hide();
         $(document).on('change', '#customer_id', function(e){
+            $('#get_customer_id').val($('#customer_id').find(":selected").val())
             e.preventDefault();
             if($('#customer_id').find(":selected").val() == 'New Customer'){
                 $('#newCustomerDiv').show();
@@ -236,7 +238,6 @@
         $('#selling_cart_form').on('submit', function(e){
             e.preventDefault();
             const form_data = new FormData(this);
-            $("#selling_cart_btn").text('Creating');
             $.ajax({
                 url: '{{ route('add.selling.cart') }}',
                 method: 'POST',
@@ -262,8 +263,10 @@
                             if(response.status == 402){
                                 toastr.warning(response.message);
                             }else{
-                                $("#selling_cart_btn").text('Created');
                                 toastr.success(response.message);
+                                $('#get_customer_id').val(response.customer_id);
+                                $('#set_customer_id').val(response.customer_id);
+                                $('#selling_carts_table').DataTable().ajax.reload();
                             }
                         }
                     }
@@ -281,7 +284,7 @@
                 "data":function(e){
                     e.selling_invoice_no = $('#selling_invoice_no').val();
                     e.selling_date = $('#selling_date').val();
-                    e.customer_id = $('#customer_id').val();
+                    e.customer_id = $('#get_customer_id').val();
                 },
             },
             columns: [
@@ -303,7 +306,7 @@
             var cart_id = $(this).attr('id');
             var selling_invoice_no = $('#selling_invoice_no').val();
             var selling_date = $('#selling_date').val();
-            var customer_id = $('#customer_id').val();
+            var customer_id = $('#get_customer_id').val();
             $.ajax({
                 url: '{{ route('change.selling.cart.data') }}',
                 method: 'POST',
@@ -341,7 +344,7 @@
             e.preventDefault();
             var selling_invoice_no = $('#selling_invoice_no').val();
             var selling_date = $('#selling_date').val();
-            var customer_id = $('#customer_id').val();
+            var customer_id = $('#get_customer_id').val();
             var cart_id = $(this).attr('id');
             Swal.fire({
                 title: 'Are you sure?',
@@ -410,7 +413,7 @@
             e.preventDefault();
             var selling_invoice_no = $('#selling_invoice_no').val();
             var selling_date = $('#selling_date').val();
-            var customer_id = $('#customer_id').val();
+            var customer_id = $('#get_customer_id').val();
             $('#set_selling_invoice_no').val(selling_invoice_no)
             $('#set_selling_date').val(selling_date)
             $('#set_customer_id').val(customer_id)

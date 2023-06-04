@@ -86,7 +86,7 @@ class SellingController extends Controller
 
     public function getProducts(Request $request)
     {
-        $send_products = "<option>--Select Product--</option>";
+        $send_products = "<option value=''>--Select Product--</option>";
         $products = Product::where('category_id', $request->category_id)->get();
         foreach ($products as $product) {
             $send_products .= "<option value='$product->id'>$product->product_name</option>";
@@ -127,7 +127,9 @@ class SellingController extends Controller
             if($request->customer_id == 'New Customer'){
                 $validator = Validator::make($request->all(), [
                     'customer_name' => 'required',
+                    'customer_email' => 'required',
                     'customer_phone_number' => 'required',
+                    'customer_address' => 'required',
                 ]);
 
                 if($validator->fails()){
@@ -172,79 +174,12 @@ class SellingController extends Controller
 
                 return response()->json([
                     'status' => 200,
+                    'customer_id' => $customer_id,
                     'message' => 'Selling product added successfully.',
                 ]);
             }
         }
     }
-
-    // public function sellingCartStore(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'selling_invoice_no' => 'required',
-    //         'selling_date' => 'required',
-    //         'customer_id' => 'required',
-    //         'product_id' => 'required',
-    //     ]);
-
-    //     if($request->customer_id == 'New Customer'){
-    //         $validator = Validator::make($request->all(), [
-    //             'customer_name' => 'required',
-    //             'customer_phone_number' => 'required',
-    //         ]);
-
-    //         if($validator->fails()){
-    //             return response()->json([
-    //                 'status' => 405,
-    //                 'error'=> $validator->errors()->toArray()
-    //             ]);
-    //         }else{
-    //             $new_customer_id = Customer::insertGetId([
-    //                 'customer_name' => $request->customer_name,
-    //                 'customer_email' => $request->customer_email,
-    //                 'customer_phone_number' => $request->customer_phone_number,
-    //                 'customer_address' => $request->customer_address,
-    //                 'created_by' => Auth::user()->id,
-    //                 'created_at' => Carbon::now(),
-    //             ]);
-
-    //             $customer_id = $new_customer_id;
-    //         }
-    //     }else{
-    //         $customer_id = $request->customer_id;
-    //     }
-
-    //     if($validator->fails()){
-    //         return response()->json([
-    //             'status' => 400,
-    //             'error'=> $validator->errors()->toArray()
-    //         ]);
-    //     }else{
-    //             $exists = Selling_cart::where('selling_invoice_no', $request->selling_invoice_no)
-    //             ->where('selling_date', $request->selling_date)
-    //             ->where('customer_id', $customer_id)->where('product_id', $request->product_id)->exists();
-    //             if($exists){
-    //                 return response()->json([
-    //                     'status' => 401,
-    //                     'message' => 'Selling product already added.',
-    //                 ]);
-    //             }else{
-    //                 Selling_cart::insert([
-    //                     'selling_invoice_no' => $request->selling_invoice_no,
-    //                     'selling_date' => $request->selling_date,
-    //                     'customer_id' => $customer_id,
-    //                     'product_id' => $request->product_id,
-    //                     'selling_price' => $request->selling_price,
-    //                     'created_at' => Carbon::now(),
-    //                 ]);
-
-    //                 return response()->json([
-    //                     'status' => 200,
-    //                     'message' => 'Selling product added successfully.',
-    //                 ]);
-    //             }
-    //     }
-    // }
 
     public function sellingCartItemDelete(Request $request)
     {
