@@ -170,9 +170,9 @@
     </div>
     <!-- / Layout wrapper -->
 
-    <div class="buy-now">
+    {{-- <div class="buy-now">
       <a href="{{ route('pos') }}" target="_blank" class="btn btn-info btn-buy-now" >Go to Pos</a>
-    </div>
+    </div> --}}
 
     <!-- Core JS -->
     <script src="{{ asset('admin') }}/vendor/libs/jquery/jquery.js"></script>
