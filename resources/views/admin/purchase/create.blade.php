@@ -8,27 +8,17 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div class="text">
-                    <h4 class="card-title">Purchase Product</h4>
+                    <h4 class="card-title">Purchase</h4>
                 </div>
             </div>
             <div class="card-body">
                 <form action="#" method="POST" id="purchase_cart_form">
                     @csrf
-                    <div class="row mb-3 bg-dark py-2">
-                        <div class="col-lg-2 col-12 mb-3">
-                            <label class="form-label text-white">Purchase Invoice No</label>
-                            <input type="text" name="purchase_invoice_no" value="PI-{{ App\Models\Purchase_summary::max('id')+1 }}" id="purchase_invoice_no" class="form-control filter_data">
-                            <span class="text-danger error-text purchase_invoice_no_error"></span>
-                        </div>
-                        <div class="col-lg-3 col-12 mb-3">
-                            <label class="form-label text-white">Purchase Date</label>
-                            <input type="date" name="purchase_date" id="purchase_date" class="form-control filter_data">
-                            <span class="text-danger error-text purchase_date_error"></span>
-                        </div>
+                    <div class="row mb-3 py-2">
                         <div class="col-lg-4 col-12 mb-3">
-                            <label class="form-label text-white">Supplier Name</label>
-                            <select class="form-select filter_data select_supplier" name="supplier_id" id="supplier_id">
-                                <option value="">Select Supplier</option>
+                            <label class="form-label">Supplier Name</label>
+                            <select class="form-select select_supplier filter_data" name="supplier_id" id="supplier_id">
+                                <option value="">--Select Supplier--</option>
                                 @foreach ($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }} ({{ $supplier->supplier_phone_number }})</option>
                                 @endforeach
@@ -36,9 +26,9 @@
                             <span class="text-danger error-text supplier_id_error"></span>
                         </div>
                     </div>
-                    <div class="row mb-3 bg-info py-2">
+                    <div class="row mb-3 py-2">
                         <div class="col-lg-3 col-12 mb-3">
-                            <label class="form-label text-dark">Category Name</label>
+                            <label class="form-label">Category Name</label>
                             <select name="category_id" class="form-select select_category" >
                                 <option value="">Select Category</option>
                                 @foreach ($categories as $category)
@@ -48,29 +38,29 @@
                             <span class="text-danger error-text category_id_error"></span>
                         </div>
                         <div class="col-lg-3 col-12 mb-3">
-                            <label class="form-label text-dark">Product Name</label>
+                            <label class="form-label">Product Name</label>
                             <select name="product_id" class="form-select select_product" id="all_product">
-                                <option value="">Select Category First</option>
+                                <option value="">--Select Category First--</option>
                             </select>
                             <span class="text-danger error-text product_id_error"></span>
                         </div>
                         <div class="col-lg-2 col-12 mb-3">
-                            <label class="form-label text-dark">Product Stoct</label>
+                            <label class="form-label">Product Stoct</label>
                             <input type="text" id="get_product_stock" style="width: 150px" readonly>
                         </div>
                         <div class="col-lg-2 col-12 mb-3">
-                            <label class="form-label text-dark">Purchase Price</label>
+                            <label class="form-label">Purchase Price</label>
                             <input type="text" id="get_purchase_price" name="purchase_price" style="width: 150px" readonly>
                         </div>
                         <div class="col-lg-1 pt-3">
-                            <button class="btn btn-primary mt-2" id="purchase_cart_btn" type="Submit"><i class="fa-solid fa-plus"></i></button>
+                            <button class="btn btn-primary mt-2" type="Submit"><i class="fa-solid fa-plus"></i></button>
                         </div>
                     </div>
                 </form>
                 <div class="row mb-3 py-2">
                     <div class="col-lg-12">
                         <div class="table-responsive">
-                            <table class="table table-primary" id="purchase_carts_table">
+                            <table class="table" id="purchase_carts_table">
                                 <thead>
                                     <tr>
                                         <th>Sl No</th>
@@ -92,10 +82,8 @@
                 </div>
                 <form action="#" method="POST" id="purchase_product_form">
                     @csrf
-                    <input type="hidden" name="purchase_invoice_no" id="set_purchase_invoice_no">
-                    <input type="hidden" name="purchase_date" id="set_purchase_date">
                     <input type="hidden" name="supplier_id" id="set_supplier_id">
-                    <div class="row bg-dark py-2 d-flex justify-content-end">
+                    <div class="row py-2 d-flex justify-content-end">
                         <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label">Sub Total</label>
                             <input type="text" name="sub_total" value="00" class="form-control" id="sub_total" readonly/>
@@ -160,7 +148,6 @@
         });
 
         $('.select_product').select2({
-            placeholder: 'Select category first'
         });
 
         $.ajaxSetup({
@@ -174,7 +161,7 @@
             e.preventDefault();
             var category_id = $(this).val();
             $.ajax({
-                url: '{{ route('purchase.product.list') }}',
+                url: '{{ route('get.purchase.product.list') }}',
                 method: 'POST',
                 data: {category_id:category_id},
                 success: function(response) {
@@ -188,7 +175,7 @@
             e.preventDefault();
             var product_id = $(this).val();
             $.ajax({
-                url: '{{ route('purchase.product.details') }}',
+                url: '{{ route('get.purchase.product.details') }}',
                 method: 'POST',
                 data: {product_id:product_id},
                 success: function(response) {
@@ -202,9 +189,8 @@
         $('#purchase_cart_form').on('submit', function(e){
             e.preventDefault();
             const form_data = new FormData(this);
-            $("#purchase_cart_btn").text('Creating');
             $.ajax({
-                url: '{{ route('add.purchase.cart') }}',
+                url: '{{ route('add.purchase.product.cart') }}',
                 method: 'POST',
                 data: form_data,
                 cache: false,
@@ -223,8 +209,10 @@
                         if(response.status == 401){
                             toastr.warning(response.message);
                         }else{
-                            $("#purchase_cart_btn").text('Created');
-                            table.ajax.reload();
+                            $('#purchase_carts_table').DataTable().ajax.reload();
+                            $('#sub_total').val(response.sub_total);
+                            $('#grand_total').val(response.sub_total);
+                            $('#payment_amount').val(response.sub_total);
                             toastr.success(response.message);
                         }
                     }
@@ -238,10 +226,8 @@
             serverSide: true,
             searching: true,
             ajax: {
-                url: "{{ route('purchase.product') }}",
+                url: "{{ route('purchase') }}",
                 "data":function(e){
-                    e.purchase_invoice_no = $('#purchase_invoice_no').val();
-                    e.purchase_date = $('#purchase_date').val();
                     e.supplier_id = $('#supplier_id').val();
                 },
             },
@@ -257,18 +243,34 @@
             ],
         });
 
-        // Change Purchase Quantity
+        // Filter Data & Get Subtotal
+        $(document).on('change', '.filter_data', function(e){
+            e.preventDefault();
+            var supplier_id = $('#supplier_id').val();
+            $('#set_supplier_id').val(supplier_id)
+            $.ajax({
+                url: '{{ route('get.purchase.cart.subtotal') }}',
+                method: 'POST',
+                data: {supplier_id:supplier_id},
+                success: function(response) {
+                    $('#purchase_carts_table').DataTable().ajax.reload();
+                    $('#sub_total').val(response);
+                    $('#grand_total').val(response);
+                    $('#payment_amount').val(response);
+                }
+            });
+        })
+
+        // Update Purchase Cart Quantity
         $(document).on("change", ".purchase_quantity, .purchase_price", function () {
             var purchase_quantity = $('.purchase_quantity').val();
             var purchase_price = $('.purchase_price').val();
             var cart_id = $(this).attr('id');
-            var purchase_invoice_no = $('#purchase_invoice_no').val();
-            var purchase_date = $('#purchase_date').val();
             var supplier_id = $('#supplier_id').val();
             $.ajax({
-                url: '{{ route('change.purchase.cart.data') }}',
+                url: '{{ route('update.purchase.product.cart') }}',
                 method: 'POST',
-                data: {cart_id:cart_id, purchase_quantity:purchase_quantity, purchase_price:purchase_price, purchase_invoice_no:purchase_invoice_no, purchase_date:purchase_date, supplier_id:supplier_id},
+                data: {cart_id:cart_id, purchase_quantity:purchase_quantity, purchase_price:purchase_price, supplier_id:supplier_id},
                 success: function(response) {
                     $('#purchase_carts_table').DataTable().ajax.reload();
                     $('#sub_total').val(response);
@@ -296,8 +298,6 @@
         // Purchase Item Delete
         $(document).on('click', '.deleteBtn', function(e){
             e.preventDefault();
-            var purchase_invoice_no = $('#purchase_invoice_no').val();
-            var purchase_date = $('#purchase_date').val();
             var supplier_id = $('#supplier_id').val();
             var cart_id = $(this).attr('id');
             Swal.fire({
@@ -311,9 +311,9 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ route('purchase.cart.item.delete') }}",
+                        url: "{{ route('purchase.cart.product.delete') }}",
                         method: 'POST',
-                        data: {cart_id:cart_id, purchase_invoice_no:purchase_invoice_no, purchase_date:purchase_date, supplier_id:supplier_id},
+                        data: {cart_id:cart_id, supplier_id:supplier_id},
                         success: function(response) {
                             $('#purchase_carts_table').DataTable().ajax.reload()
                             $('#sub_total').val(response.sub_total);
@@ -362,35 +362,13 @@
             }
         })
 
-        // Get Subtotal
-        $(document).on('change', '.filter_data', function(e){
-            e.preventDefault();
-            var purchase_invoice_no = $('#purchase_invoice_no').val();
-            var purchase_date = $('#purchase_date').val();
-            var supplier_id = $('#supplier_id').val();
-            $('#set_purchase_invoice_no').val(purchase_invoice_no)
-            $('#set_purchase_date').val(purchase_date)
-            $('#set_supplier_id').val(supplier_id)
-            $.ajax({
-                url: '{{ route('purchase.subtotal') }}',
-                method: 'POST',
-                data: {purchase_invoice_no:purchase_invoice_no, purchase_date:purchase_date, supplier_id:supplier_id},
-                success: function(response) {
-                    $('#purchase_carts_table').DataTable().ajax.reload();
-                    $('#sub_total').val(response);
-                    $('#grand_total').val(response);
-                    $('#payment_amount').val(response);
-                }
-            });
-        })
-
         // Store Purchase Product Data
         $('#purchase_product_form').on('submit', function(e){
             e.preventDefault();
             const form_data = new FormData(this);
             $("#purchase_btn").text('Creating');
             $.ajax({
-                url: '{{ route('store.purchase.product') }}',
+                url: '{{ route('purchase.store') }}',
                 method: 'POST',
                 data: form_data,
                 cache: false,
@@ -414,18 +392,22 @@
                                 $("#payment_method_error").html(response.message);
                             }else{
                                 $('#purchase_carts_table').DataTable().ajax.reload()
-                                $("#purchase_product_btn").text('Created');
+                                $("#purchase_product_btn").text('Purchase');
                                 $("#purchase_cart_form")[0].reset();
                                 $("#purchase_product_form")[0].reset();
                                 toastr.success(response.message);
-                                window.location = '{{ route('purchase.list') }}'
+
+                                var purchase_invoice_no = response.purchase_invoice_no;
+                                var url = "{{ route('purchase.invoice', ':purchase_invoice_no') }}";
+                                url = url.replace(':purchase_invoice_no', purchase_invoice_no);
+                                window.location.href = url;
                             }
                         }
                     }
                 }
             });
         });
-    });
 
+    });
 </script>
 @endsection

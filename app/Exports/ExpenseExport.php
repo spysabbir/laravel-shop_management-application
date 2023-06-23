@@ -25,6 +25,7 @@ class ExpenseExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             'Id',
+            'Expense Branch',
             'Expense Category',
             'Expense Date',
             'Expense Title',
@@ -37,7 +38,8 @@ class ExpenseExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             $expenses->id,
-            $expenses->relationtoexpensecategory->expense_category_name,
+            $expenses->branch_name,
+            $expenses->expense_category_name,
             $expenses->expense_date,
             $expenses->expense_title,
             $expenses->expense_cost,

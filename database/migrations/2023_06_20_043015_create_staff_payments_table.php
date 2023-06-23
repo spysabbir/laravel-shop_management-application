@@ -13,13 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('staff_salaries', function (Blueprint $table) {
+        Schema::create('staff_payments', function (Blueprint $table) {
             $table->id();
             $table->integer('staff_id');
-            $table->float('new_salary');
-            $table->date('assign_date');
-            $table->integer('assign_by');
-            $table->dateTime('assign_at');
+            $table->string('payment_type');
+            $table->string('payment_year');
+            $table->string('payment_month');
+            $table->float('payment_amount');
+            $table->text('payment_note')->nullable();
+            $table->integer('payment_by');
+            $table->dateTime('payment_at');
         });
     }
 
@@ -30,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('staff_salaries');
+        Schema::dropIfExists('staff_payments');
     }
 };

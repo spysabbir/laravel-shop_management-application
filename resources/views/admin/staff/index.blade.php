@@ -163,7 +163,7 @@
                         <thead>
                             <tr>
                                 <th>Sl No</th>
-                                <th>Join Date</th>
+                                {{-- <th>Join Date</th> --}}
                                 <th>Profile Photo</th>
                                 <th>Name</th>
                                 <th>Position</th>
@@ -176,7 +176,48 @@
                         </thead>
                         <tbody>
 
-                            <!-- Modal -->
+                            <!-- Assign Salary Modal -->
+                            <div class="modal fade" id="assignSalaryModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel1">Assign Salary</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form">
+                                                <form action="#" method="POST" id="assign_salary_form">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <input type="hidden" name="staff_id" id="assign_salary_staff_id">
+                                                        <div class="col-4 mb-3">
+                                                            <label class="form-label">New Salary</label>
+                                                            <input type="number" name="new_salary" class="form-control" placeholder="Enter salary"/>
+                                                            <span class="text-danger error-text new_salary_error"></span>
+                                                        </div>
+                                                        <div class="col-5 mb-3">
+                                                            <label class="form-label">Assign Date</label>
+                                                            <input type="date" name="assign_date" class="form-control"/>
+                                                            <span class="text-danger error-text assign_date_error"></span>
+                                                        </div>
+                                                        <div class="col-3 mb-3">
+                                                            <button type="submit" id="assign_salary_btn" class="btn btn-primary mt-4">Assign</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <h5 class="text-center text-info">Salary List</h5>
+                                            <div class="list" id="send_staff_salary_data">
+
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- View Modal -->
                             <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -193,7 +234,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Modal -->
+                            <!-- Edit Modal -->
                             <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -261,18 +302,13 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Staff Date Of Birth</label>
-                                                    <input type="date" name="staff_date_of_birth" id="staff_date_of_birth" class="form-control" />
+                                                    <input type="date" name="staff_date_of_birth" class="form-control staff_date_of_birth" />
                                                     <span class="text-danger error-text update_staff_date_of_birth_error"></span>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Staff Address</label>
                                                     <textarea name="staff_address" id="staff_address" class="form-control"></textarea>
                                                     <span class="text-danger error-text update_staff_address_error"></span>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Staff Salary</label>
-                                                    <input type="number" name="staff_salary" class="form-control" id="staff_salary"/>
-                                                    <span class="text-danger error-text update_staff_salary_error"></span>
                                                 </div>
                                                 <button type="submit" id="update_btn" class="btn btn-primary">Update</button>
                                             </form>
@@ -315,7 +351,7 @@
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'created_at', name: 'created_at'},
+                // {data: 'created_at', name: 'created_at'},
                 {data: 'profile_photo', name: 'profile_photo'},
                 {data: 'staff_name', name: 'staff_name'},
                 {data: 'staff_designation', name: 'staff_designation'},
@@ -364,6 +400,7 @@
                 }
             });
         });
+
         // View Details
         $(document).on('click', '.viewBtn', function(e){
             e.preventDefault();
@@ -378,6 +415,7 @@
                 }
             });
         })
+
         // Edit Form
         $(document).on('click', '.editBtn', function(e){
             e.preventDefault();
@@ -393,7 +431,7 @@
                     $("#staff_email").val(response.staff_email);
                     $("#staff_phone_number").val(response.staff_phone_number);
                     $("#staff_nid_no").val(response.staff_nid_no);
-                    $("#staff_date_of_birth").val(response.staff_date_of_birth);
+                    $(".staff_date_of_birth").val(response.staff_date_of_birth);
                     $("#staff_address").val(response.staff_address);
                     $("#staff_salary").val(response.staff_salary);
                     $('#staff_id').val(response.id)
@@ -552,6 +590,82 @@
                 }
             });
         })
+
+        // Assign Salary Form
+        $(document).on('click', '.assignSalaryBtn', function(e){
+            e.preventDefault();
+            var id = $(this).attr('id');
+            var url = "{{ route('assign.staff.salary', ":id") }}";
+            url = url.replace(':id', id)
+            $.ajax({
+                url:  url,
+                method: 'GET',
+                success: function(response) {
+                    $('#assign_salary_staff_id').val(response.staff.id);
+                    $('#send_staff_salary_data').html(response.send_staff_salary_data);
+                }
+            });
+        })
+
+        // Assign Salary Store
+        $('#assign_salary_form').on('submit', function(e){
+            e.preventDefault();
+            const form_data = new FormData(this);
+            $("#assign_salary_btn").text('Creating...');
+            $.ajax({
+                url: '{{ route('assign.staff.salary.store') }}',
+                method: 'POST',
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                beforeSend:function(){
+                    $(document).find('span.error-text').text('');
+                },
+                success: function(response) {
+                    if (response.status == 400) {
+                        $.each(response.error, function(prefix, val){
+                            $('span.'+prefix+'_error').text(val[0]);
+                        })
+                    }else{
+                        $("#assign_salary_btn").text('Created');
+                        $("#assign_salary_form")[0].reset();
+                        $('.btn-close').trigger('click');
+                        toastr.success(response.message);
+                    }
+                }
+            });
+        });
+
+        // Delete Data
+        $(document).on('click', '.assign_staff_salary_delete_btn', function(e){
+            e.preventDefault();
+            $('.btn-close').trigger('click');
+            let id = $(this).attr('id');
+            var url = "{{ route('assign.staff.salary.destroy', ":id") }}";
+            url = url.replace(':id', id)
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function(response) {
+                            toastr.warning(response.message);
+                        }
+                    });
+                }
+            })
+        })
+
     });
 </script>
 @endsection

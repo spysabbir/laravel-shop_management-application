@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('purchase_summaries', function (Blueprint $table) {
             $table->id();
             $table->string('purchase_invoice_no');
-            $table->date('purchase_date');
             $table->integer('supplier_id');
             $table->float('sub_total');
             $table->float('discount')->nullable();

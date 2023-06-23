@@ -15,8 +15,6 @@ return new class extends Migration
     {
         Schema::create('purchase_carts', function (Blueprint $table) {
             $table->id();
-            $table->string('purchase_invoice_no');
-            $table->date('purchase_date');
             $table->integer('supplier_id');
             $table->integer('product_id');
             $table->integer('purchase_quantity')->nullable();

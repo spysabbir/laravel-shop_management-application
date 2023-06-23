@@ -10,6 +10,8 @@ class Purchase_details extends Model
     use HasFactory;
     protected $guarded = [];
 
+    public $timestamps = false;
+
     function relationtocategory(){
         return $this->hasOne(Category::class, 'id', 'category_id');
     }

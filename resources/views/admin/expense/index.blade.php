@@ -102,14 +102,6 @@
                 <div class="filter">
                     <div class="row mb-3">
                         <div class="col-lg-3">
-                            <label class="form-label">Status</label>
-                            <select class="form-control filter_data" id="status">
-                                <option value="">All</option>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3">
                             <label class="form-label">Expense Category Name</label>
                             <select class="form-select filter_data" id="expense_category_id">
                                 <option value="">All</option>
@@ -118,6 +110,14 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-lg-3">
+                            <label class="form-label">Expense Date Start</label>
+                            <input type="date" class="form-control filter_data" id="expense_date_start">
+                        </div>
+                        <div class="col-lg-3">
+                            <label class="form-label">Expense Date End</label>
+                            <input type="date" class="form-control filter_data" id="expense_date_end">
+                        </div>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -125,9 +125,10 @@
                         <thead>
                             <tr>
                                 <th>Sl No</th>
+                                <th>Expense Category</th>
                                 <th>Expense Title</th>
                                 <th>Expense Cose</th>
-                                <th>Expense Status</th>
+                                <th>Expense Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -211,15 +212,17 @@
             ajax: {
                 url: "{{ route('expense.index') }}",
                 "data":function(e){
-                    e.status = $('#status').val();
                     e.expense_category_id = $('#expense_category_id').val();
+                    e.expense_date_start = $('#expense_date_start').val();
+                    e.expense_date_end = $('#expense_date_end').val();
                 },
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'expense_category_name', name: 'expense_category_name'},
                 {data: 'expense_title', name: 'expense_title'},
                 {data: 'expense_cost', name: 'expense_cost'},
-                {data: 'status', name: 'status'},
+                {data: 'expense_date', name: 'expense_date'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
         });
@@ -395,33 +398,17 @@
                 confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                 if (result.isConfirmed) {
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(response) {
-                        trashed_table.ajax.reload();
-                        $('.btn-close').trigger('click');
-                        toastr.error(response.message);
-                    }
-                });
-            }
-            })
-        })
-
-        // Status Change
-        $(document).on('click', '.statusBtn', function(e){
-            e.preventDefault();
-            let id = $(this).attr('id');
-            var url = "{{ route('expense.status', ":id") }}";
-            url = url.replace(':id', id)
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(response) {
-                    table.ajax.reload();
-                    toastr.info(response.message);
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function(response) {
+                            trashed_table.ajax.reload();
+                            $('.btn-close').trigger('click');
+                            toastr.error(response.message);
+                        }
+                    });
                 }
-            });
+            })
         })
     });
 </script>

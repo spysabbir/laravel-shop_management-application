@@ -16,17 +16,19 @@
                     <div class="row mb-3">
                         <div class="col-md-6 col-12 mb-3">
                             <label class="form-label" for="favicon">Favicon</label>
-                            <input id="favicon" class="form-control" type="file" name="favicon" />
+                            <input class="form-control" type="file" id="favicon" name="favicon" />
                             @error('favicon')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
+                            <img width="70" height="70" src="{{ asset('uploads/default_photo') }}/{{ $default_setting->favicon }}" id="faviconPreview" alt="Favicon">
                         </div>
                         <div class="col-md-6 col-12 mb-3">
-                            <label class="form-label" for="logo_photo">Logo Photo</label>
-                            <input id="logo_photo" class="form-control" type="file" name="logo_photo" />
+                            <label class="form-label" for="logoImage">Logo Photo</label>
+                            <input class="form-control" type="file" id="logoImage" name="logo_photo" />
                             @error('logo_photo')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
+                            <img width="192" height="40" src="{{ asset('uploads/default_photo') }}/{{ $default_setting->logo_photo }}" id="logoImagePreview" alt="Logo Photo">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -108,6 +110,23 @@
 
 @section('script')
 <script>
-
+$(document).ready(function(){
+        // Logo Image Preview
+        $('#logoImage').change(function(){
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#logoImagePreview').attr('src', e.target.result).show();
+            }
+            reader.readAsDataURL(this.files[0]);
+        });
+        // Favicon Preview
+        $('#favicon').change(function(){
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#faviconPreview').attr('src', e.target.result).show();
+            }
+            reader.readAsDataURL(this.files[0]);
+        });
+    })
 </script>
 @endsection

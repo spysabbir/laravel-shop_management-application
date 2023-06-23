@@ -56,6 +56,7 @@
                         <thead>
                             <tr>
                                 <th>Sl No</th>
+                                <th>Expense Branch Name</th>
                                 <th>Expense Category Name</th>
                                 <th>Expense Title</th>
                                 <th>Expense Cost</th>
@@ -92,6 +93,7 @@
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'branch_name', name: 'branch_name'},
                 {data: 'expense_category_name', name: 'expense_category_name'},
                 {data: 'expense_title', name: 'expense_title'},
                 {data: 'expense_cost', name: 'expense_cost'},

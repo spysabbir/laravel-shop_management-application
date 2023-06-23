@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('expense_title');
             $table->float('expense_cost');
             $table->longText('expense_description');
-            $table->string('status')->default('Active');
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();

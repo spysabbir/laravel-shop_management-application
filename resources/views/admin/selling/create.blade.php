@@ -8,28 +8,18 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <div class="text">
-                    <h4 class="card-title">Selling Product</h4>
+                    <h4 class="card-title">Selling</h4>
                 </div>
             </div>
             <div class="card-body">
                 <form action="#" method="POST" id="selling_cart_form">
                     @csrf
                     <div class="row">
-                        <div class="col-lg-2 col-12 mb-3">
-                            <label class="form-label">Selling Invoice No</label>
-                            <input type="text" name="selling_invoice_no" value="SI{{ App\Models\Selling_summary::max('id')+1 }}" id="selling_invoice_no" class="form-control filter_data" readonly>
-                            <span class="text-danger error-text selling_invoice_no_error"></span>
-                        </div>
-                        <div class="col-lg-3 col-12 mb-3">
-                            <label class="form-label">Selling Date</label>
-                            <input type="date" name="selling_date" id="selling_date" class="form-control filter_data">
-                            <span class="text-danger error-text selling_date_error"></span>
-                        </div>
                         <div class="col-lg-4 col-12 mb-3">
                             <label class="form-label">Customer Name</label>
                             <select class="form-select filter_data select_customer" name="customer_id" id="customer_id">
-                                <option value="">Select Customer</option>
-                                <option value="New Customer">---New Customer--</option>
+                                <option value="">--Select Customer--</option>
+                                <option value="New Customer">New Customer</option>
                                 @foreach ($customers as $customer)
                                 <option value="{{ $customer->id }}">{{ $customer->customer_name }} ({{ $customer->customer_phone_number }})</option>
                                 @endforeach
@@ -94,7 +84,7 @@
                 <div class="row mb-3 py-2">
                     <div class="col-lg-12">
                         <div class="table-responsive">
-                            <table class="table table-primary" id="selling_carts_table">
+                            <table class="table" id="selling_carts_table">
                                 <thead>
                                     <tr>
                                         <th>Sl No</th>
@@ -116,9 +106,7 @@
                 </div>
                 <form action="#" method="POST" id="selling_product_form">
                     @csrf
-                    <input type="text" name="selling_invoice_no" id="set_selling_invoice_no">
-                    <input type="text" name="selling_date" id="set_selling_date">
-                    <input type="text" name="customer_id" id="set_customer_id">
+                    <input type="hidden" name="customer_id" id="set_customer_id">
                     <div class="row d-flex justify-content-end">
                         <div class="col-lg-2 col-12 mb-3">
                             <label class="form-label">Sub Total</label>
@@ -184,7 +172,6 @@
         });
 
         $('.select_product').select2({
-            // placeholder: 'Select category first'
         });
 
         $.ajaxSetup({
@@ -210,7 +197,7 @@
             e.preventDefault();
             var category_id = $(this).val();
             $.ajax({
-                url: '{{ route('selling.product.list') }}',
+                url: '{{ route('get.selling.product.list') }}',
                 method: 'POST',
                 data: {category_id:category_id},
                 success: function(response) {
@@ -224,7 +211,7 @@
             e.preventDefault();
             var product_id = $(this).val();
             $.ajax({
-                url: '{{ route('selling.product.details') }}',
+                url: '{{ route('get.selling.product.details') }}',
                 method: 'POST',
                 data: {product_id:product_id},
                 success: function(response) {
@@ -239,7 +226,7 @@
             e.preventDefault();
             const form_data = new FormData(this);
             $.ajax({
-                url: '{{ route('add.selling.cart') }}',
+                url: '{{ route('add.selling.product.cart') }}',
                 method: 'POST',
                 data: form_data,
                 cache: false,
@@ -263,10 +250,17 @@
                             if(response.status == 402){
                                 toastr.warning(response.message);
                             }else{
-                                toastr.success(response.message);
-                                $('#get_customer_id').val(response.customer_id);
-                                $('#set_customer_id').val(response.customer_id);
-                                $('#selling_carts_table').DataTable().ajax.reload();
+                                if(response.status == 403){
+                                    toastr.warning(response.message);
+                                }else{
+                                    $('#selling_carts_table').DataTable().ajax.reload();
+                                    $('#get_customer_id').val(response.customer_id);
+                                    $('#set_customer_id').val(response.customer_id);
+                                    $('#sub_total').val(response.sub_total);
+                                    $('#grand_total').val(response.sub_total);
+                                    $('#payment_amount').val(response.sub_total);
+                                    toastr.success(response.message);
+                                }
                             }
                         }
                     }
@@ -280,10 +274,8 @@
             serverSide: true,
             searching: true,
             ajax: {
-                url: "{{ route('selling.product') }}",
+                url: "{{ route('selling') }}",
                 "data":function(e){
-                    e.selling_invoice_no = $('#selling_invoice_no').val();
-                    e.selling_date = $('#selling_date').val();
                     e.customer_id = $('#get_customer_id').val();
                 },
             },
@@ -299,18 +291,34 @@
             ],
         });
 
-        // Change Selling Quantity
+        // Filter Data & Get Subtotal
+        $(document).on('change', '.filter_data', function(e){
+            e.preventDefault();
+            var customer_id = $('#get_customer_id').val();
+            $('#set_customer_id').val(customer_id)
+            $.ajax({
+                url: '{{ route('get.selling.cart.subtotal') }}',
+                method: 'POST',
+                data: {customer_id:customer_id},
+                success: function(response) {
+                    $('#selling_carts_table').DataTable().ajax.reload();
+                    $('#sub_total').val(response);
+                    $('#grand_total').val(response);
+                    $('#payment_amount').val(response);
+                }
+            });
+        })
+
+        // Update Selling Cart Quantity
         $(document).on("change", ".selling_quantity, .selling_price", function () {
             var selling_quantity = $('.selling_quantity').val();
             var selling_price = $('.selling_price').val();
             var cart_id = $(this).attr('id');
-            var selling_invoice_no = $('#selling_invoice_no').val();
-            var selling_date = $('#selling_date').val();
             var customer_id = $('#get_customer_id').val();
             $.ajax({
-                url: '{{ route('change.selling.cart.data') }}',
+                url: '{{ route('update.selling.product.cart') }}',
                 method: 'POST',
-                data: {cart_id:cart_id, selling_quantity:selling_quantity, selling_price:selling_price, selling_invoice_no:selling_invoice_no, selling_date:selling_date, customer_id:customer_id},
+                data: {cart_id:cart_id, selling_quantity:selling_quantity, selling_price:selling_price, customer_id:customer_id},
                 success: function(response) {
                     if(response.status == 400){
                         toastr.error(response.message);
@@ -342,8 +350,6 @@
         // Selling Item Delete
         $(document).on('click', '.deleteBtn', function(e){
             e.preventDefault();
-            var selling_invoice_no = $('#selling_invoice_no').val();
-            var selling_date = $('#selling_date').val();
             var customer_id = $('#get_customer_id').val();
             var cart_id = $(this).attr('id');
             Swal.fire({
@@ -357,9 +363,9 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ route('selling.cart.item.delete') }}",
+                        url: "{{ route('selling.cart.product.delete') }}",
                         method: 'POST',
-                        data: {cart_id:cart_id, selling_invoice_no:selling_invoice_no, selling_date:selling_date, customer_id:customer_id},
+                        data: {cart_id:cart_id, customer_id:customer_id},
                         success: function(response) {
                             $('#selling_carts_table').DataTable().ajax.reload()
                             $('#sub_total').val(response.sub_total);
@@ -408,35 +414,13 @@
             }
         })
 
-        // Get Subtotal
-        $(document).on('change', '.filter_data', function(e){
-            e.preventDefault();
-            var selling_invoice_no = $('#selling_invoice_no').val();
-            var selling_date = $('#selling_date').val();
-            var customer_id = $('#get_customer_id').val();
-            $('#set_selling_invoice_no').val(selling_invoice_no)
-            $('#set_selling_date').val(selling_date)
-            $('#set_customer_id').val(customer_id)
-            $.ajax({
-                url: '{{ route('selling.subtotal') }}',
-                method: 'POST',
-                data: {selling_invoice_no:selling_invoice_no, selling_date:selling_date, customer_id:customer_id},
-                success: function(response) {
-                    $('#selling_carts_table').DataTable().ajax.reload();
-                    $('#sub_total').val(response);
-                    $('#grand_total').val(response);
-                    $('#payment_amount').val(response);
-                }
-            });
-        })
-
         // Store Selling Product Data
         $('#selling_product_form').on('submit', function(e){
             e.preventDefault();
             const form_data = new FormData(this);
             $("#selling_btn").text('Creating');
             $.ajax({
-                url: '{{ route('store.selling.product') }}',
+                url: '{{ route('selling.store') }}',
                 method: 'POST',
                 data: form_data,
                 cache: false,
@@ -460,11 +444,15 @@
                                 $("#payment_method_error").html(response.message);
                             }else{
                                 $('#selling_carts_table').DataTable().ajax.reload()
-                                $("#selling_product_btn").text('Created');
+                                $("#selling_product_btn").text('Selling');
                                 $("#selling_cart_form")[0].reset();
                                 $("#selling_product_form")[0].reset();
                                 toastr.success(response.message);
-                                window.location = '{{ route('selling.list') }}'
+
+                                var selling_invoice_no = response.selling_invoice_no;
+                                var url = "{{ route('selling.invoice', ':selling_invoice_no') }}";
+                                url = url.replace(':selling_invoice_no', selling_invoice_no);
+                                window.location.href = url;
                             }
                         }
                     }

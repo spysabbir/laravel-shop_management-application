@@ -20,8 +20,10 @@ use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PurchaseController;
+use App\Http\Controllers\Admin\PurchaseReturnController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SellingController;
+use App\Http\Controllers\Admin\SellingReturnController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StaffDesignationController;
@@ -117,10 +119,15 @@ Route::prefix('admin')->group(function(){
             Route::get('staff-restore/{id}', [StaffController::class, 'restore'])->name('staff.restore');
             Route::get('staff-forcedelete/{id}', [StaffController::class, 'forceDelete'])->name('staff.forcedelete');
             Route::get('staff-status/{id}', [StaffController::class, 'status'])->name('staff.status');
-            Route::get('staff-salary', [StaffController::class, 'staffSalary'])->name('staff.salary');
-            Route::get('staff-salary-payment-form/{id}', [StaffController::class, 'staffSalaryPaymentForm'])->name('staff.salary.payment.form');
-            Route::post('staff-salary-payment-store/{id}', [StaffController::class, 'staffSalaryPaymentStore'])->name('staff.salary.payment.store');
-            Route::get('staff-salary-payment-details/{id}', [StaffController::class, 'staffSalaryPaymentDetails'])->name('staff.salary.payment.details');
+
+            Route::get('assign-staff-salary/{id}', [StaffController::class, 'assignStaffSalary'])->name('assign.staff.salary');
+            Route::post('assign-staff-salary-store', [StaffController::class, 'assignStaffSalaryStore'])->name('assign.staff.salary.store');
+            Route::get('assign.staff.salary.destroy/{id}', [StaffController::class, 'assignStaffSalaryDestroy'])->name('assign.staff.salary.destroy');
+
+            Route::get('staff-payment', [StaffController::class, 'staffPayment'])->name('staff.payment');
+            Route::get('staff-payment-form/{id}', [StaffController::class, 'staffPaymentForm'])->name('staff.payment.form');
+            Route::post('staff-payment-store/{id}', [StaffController::class, 'staffPaymentStore'])->name('staff.payment.store');
+            Route::get('staff-payment-details/{id}', [StaffController::class, 'staffPaymentDetails'])->name('staff.payment.details');
 
             Route::resource('supplier', SupplierController::class);
             Route::get('supplier-trashed', [SupplierController::class, 'trashed'])->name('supplier.trashed');
@@ -132,7 +139,6 @@ Route::prefix('admin')->group(function(){
             Route::get('expense-trashed', [ExpenseController::class, 'trashed'])->name('expense.trashed');
             Route::get('expense-restore/{id}', [ExpenseController::class, 'restore'])->name('expense.restore');
             Route::get('expense-forcedelete/{id}', [ExpenseController::class, 'forceDelete'])->name('expense.forcedelete');
-            Route::get('expense-status/{id}', [ExpenseController::class, 'status'])->name('expense.status');
 
             Route::resource('customer', CustomerController::class);
             Route::get('customer-trashed', [CustomerController::class, 'trashed'])->name('customer.trashed');
@@ -164,37 +170,37 @@ Route::prefix('admin')->group(function(){
             Route::get('product-forcedelete/{id}', [ProductController::class, 'forceDelete'])->name('product.forcedelete');
             Route::get('product-status/{id}', [ProductController::class, 'status'])->name('product.status');
 
-            Route::get('purchase-product', [PurchaseController::class, 'purchaseProduct'])->name('purchase.product');
-            Route::get('purchase-cart-delete', [PurchaseController::class, 'purchaseCartDelete'])->name('purchase.cart.delete');
-            Route::post('purchase-product-list', [PurchaseController::class, 'getProducts'])->name('purchase.product.list');
-            Route::post('purchase-product-details', [PurchaseController::class, 'purchaseProductDetails'])->name('purchase.product.details');
-            Route::post('add-purchase-cart', [PurchaseController::class, 'purchaseCartStore'])->name('add.purchase.cart');
-            Route::post('purchase-cart-item-delete', [PurchaseController::class, 'purchaseCartItemDelete'])->name('purchase.cart.item.delete');
-            Route::post('change-purchase-cart-data', [PurchaseController::class, 'changePurchaseCartData'])->name('change.purchase.cart.data');
-            Route::post('purchase-sub-total', [PurchaseController::class, 'getSubTotal'])->name('purchase.subtotal');
-            Route::post('store-purchase-product', [PurchaseController::class, 'purchaseProductStore'])->name('store.purchase.product');
+            Route::get('purchase', [PurchaseController::class, 'purchase'])->name('purchase');
+            Route::post('get-purchase-product-list', [PurchaseController::class, 'getPurchaseProductList'])->name('get.purchase.product.list');
+            Route::post('get-purchase-product-details', [PurchaseController::class, 'getPurchaseProductDetails'])->name('get.purchase.product.details');
+            Route::post('add-purchase-product-cart', [PurchaseController::class, 'storePurchaseProductCart'])->name('add.purchase.product.cart');
+            Route::post('update-purchase-product-cart', [PurchaseController::class, 'updatePurchaseProductCart'])->name('update.purchase.product.cart');
+            Route::post('purchase-cart-product-delete', [PurchaseController::class, 'purchaseCartProductDelete'])->name('purchase.cart.product.delete');
+            Route::post('get-purchase-cart-subtotal', [PurchaseController::class, 'getPurchaseCartSubtotal'])->name('get.purchase.cart.subtotal');
+            Route::post('purchase-store', [PurchaseController::class, 'purchaseStore'])->name('purchase.store');
 
             Route::get('purchase-list', [PurchaseController::class, 'purchaseList'])->name('purchase.list');
             Route::get('supplier-payment/{purchase_invoice_no}', [PurchaseController::class, 'supplierPayment'])->name('supplier.payment');
             Route::post('supplier-payment-update/{purchase_invoice_no}', [PurchaseController::class, 'supplierPaymentUpdate'])->name('supplier.payment.update');
             Route::get('purchase-invoice/{purchase_invoice_no}', [PurchaseController::class, 'purchaseInvoice'])->name('purchase.invoice');
-            Route::get('purchase-invoice-download/{purchase_invoice_no}', [PurchaseController::class, 'purchaseInvoiceDownload'])->name('purchase.invoice.download');
 
-            Route::get('selling-product', [SellingController::class, 'sellingProduct'])->name('selling.product');
-            Route::get('selling-cart-delete', [SellingController::class, 'sellingCartDelete'])->name('selling.cart.delete');
-            Route::post('selling-product-list', [SellingController::class, 'getProducts'])->name('selling.product.list');
-            Route::post('selling-product-details', [SellingController::class, 'sellingProductDetails'])->name('selling.product.details');
-            Route::post('add-selling-cart', [SellingController::class, 'sellingCartStore'])->name('add.selling.cart');
-            Route::post('selling-cart-item-delete', [SellingController::class, 'sellingCartItemDelete'])->name('selling.cart.item.delete');
-            Route::post('change-selling-cart-data', [SellingController::class, 'changeSellingCartData'])->name('change.selling.cart.data');
-            Route::post('selling-subtotal', [SellingController::class, 'getSubTotal'])->name('selling.subtotal');
-            Route::post('store-selling-product', [SellingController::class, 'sellingProductStore'])->name('store.selling.product');
+            Route::get('purchase-return', [PurchaseReturnController::class, 'purchaseReturn'])->name('purchase.return');
+
+            Route::get('selling', [SellingController::class, 'selling'])->name('selling');
+            Route::post('get-selling-product-list', [SellingController::class, 'getSellingProductList'])->name('get.selling.product.list');
+            Route::post('get-selling-product-details', [SellingController::class, 'getSellingProductDetails'])->name('get.selling.product.details');
+            Route::post('add-selling-product-cart', [SellingController::class, 'storeSellingProductCart'])->name('add.selling.product.cart');
+            Route::post('update-selling-product-cart', [SellingController::class, 'updateSellingProductCart'])->name('update.selling.product.cart');
+            Route::post('selling-cart-product-delete', [SellingController::class, 'sellingCartProductDelete'])->name('selling.cart.product.delete');
+            Route::post('get-selling-cart-subtotal', [SellingController::class, 'getSellingCartSubtotal'])->name('get.selling.cart.subtotal');
+            Route::post('selling-store', [SellingController::class, 'sellingStore'])->name('selling.store');
 
             Route::get('selling-list', [SellingController::class, 'sellingList'])->name('selling.list');
             Route::get('customer-payment/{selling_invoice_no}', [SellingController::class, 'customerPayment'])->name('customer.payment');
             Route::post('customer-payment-update/{selling_invoice_no}', [SellingController::class, 'customerPaymentUpdate'])->name('customer.payment.update');
             Route::get('selling-invoice/{selling_invoice_no}', [SellingController::class, 'sellingInvoice'])->name('selling.invoice');
-            Route::get('selling-invoice-download/{selling_invoice_no}', [SellingController::class, 'sellingInvoiceDownload'])->name('selling.invoice.download');
+
+            Route::get('selling-return', [SellingReturnController::class, 'sellingReturn'])->name('selling.return');
 
             Route::get('stock-products', [AdminController::class, 'stockProducts'])->name('stock.products');
 

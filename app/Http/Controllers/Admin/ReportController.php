@@ -106,7 +106,8 @@ class ReportController extends Controller
         if ($request->ajax()) {
             $expenses = "";
             $query = Expense::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')
-                    ->leftJoin('expense_categories', 'expenses.expense_category_id', 'expense_categories.id');
+                    ->leftJoin('expense_categories', 'expenses.expense_category_id', 'expense_categories.id')
+                    ->leftJoin('branches', 'expenses.expense_category_id', 'branches.id');
 
             if($request->expense_date_start){
                 $query->whereDate('expenses.created_at', '>=', $request->expense_date_start);
@@ -124,7 +125,7 @@ class ReportController extends Controller
                 $query->where('expenses.branch_id', $request->branch_id);
             }
 
-            $expenses = $query->select('expenses.*', 'expense_categories.expense_category_name');
+            $expenses = $query->select('expenses.*', 'expense_categories.expense_category_name', 'branches.branch_name');
 
             return Datatables::of($expenses->get())
                     ->addIndexColumn()
@@ -146,7 +147,8 @@ class ReportController extends Controller
     {
         $expenses = "";
         $query = Expense::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')
-                ->leftJoin('expense_categories', 'expenses.expense_category_id', 'expense_categories.id');
+                ->leftJoin('expense_categories', 'expenses.expense_category_id', 'expense_categories.id')
+                ->leftJoin('branches', 'expenses.expense_category_id', 'branches.id');
 
         if($request->expense_date_start){
             $query->whereDate('expenses.created_at', '>=', $request->expense_date_start);
@@ -164,7 +166,7 @@ class ReportController extends Controller
             $query->where('expenses.branch_id', $request->branch_id);
         }
 
-        $expenses = $query->select('expenses.*', 'expense_categories.expense_category_name')->get();
+        $expenses = $query->select('expenses.*', 'expense_categories.expense_category_name', 'branches.branch_name')->get();
 
         return Excel::download(new ExpenseExport($expenses), 'expense.xlsx');
     }

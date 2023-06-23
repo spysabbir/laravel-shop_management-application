@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
+use App\Models\Category;
 use App\Models\Expense;
+use App\Models\Expense_category;
 use App\Models\Staff;
 use App\Models\Staff_salary;
 use App\Models\StaffDesignation;
+use App\Models\StaffPayment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -89,6 +92,7 @@ class StaffController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $btn = '
+                            <button type="button" id="'.$row->id.'" class="btn btn-success btn-sm assignSalaryBtn" data-bs-toggle="modal" data-bs-target="#assignSalaryModal"><i class="fa-solid fa-credit-card"></i></button>
                             <button type="button" id="'.$row->id.'" class="btn btn-info btn-sm viewBtn" data-bs-toggle="modal" data-bs-target="#viewModal"><i class="fa-solid fa-eye"></i></button>
                             <button type="button" id="'.$row->id.'" class="btn btn-primary btn-sm editBtn" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fa-regular fa-pen-to-square"></i></button>
                             <button type="button" id="'.$row->id.'" class="btn btn-danger btn-sm deleteBtn"><i class="fa-solid fa-trash-can"></i></button>
@@ -130,6 +134,14 @@ class StaffController extends Controller
                 'staff_salary' => $request->staff_salary,
                 'created_by' => Auth::user()->id,
                 'created_at' => Carbon::now(),
+            ]);
+
+            Staff_salary::insert([
+                'staff_id' => $staff_id,
+                'new_salary' => $request->staff_salary,
+                'assign_date' => date('Y-m-d'),
+                'assign_by' => Auth::user()->id,
+                'assign_at' => Carbon::now(),
             ]);
 
             // Profile Photo Upload
@@ -188,7 +200,6 @@ class StaffController extends Controller
                 'staff_nid_no' => $request->staff_nid_no,
                 'staff_date_of_birth' => $request->staff_date_of_birth,
                 'staff_address' => $request->staff_address,
-                'staff_salary' => $request->staff_salary,
                 'updated_by' => Auth::user()->id,
             ]);
 
@@ -299,14 +310,94 @@ class StaffController extends Controller
         }
     }
 
-    public function staffSalary(Request $request)
+    public function assignStaffSalary($id)
+    {
+        $staff = Staff::where('id', $id)->first();
+
+        $send_staff_salary_data = "
+            <div class='row border align-items-center'>
+                <div class='col-lg-4 border'>New Salary</div>
+                <div class='col-lg-4 border'>Assign Date</div>
+                <div class='col-lg-4 border'>Action</div>
+            </div>
+        ";
+        $staff_salaries = Staff_salary::where('staff_id', $id)->get();
+        foreach ($staff_salaries as $staff_salary){
+            $staff_id = Staff_salary::where('staff_id', $staff_salary->staff_id)->orderBy('id', 'desc')->first()->id;
+            $send_staff_salary_data .= '
+            <div class="row border align-items-center">
+                <div class="col-lg-4 border">'.$staff_salary->new_salary.'</div>
+                <div class="col-lg-4 border">'.$staff_salary->assign_date.'</div>
+                <div class="col-lg-4 border">
+                    '.($staff_id == $staff_salary->id ? '<button type="button" id="'.$staff_salary->id.'" class="btn btn-danger btn-sm assign_staff_salary_delete_btn">Delete</button>
+                    ' : '<span class="badge bg-warning">N/A</span>').'
+                </div>
+            </div>
+            ';
+        }
+
+        return response()->json([
+            'staff' => $staff,
+            'send_staff_salary_data' => $send_staff_salary_data,
+        ]);
+    }
+
+    public function assignStaffSalaryStore(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            '*' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => 400,
+                'error'=> $validator->errors()->toArray()
+            ]);
+        }else{
+            Staff_salary::insert([
+                'staff_id' => $request->staff_id,
+                'new_salary' => $request->new_salary,
+                'assign_date' =>  $request->assign_date,
+                'assign_by' => Auth::user()->id,
+                'assign_at' => Carbon::now(),
+            ]);
+
+            Staff::where('id', $request->staff_id)->update([
+                'staff_salary' => $request->new_salary,
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Staff salary assign successfully.',
+            ]);
+        }
+    }
+
+    public function assignStaffSalaryDestroy($id)
+    {
+        $staff_salary = Staff_salary::where('id', $id)->first();
+        $staff_salary->delete();
+        $last_salary = Staff_salary::where('staff_id', $staff_salary->staff_id)->orderBy('id', 'desc')->first()->new_salary;
+
+        Staff::where('id', $staff_salary->staff_id)->update([
+            'staff_salary' => $last_salary,
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Assign staff salary destroy successfully.',
+        ]);
+    }
+
+    public function staffPayment(Request $request)
     {
         if ($request->ajax()) {
             $all_staff = "";
-            $query = Staff::where('branch_id', Auth::user()->branch_id);
+            $query = Staff::where('branch_id', Auth::user()->branch_id)->where('status', 'Active');
 
-            if($request->status){
-                $query->where('staff.status', $request->status);
+            if($request->staff_gender){
+                $query->where('staff.staff_gender', $request->staff_gender);
             }
 
             $all_staff = $query->select('staff.*')->get();
@@ -323,91 +414,108 @@ class StaffController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $btn = '
-                            <button type="button" id="'.$row->id.'" class="btn btn-info btn-sm paymentSalaryDetailsBtn" data-bs-toggle="modal" data-bs-target="#paymentSalaryDetailsModal"><i class="fa-solid fa-eye"></i></button>
-                            <button type="button" id="'.$row->id.'" class="btn btn-primary btn-sm paymentSalaryBtn" data-bs-toggle="modal" data-bs-target="#paymentSalaryModal"><i class="fa-solid fa-credit-card"></i></button>
+                            <button type="button" id="'.$row->id.'" class="btn btn-info btn-sm viewStaffPaymentDetailsBtn" data-bs-toggle="modal" data-bs-target="#viewStaffPaymentDetailsModal"><i class="fa-solid fa-eye"></i></button>
+                            <button type="button" id="'.$row->id.'" class="btn btn-primary btn-sm staffPaymentBtn" data-bs-toggle="modal" data-bs-target="#staffPaymentModal"><i class="fa-solid fa-credit-card"></i></button>
                         ';
                         return $btn;
                     })
                     ->rawColumns(['created_at', 'profile_photo', 'action'])
                     ->make(true);
         }
-        return view('admin.staff.salary');
+        return view('admin.staff.payment');
     }
 
-    public function staffSalaryPaymentForm($id)
+    public function staffPaymentForm($id)
     {
         $staff = Staff::where('id', $id)->first();
         return response()->json($staff);
     }
 
-    public function staffSalaryPaymentStore(Request $request, $id)
+    public function staffPaymentStore(Request $request, $id)
     {
         $staff = Staff::where('id', $id)->first();
 
         $validator = Validator::make($request->all(), [
             '*' => 'required',
+            'payment_note' => 'nullable',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()){
             return response()->json([
                 'status' => 400,
                 'error'=> $validator->errors()->toArray()
             ]);
-        }else{
-            $exists = Staff_salary::where('staff_id', $id)
-                ->where('salary_year', $request->salary_year)
-                ->where('salary_month', $request->salary_month)
-                ->exists();
-
-            if($exists){
+        } else{
+            if ($staff->staff_salary < $request->payment_amount){
                 return response()->json([
                     'status' => 401,
-                    'message' => 'Staff salary already payment.',
+                    'message' => 'Payment amount is greater than the staff salary amount.',
                 ]);
-            }else{
-                if($staff->staff_salary < $request->payment_salary){
+            } else{
+                $payment_amount = StaffPayment::where('staff_id', $id)
+                ->where('payment_type', $request->payment_type)
+                ->where('payment_year', $request->payment_year)
+                ->where('payment_month', $request->payment_month)
+                ->sum('payment_amount');
+
+                if ($payment_amount == $staff->staff_salary){
                     return response()->json([
                         'status' => 402,
-                        'message' => 'Payment salary is greater than the staff salary.',
+                        'message' => 'Staff already received '.$payment_amount.' amount',
                     ]);
-                }else{
-                    Staff_salary::insert([
-                        'staff_id' => $id,
-                        'salary_year' => $request->salary_year,
-                        'salary_month' => $request->salary_month,
-                        'payment_salary' => $request->payment_salary,
-                        'payment_date' => Carbon::now(),
-                    ]);
+                } else{
+                    $due_amount = $staff->staff_salary- $payment_amount;
+                    if ($due_amount < $request->payment_amount) {
+                        return response()->json([
+                            'status' => 403,
+                            'message' => 'Staff already received advance '.$payment_amount.' amount please provide '.$due_amount.' amount',
+                        ]);
+                    } else {
+                        StaffPayment::insert([
+                            'staff_id' => $id,
+                            'payment_type' => $request->payment_type,
+                            'payment_year' => $request->payment_year,
+                            'payment_month' => $request->payment_month,
+                            'payment_amount' => $request->payment_amount,
+                            'payment_note' => $request->payment_note,
+                            'payment_by' => Auth::user()->id,
+                            'payment_at' => Carbon::now(),
+                        ]);
 
-                    if(Expense::where('expense_title', $request->salary_year." ".$request->salary_month." Salary")->exists()){
-                        Expense::where('expense_title', $request->salary_year." ".$request->salary_month." Salary")->increment('expense_cost', $request->payment_salary);
-                    }else{
-                        Expense::insert([
-                            'branch_id' => $staff->branch_id,
-                            'expense_category_id' => 1,
-                            'expense_date' => date('Y-m-d'),
-                            'expense_title' => $request->salary_year." ".$request->salary_month." Salary",
-                            'expense_cost' => $request->payment_salary,
-                            'expense_description' => $request->salary_year." ".$request->salary_month." Salary",
-                            'created_by' => Auth::user()->id,
-                            'created_at' => Carbon::now(),
+                        $get_category = Expense_category::where('expense_category_name', $request->payment_type)->first();
+                        $expense = Expense::where('branch_id', Auth::user()->branch_id)
+                                        ->where('expense_category_id', $get_category->id)
+                                        ->where('expense_title', $request->payment_year." ".$request->payment_month." Payment");
+                        if($expense->exists()){
+                            $expense->increment('expense_cost', $request->payment_amount);
+                        }else{
+                            Expense::insert([
+                                'branch_id' => Auth::user()->branch_id,
+                                'expense_category_id' => $get_category->id,
+                                'expense_date' => date('Y-m-d'),
+                                'expense_title' => $request->payment_year." ".$request->payment_month." Payment",
+                                'expense_cost' => $request->payment_amount,
+                                'expense_description' => $request->payment_year." ".$request->payment_month." Payment". $request->payment_note,
+                                'created_by' => Auth::user()->id,
+                                'created_at' => Carbon::now(),
+                            ]);
+                        }
+
+                        return response()->json([
+                            'status' => 200,
+                            'message' => 'Staff payment received successfully.',
                         ]);
                     }
-
-                    return response()->json([
-                        'status' => 200,
-                        'message' => 'Staff salary payment successfully.',
-                    ]);
                 }
             }
 
         }
     }
 
-    public function staffSalaryPaymentDetails($id)
+    public function staffPaymentDetails($id)
     {
         $staff = Staff::where('id', $id)->first();
-        $staff_salaries = Staff_salary::where('staff_id', $id)->get();
-        return view('admin.staff.salary_details', compact('staff', 'staff_salaries'));
+        $staff_payments = StaffPayment::where('staff_id', $id)->get();
+        return view('admin.staff.salary_details', compact('staff', 'staff_payments'));
     }
 }

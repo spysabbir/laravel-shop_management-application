@@ -17,41 +17,38 @@ class ExpenseController extends Controller
     {
         if ($request->ajax()) {
             $expenses = "";
-            $query = Expense::where('branch_id', Auth::user()->branch_id);
-
-            if($request->status){
-                $query->where('expenses.status', $request->status);
-            }
+            $query = Expense::where('branch_id', Auth::user()->branch_id)
+                        ->leftJoin('expense_categories', 'expenses.expense_category_id', 'expense_categories.id');
 
             if($request->expense_category_id){
                 $query->where('expenses.expense_category_id', $request->expense_category_id);
             }
 
-            $expenses = $query->select('expenses.*')->get();
+            if($request->expense_date_start){
+                $query->whereDate('expenses.created_at', '>=', $request->expense_date_start);
+            }
+
+            if($request->expense_date_end){
+                $query->whereDate('expenses.created_at', '<=', $request->expense_date_end);
+            }
+
+            $expenses = $query->select('expenses.*', 'expense_categories.expense_category_name')->get();
 
             return Datatables::of($expenses)
                     ->addIndexColumn()
-                    ->editColumn('status', function($row){
-                        if($row->status == "Active"){
+                    ->addColumn('action', function($row){
+                        if($row->expense_category_name != "Salary" && $row->expense_category_name != "Bonus"){
                             return'
-                            <span class="badge bg-success">'.$row->status.'</span>
-                            <button type="button" id="'.$row->id.'" class="btn btn-warning btn-sm statusBtn"><i class="fa-solid fa-ban"></i></button>
+                            <button type="button" id="'.$row->id.'" class="btn btn-primary btn-sm editBtn" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fa-regular fa-pen-to-square"></i></button>
+                            <button type="button" id="'.$row->id.'" class="btn btn-danger btn-sm deleteBtn"><i class="fa-solid fa-trash-can"></i></button>
                             ';
                         }else{
                             return'
-                            <span class="badge bg-warning">'.$row->status.'</span>
-                            <button type="button" id="'.$row->id.'" class="btn btn-success btn-sm statusBtn"><i class="fa-solid fa-check"></i></button>
+                            <span class="badge bg-info">N/A</span>
                             ';
                         }
                     })
-                    ->addColumn('action', function($row){
-                        $btn = '
-                            <button type="button" id="'.$row->id.'" class="btn btn-primary btn-sm editBtn" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fa-regular fa-pen-to-square"></i></button>
-                            <button type="button" id="'.$row->id.'" class="btn btn-danger btn-sm deleteBtn"><i class="fa-solid fa-trash-can"></i></button>
-                        ';
-                        return $btn;
-                    })
-                    ->rawColumns(['status', 'action'])
+                    ->rawColumns(['action'])
                     ->make(true);
         }
 
@@ -185,29 +182,5 @@ class ExpenseController extends Controller
             'status' => 200,
             'message' => 'Expense force delete successfully.',
         ]);
-    }
-
-    public function status($id)
-    {
-        $expense = Expense::where('id', $id)->first();
-        if($expense->status == "Active"){
-            $expense->update([
-                'status' => "Inactive",
-                'updated_by' => Auth::user()->id,
-            ]);
-            return response()->json([
-                'status' => 200,
-                'message' => 'Expense status inactive.',
-            ]);
-        }else{
-            $expense->update([
-                'status' =>"Active",
-                'updated_by' => Auth::user()->id,
-            ]);
-            return response()->json([
-                'status' => 200,
-                'message' => 'Expense status active.',
-            ]);
-        }
     }
 }

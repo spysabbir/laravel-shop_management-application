@@ -20,7 +20,7 @@
                     <div class="row mb-3">
                         <div class="col-lg-3">
                             <label class="form-label">Supplier Name</label>
-                            <select class="form-control filter_data" id="supplier_id">
+                            <select class="form-control filter_data" id="filter_supplier_id">
                                 <option value="">All</option>
                                 @foreach ($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-lg-3">
                             <label class="form-label">Payment Status</label>
-                            <select class="form-control filter_data" id="payment_status">
+                            <select class="form-control filter_data" id="filter_payment_status">
                                 <option value="">All</option>
                                 <option value="Paid">Paid</option>
                                 <option value="Unpaid">Unpaid</option>
@@ -44,7 +44,6 @@
                             <tr>
                                 <th>Sl No</th>
                                 <th>Invoice No</th>
-                                <th>Purchase Date</th>
                                 <th>Supplier Name</th>
                                 <th>Grand Total</th>
                                 <th>Payment Amount</th>
@@ -120,14 +119,13 @@
             ajax: {
                 url: "{{ route('purchase.list') }}",
                 "data":function(e){
-                    e.payment_status = $('#payment_status').val();
-                    e.supplier_id = $('#supplier_id').val();
+                    e.payment_status = $('#filter_payment_status').val();
+                    e.supplier_id = $('#filter_supplier_id').val();
                 },
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'purchase_invoice_no', name: 'purchase_invoice_no'},
-                {data: 'purchase_date', name: 'purchase_date'},
                 {data: 'supplier_name', name: 'supplier_name'},
                 {data: 'grand_total', name: 'grand_total'},
                 {data: 'payment_amount', name: 'payment_amount'},

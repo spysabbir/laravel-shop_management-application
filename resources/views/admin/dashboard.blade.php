@@ -20,8 +20,7 @@
                 <div class="col-sm-7">
                     <div class="card-body">
                         <h5 class="card-title text-primary">Congratulations {{ Auth::user()->name }}! 🎉</h5>
-                        <p class="mb-4"> You have done <span class="fw-bold">{{ App\Models\Selling_summary::whereDate('selling_date', date('Y-m-d'))->count() }}</span> more sales today. Check your new sale today.</p>
-                        <a href="{{ route('selling.product') }}" class="btn btn-sm btn-outline-primary">Sale</a>
+                        <p class="mb-4"> We have working today.</p>
                     </div>
                 </div>
                 <div class="col-sm-5 text-center text-sm-left">
@@ -62,99 +61,103 @@
             </div>
         </div>
     </div>
+</div>
+
+@if (Auth::user()->role == 'Super Admin' || Auth::user()->role == 'Admin')
+<div class="row">
     <!-- Total Revenue -->
-    <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
-      <div class="card">
-        <div class="row row-bordered g-0">
-            <div class="col-md-4">
-                <div class="card-body">
-                    <div class="text-center">
-                        <span class="badge bg-success">{{ date('Y') }}</span>
-                    </div>
-                </div>
-                <div class="text-center fw-semibold pt-3 mb-2">Company Growth</div>
-                <div class="d-flex px-xxl-4 px-lg-2 p-4 gap-xxl-3 gap-lg-1 gap-3 justify-content-between">
-                    <div class="d-flex">
-                        <div class="me-2">
-                        <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
-                        </div>
-                        <div class="d-flex flex-column">
-                        <small>Purchase</small>
-                        <h6 class="mb-0">{{ App\Models\Purchase_summary::whereYear('purchase_date', date('Y'))->sum('grand_total') }}</h6>
+    <div class="col-lg-8 col-12 order-2 order-md-3 order-lg-2 mb-4">
+        <div class="card">
+            <div class="row row-bordered g-0">
+                <div class="col-md-4">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <span class="badge bg-success">{{ date('Y') }}</span>
                         </div>
                     </div>
-                    <div class="d-flex">
-                        <div class="me-2">
-                        <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
-                        </div>
-                        <div class="d-flex flex-column">
-                        <small>Selling</small>
-                        <h6 class="mb-0">{{ App\Models\Selling_summary::whereYear('selling_date', date('Y'))->sum('grand_total') }}</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-body">
-                    <div class="text-center">
-                        <span class="badge bg-success">{{ date('F') }}</span>
-                    </div>
-                </div>
-                <div class="text-center fw-semibold pt-3 mb-2">Company Growth</div>
+                    <div class="text-center fw-semibold pt-3 mb-2">Company Growth</div>
                     <div class="d-flex px-xxl-4 px-lg-2 p-4 gap-xxl-3 gap-lg-1 gap-3 justify-content-between">
-                    <div class="d-flex">
-                        <div class="me-2">
-                        <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
+                        <div class="d-flex">
+                            <div class="me-2">
+                            <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
+                            </div>
+                            <div class="d-flex flex-column">
+                            <small>Purchase</small>
+                            <h6 class="mb-0">{{ App\Models\Purchase_summary::whereYear('created_at', date('Y'))->sum('grand_total') }}</h6>
+                            </div>
                         </div>
-                        <div class="d-flex flex-column">
-                        <small>Purchase</small>
-                        <h6 class="mb-0">{{ App\Models\Purchase_summary::whereMonth('purchase_date', date('m'))->sum('grand_total') }}</h6>
-                        </div>
-                    </div>
-                    <div class="d-flex">
-                        <div class="me-2">
-                        <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
-                        </div>
-                        <div class="d-flex flex-column">
-                        <small>Selling</small>
-                        <h6 class="mb-0">{{ App\Models\Selling_summary::whereMonth('selling_date', date('m'))->sum('grand_total') }}</h6>
+                        <div class="d-flex">
+                            <div class="me-2">
+                            <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
+                            </div>
+                            <div class="d-flex flex-column">
+                            <small>Selling</small>
+                            <h6 class="mb-0">{{ App\Models\Selling_summary::whereYear('created_at', date('Y'))->sum('grand_total') }}</h6>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-body">
-                    <div class="text-center">
-                        <span class="badge bg-success">{{ date('D') }}</span>
+                <div class="col-md-4">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <span class="badge bg-success">{{ date('F') }}</span>
+                        </div>
+                    </div>
+                    <div class="text-center fw-semibold pt-3 mb-2">Company Growth</div>
+                        <div class="d-flex px-xxl-4 px-lg-2 p-4 gap-xxl-3 gap-lg-1 gap-3 justify-content-between">
+                        <div class="d-flex">
+                            <div class="me-2">
+                            <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
+                            </div>
+                            <div class="d-flex flex-column">
+                            <small>Purchase</small>
+                            <h6 class="mb-0">{{ App\Models\Purchase_summary::whereMonth('created_at', date('m'))->sum('grand_total') }}</h6>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="me-2">
+                            <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
+                            </div>
+                            <div class="d-flex flex-column">
+                            <small>Selling</small>
+                            <h6 class="mb-0">{{ App\Models\Selling_summary::whereMonth('created_at', date('m'))->sum('grand_total') }}</h6>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="text-center fw-semibold pt-3 mb-2">Company Growth</div>
-                    <div class="d-flex px-xxl-4 px-lg-2 p-4 gap-xxl-3 gap-lg-1 gap-3 justify-content-between">
-                    <div class="d-flex">
-                        <div class="me-2">
-                        <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
-                        </div>
-                        <div class="d-flex flex-column">
-                        <small>Purchase</small>
-                        <h6 class="mb-0">{{ App\Models\Purchase_summary::whereDate('purchase_date', date('Y-m-d'))->sum('grand_total') }}</h6>
+                <div class="col-md-4">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <span class="badge bg-success">{{ date('D') }}</span>
                         </div>
                     </div>
-                    <div class="d-flex">
-                        <div class="me-2">
-                        <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
+                    <div class="text-center fw-semibold pt-3 mb-2">Company Growth</div>
+                        <div class="d-flex px-xxl-4 px-lg-2 p-4 gap-xxl-3 gap-lg-1 gap-3 justify-content-between">
+                        <div class="d-flex">
+                            <div class="me-2">
+                            <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
+                            </div>
+                            <div class="d-flex flex-column">
+                            <small>Purchase</small>
+                            <h6 class="mb-0">{{ App\Models\Purchase_summary::whereDate('created_at', date('Y-m-d'))->sum('grand_total') }}</h6>
+                            </div>
                         </div>
-                        <div class="d-flex flex-column">
-                        <small>Selling</small>
-                        <h6 class="mb-0">{{ App\Models\Selling_summary::whereDate('selling_date', date('Y-m-d'))->sum('grand_total') }}</h6>
+                        <div class="d-flex">
+                            <div class="me-2">
+                            <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
+                            </div>
+                            <div class="d-flex flex-column">
+                            <small>Selling</small>
+                            <h6 class="mb-0">{{ App\Models\Selling_summary::whereDate('created_at', date('Y-m-d'))->sum('grand_total') }}</h6>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-      </div>
     </div>
     <!--/ Total Revenue -->
-    <div class="col-12 col-md-8 col-lg-4 order-3 order-md-2">
+    <div class="col-lg-4 col-md-8 col-12  order-3 order-md-2">
         <div class="row">
             <div class="col-12 mb-4">
                 <div class="card">
@@ -186,6 +189,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-3 mb-4">
         <div class="card">
@@ -240,6 +244,7 @@
         </div>
     </div>
 </div>
+@endif
 
 <div class="row">
     <!-- Statistics -->
@@ -314,7 +319,11 @@
                     <div>
                         <small class="text-muted d-block">Total Expense</small>
                         <div class="d-flex align-items-center">
+                            @if (Auth::user()->role == 'Super Admin' || Auth::user()->role == 'Admin')
                             <h6 class="mb-0 me-1">{{ App\Models\Expense::sum('expense_cost') }}</h6>
+                            @else
+                            <h6 class="mb-0 me-1">{{ App\Models\Expense::where('branch_id', Auth::user()->branch_id)->sum('expense_cost') }}</h6>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -325,7 +334,11 @@
                     <div>
                         <small class="text-muted d-block">Expenses This Year</small>
                         <div class="d-flex align-items-center">
+                            @if (Auth::user()->role == 'Super Admin' || Auth::user()->role == 'Admin')
                             <h6 class="mb-0 me-1">{{ App\Models\Expense::whereYear('expense_date', date('Y'))->sum('expense_cost') }}</h6>
+                            @else
+                            <h6 class="mb-0 me-1">{{ App\Models\Expense::where('branch_id', Auth::user()->branch_id)->whereYear('expense_date', date('Y'))->sum('expense_cost') }}</h6>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -336,7 +349,11 @@
                     <div>
                         <small class="text-muted d-block">Expenses This Month</small>
                         <div class="d-flex align-items-center">
+                            @if (Auth::user()->role == 'Super Admin' || Auth::user()->role == 'Admin')
                             <h6 class="mb-0 me-1">{{ App\Models\Expense::whereMonth('expense_date', date('m'))->sum('expense_cost') }}</h6>
+                            @else
+                            <h6 class="mb-0 me-1">{{ App\Models\Expense::where('branch_id', Auth::user()->branch_id)->whereMonth('expense_date', date('m'))->sum('expense_cost') }}</h6>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -347,7 +364,11 @@
                     <div>
                         <small class="text-muted d-block">Expenses Today</small>
                         <div class="d-flex align-items-center">
+                            @if (Auth::user()->role == 'Super Admin' || Auth::user()->role == 'Admin')
                             <h6 class="mb-0 me-1">{{ App\Models\Expense::whereMonth('expense_date', date('m'))->sum('expense_cost') }}</h6>
+                            @else
+                            <h6 class="mb-0 me-1">{{ App\Models\Expense::where('branch_id', Auth::user()->branch_id)->whereMonth('expense_date', date('m'))->sum('expense_cost') }}</h6>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -365,14 +386,23 @@
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
-                    @forelse ($purchase_summaries->take(6) as $purchase_summary)
+                    @if (Auth::user()->role == 'Super Admin' || Auth::user()->role == 'Admin')
+                        @php
+                            $all_purchase_summaries = $purchase_summaries;
+                        @endphp
+                    @else
+                        @php
+                            $all_purchase_summaries = $purchase_summaries->where('branch_id', Auth::user()->branch_id)
+                        @endphp
+                    @endif
+                    @forelse ($all_purchase_summaries->take(8) as $purchase_summary)
                     <li class="d-flex mb-4 pb-1">
                         <div class="avatar flex-shrink-0 me-3">
                             <img src="{{ asset('admin') }}/img/icons/unicons/paypal.png" alt="User" class="rounded" />
                         </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
-                                <small class="text-muted d-block mb-1">{{ $purchase_summary->purchase_date }}</small>
+                                <small class="text-muted d-block mb-1">{{ $purchase_summary->created_at }}</small>
                                 <h6 class="mb-0">{{ $purchase_summary->relationtosupplier->supplier_name }}</h6>
                             </div>
                             <div class="user-progress d-flex align-items-center gap-1">
@@ -400,14 +430,23 @@
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
-                    @forelse ($selling_summaries->take(6) as $selling_summary)
+                    @if (Auth::user()->role == 'Super Admin' || Auth::user()->role == 'Admin')
+                        @php
+                            $all_selling_summaries = $selling_summaries;
+                        @endphp
+                    @else
+                        @php
+                            $all_selling_summaries = $selling_summaries->where('branch_id', Auth::user()->branch_id)
+                        @endphp
+                    @endif
+                    @forelse ($all_selling_summaries->take(6) as $selling_summary)
                     <li class="d-flex mb-4 pb-1">
                         <div class="avatar flex-shrink-0 me-3">
                             <img src="{{ asset('admin') }}/img/icons/unicons/paypal.png" alt="User" class="rounded" />
                         </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
-                                <small class="text-muted d-block mb-1">{{ $selling_summary->selling_date }}</small>
+                                <small class="text-muted d-block mb-1">{{ $selling_summary->created_at }}</small>
                                 <h6 class="mb-0">{{ $selling_summary->relationtocustomer->customer_name }}</h6>
                             </div>
                             <div class="user-progress d-flex align-items-center gap-1">

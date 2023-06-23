@@ -44,7 +44,6 @@
                             <tr>
                                 <th>Sl No</th>
                                 <th>Invoice No</th>
-                                <th>Selling Date</th>
                                 <th>Customer Name</th>
                                 <th>Grand Total</th>
                                 <th>Payment Amount</th>
@@ -127,7 +126,6 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'selling_invoice_no', name: 'selling_invoice_no'},
-                {data: 'selling_date', name: 'selling_date'},
                 {data: 'customer_name', name: 'customer_name'},
                 {data: 'grand_total', name: 'grand_total'},
                 {data: 'payment_amount', name: 'payment_amount'},

@@ -13,7 +13,7 @@
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'default.setting' || Route::currentRouteName() == 'mail.setting' || Route::currentRouteName() == 'sms.setting') ? 'active open' : ''}}">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-dock-top"></i>
+            <i class="menu-icon tf-icons bx bx-cog"></i>
             <div data-i18n="Account Settings">Settings</div>
         </a>
         <ul class="menu-sub">
@@ -36,7 +36,7 @@
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'stock.report' || Route::currentRouteName() == 'expense.report' || Route::currentRouteName() == 'purchase.report' || Route::currentRouteName() == 'selling.report') ? 'active open' : ''}}">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+            <i class="menu-icon tf-icons bx bxs-report"></i>
             <div data-i18n="Report">Report</div>
         </a>
         <ul class="menu-sub">
@@ -70,7 +70,7 @@
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'all.administrator') ? 'active open' : ''}}">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+            <i class="menu-icon tf-icons bx bx-group"></i>
             <div data-i18n="Administrator">Administrator</div>
         </a>
         <ul class="menu-sub">
@@ -88,25 +88,25 @@
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'all.contact.message') ? 'active' : ''}}">
         <a href="{{ route('all.contact.message') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <i class="menu-icon tf-icons bx bx-message-dots"></i>
             <div data-i18n="All Contact Message">All Contact Message</div>
         </a>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'expense-category.index') ? 'active' : ''}}">
         <a href="{{ route('expense-category.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <i class="menu-icon tf-icons bx bx-money-withdraw"></i>
             <div data-i18n="Expense Category">Expense Category</div>
         </a>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'staff-designation.index') ? 'active' : ''}}">
         <a href="{{ route('staff-designation.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <i class="menu-icon tf-icons bx bxs-id-card"></i>
             <div data-i18n="Staff Designation">Staff Designation</div>
         </a>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'branch.index') ? 'active' : ''}}">
         <a href="{{ route('branch.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <i class="menu-icon tf-icons bx bxs-buildings"></i>
             <div data-i18n="Branch">Branch</div>
         </a>
     </li>
@@ -116,9 +116,9 @@
     <li class="menu-header small text-uppercase">
         <span class="menu-header-text">Branch Panel</span>
     </li>
-    <li class="menu-item {{(Route::currentRouteName() == 'staff.index' || Route::currentRouteName() == 'staff.salary') ? 'active open' : ''}}">
+    <li class="menu-item {{(Route::currentRouteName() == 'staff.index' || Route::currentRouteName() == 'staff.payment') ? 'active open' : ''}}">
         <a href="javascript:void(0)" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-box"></i>
+            <i class="menu-icon tf-icons bx bxs-id-card"></i>
             <div data-i18n="Staff Interface">Staff Interface</div>
         </a>
         <ul class="menu-sub">
@@ -127,34 +127,34 @@
                     <div data-i18n="Staff List">Staff List</div>
                 </a>
             </li>
-            <li class="menu-item {{(Route::currentRouteName() == 'staff.salary') ? 'active' : ''}}">
-                <a href="{{ route('staff.salary') }}" class="menu-link">
-                    <div data-i18n="Staff Salary">Staff Salary</div>
+            <li class="menu-item {{(Route::currentRouteName() == 'staff.payment') ? 'active' : ''}}">
+                <a href="{{ route('staff.payment') }}" class="menu-link">
+                    <div data-i18n="Staff Salary">Staff Payment</div>
                 </a>
             </li>
         </ul>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'supplier.index') ? 'active' : ''}}">
         <a href="{{ route('supplier.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <i class="menu-icon tf-icons bx bxs-user-badge"></i>
             <div data-i18n="Supplier">Supplier</div>
         </a>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'customer.index') ? 'active' : ''}}">
         <a href="{{ route('customer.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <i class="menu-icon tf-icons bx bxs-user-account"></i>
             <div data-i18n="Customer">Customer</div>
         </a>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'expense.index') ? 'active' : ''}}">
         <a href="{{ route('expense.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <i class="menu-icon tf-icons bx bx-money-withdraw"></i>
             <div data-i18n="Expense">Expense</div>
         </a>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'category.index' || Route::currentRouteName() == 'brand.index' || Route::currentRouteName() == 'unit.index' || Route::currentRouteName() == 'product.index') ? 'active open' : ''}}">
         <a href="javascript:void(0)" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-box"></i>
+            <i class="menu-icon tf-icons bx bxl-product-hunt"></i>
             <div data-i18n="Product Interface">Product Interface</div>
         </a>
         <ul class="menu-sub">
@@ -180,15 +180,15 @@
             </li>
         </ul>
     </li>
-    <li class="menu-item {{(Route::currentRouteName() == 'purchase.product' || Route::currentRouteName() == 'purchase.list') ? 'active open' : ''}}">
+    <li class="menu-item {{(Route::currentRouteName() == 'purchase' || Route::currentRouteName() == 'purchase.list' || Route::currentRouteName() == 'purchase.return') ? 'active open' : ''}}">
         <a href="javascript:void(0)" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-box"></i>
+            <i class="menu-icon tf-icons bx bxs-purchase-tag-alt"></i>
             <div data-i18n="Purchase Interface">Purchase Interface</div>
         </a>
         <ul class="menu-sub">
-            <li class="menu-item {{(Route::currentRouteName() == 'purchase.product') ? 'active' : ''}}">
-                <a href="{{ route('purchase.product') }}" class="menu-link">
-                    <div data-i18n="Purchase Product">Purchase Product</div>
+            <li class="menu-item {{(Route::currentRouteName() == 'purchase') ? 'active' : ''}}">
+                <a href="{{ route('purchase') }}" class="menu-link">
+                    <div data-i18n="Purchase">Purchase</div>
                 </a>
             </li>
             <li class="menu-item {{(Route::currentRouteName() == 'purchase.list') ? 'active' : ''}}">
@@ -196,17 +196,22 @@
                     <div data-i18n="Purchase List">Purchase List</div>
                 </a>
             </li>
+            {{-- <li class="menu-item {{(Route::currentRouteName() == 'purchase.return') ? 'active' : ''}}">
+                <a href="{{ route('purchase.return') }}" class="menu-link">
+                    <div data-i18n="Purchase Return">Purchase Return</div>
+                </a>
+            </li> --}}
         </ul>
     </li>
-    <li class="menu-item {{(Route::currentRouteName() == 'selling.product' || Route::currentRouteName() == 'selling.list') ? 'active open' : ''}}">
+    <li class="menu-item {{(Route::currentRouteName() == 'selling' || Route::currentRouteName() == 'selling.list' || Route::currentRouteName() == 'selling.return') ? 'active open' : ''}}">
         <a href="javascript:void(0)" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-box"></i>
+            <i class="menu-icon tf-icons bx bx-cart-download"></i>
             <div data-i18n="Selling Interface">Selling Interface</div>
         </a>
         <ul class="menu-sub">
-            <li class="menu-item {{(Route::currentRouteName() == 'selling.product') ? 'active' : ''}}">
-                <a href="{{ route('selling.product') }}" class="menu-link">
-                    <div data-i18n="Selling Product">Selling Product</div>
+            <li class="menu-item {{(Route::currentRouteName() == 'selling') ? 'active' : ''}}">
+                <a href="{{ route('selling') }}" class="menu-link">
+                    <div data-i18n="Selling">Selling</div>
                 </a>
             </li>
             <li class="menu-item {{(Route::currentRouteName() == 'selling.list') ? 'active' : ''}}">
@@ -214,11 +219,16 @@
                     <div data-i18n="Selling List">Selling List</div>
                 </a>
             </li>
+            {{-- <li class="menu-item {{(Route::currentRouteName() == 'selling.return') ? 'active' : ''}}">
+                <a href="{{ route('selling.return') }}" class="menu-link">
+                    <div data-i18n="Selling Return">Selling Return</div>
+                </a>
+            </li> --}}
         </ul>
     </li>
     <li class="menu-item {{(Route::currentRouteName() == 'stock.products') ? 'active' : ''}}">
         <a href="{{ route('stock.products') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <i class="menu-icon tf-icons bx bxs-data"></i>
             <div data-i18n="Stock Products">Stock Products</div>
         </a>
     </li>

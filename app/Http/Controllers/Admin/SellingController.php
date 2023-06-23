@@ -25,13 +25,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class SellingController extends Controller
 {
-    public function sellingProduct (Request $request)
+    public function selling (Request $request)
     {
         if ($request->ajax()) {
             $selling_carts = "";
-            $query = Selling_cart::where('selling_invoice_no', $request->selling_invoice_no)
-                ->where('selling_date', $request->selling_date)
-                ->where('customer_id', $request->customer_id)
+            $query = Selling_cart::where('customer_id', $request->customer_id)
                 ->leftJoin('products', 'selling_carts.product_id', 'products.id');
 
             $selling_carts = $query->select('selling_carts.*', 'products.product_name', 'products.selling_price', 'products.unit_id', 'products.brand_id')->get();
@@ -78,13 +76,7 @@ class SellingController extends Controller
         return view('admin.selling.create', compact('customers', 'categories'));
     }
 
-    public function sellingCartDelete()
-    {
-        Selling_cart::truncate();
-        return back();
-    }
-
-    public function getProducts(Request $request)
+    public function getSellingProductList(Request $request)
     {
         $send_products = "<option value=''>--Select Product--</option>";
         $products = Product::where('category_id', $request->category_id)->get();
@@ -94,7 +86,7 @@ class SellingController extends Controller
         return response()->json($send_products);
     }
 
-    public function sellingProductDetails(Request $request)
+    public function getSellingProductDetails(Request $request)
     {
         $product = Product::where('id', $request->product_id)->first();
         $selling_price = $product->selling_price;
@@ -109,12 +101,11 @@ class SellingController extends Controller
         ]);
     }
 
-    public function sellingCartStore(Request $request)
+    public function storeSellingProductCart(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'selling_invoice_no' => 'required',
-            'selling_date' => 'required',
             'customer_id' => 'required',
+            'category_id' => 'required',
             'product_id' => 'required',
         ]);
 
@@ -152,9 +143,7 @@ class SellingController extends Controller
                 $customer_id = $request->customer_id;
             }
 
-            $exists = Selling_cart::where('selling_invoice_no', $request->selling_invoice_no)
-                                ->where('selling_date', $request->selling_date)
-                                ->where('customer_id', $customer_id)
+            $exists = Selling_cart::where('customer_id', $customer_id)
                                 ->where('product_id', $request->product_id)
                                 ->exists();
             if($exists){
@@ -163,42 +152,40 @@ class SellingController extends Controller
                     'message' => 'Selling product already added.',
                 ]);
             }else{
-                Selling_cart::insert([
-                    'selling_invoice_no' => $request->selling_invoice_no,
-                    'selling_date' => $request->selling_date,
-                    'customer_id' => $customer_id,
-                    'product_id' => $request->product_id,
-                    'selling_price' => $request->selling_price,
-                    'created_at' => Carbon::now(),
-                ]);
+                $product_purchase_quantity = Purchase_details::where('product_id', $request->product_id)->where('branch_id', Auth::user()->branch_id)->sum('purchase_quantity');
+                $product_selling_quantity = Selling_details::where('product_id', $request->product_id)->where('branch_id', Auth::user()->branch_id)->sum('selling_quantity');
+                $stock_quantity = $product_purchase_quantity - $product_selling_quantity;
+                if(1 > $stock_quantity){
+                    return response()->json([
+                        'status' => 403,
+                        'message' => 'This quantity of stock is not available.',
+                    ]);
+                }else{
+                    Selling_cart::insert([
+                        'customer_id' => $customer_id,
+                        'product_id' => $request->product_id,
+                        'selling_quantity' => 1,
+                        'selling_price' => $request->selling_price,
+                        'created_at' => Carbon::now(),
+                    ]);
 
-                return response()->json([
-                    'status' => 200,
-                    'customer_id' => $customer_id,
-                    'message' => 'Selling product added successfully.',
-                ]);
+                    $sub_total = 0;
+                    foreach(Selling_cart::where('customer_id', $request->customer_id)->get() as $cart){
+                        $sub_total += ($cart->selling_quantity*$cart->selling_price);
+                    };
+
+                    return response()->json([
+                        'status' => 200,
+                        'customer_id' => $customer_id,
+                        'sub_total' => $sub_total,
+                        'message' => 'Selling product added successfully.',
+                    ]);
+                }
             }
         }
     }
 
-    public function sellingCartItemDelete(Request $request)
-    {
-        Selling_cart::where('id', $request->cart_id)->delete();
-
-        $sub_total = 0;
-        foreach(Selling_cart::where('selling_invoice_no', $request->selling_invoice_no)
-                    ->where('selling_date', $request->selling_date)
-                    ->where('customer_id', $request->customer_id)->get() as $cart){
-            $sub_total += ($cart->selling_quantity*$cart->selling_price);
-        };
-
-        return response()->json([
-            'sub_total' => $sub_total,
-            'message' => 'Selling cart item delete successfully.',
-        ]);
-    }
-
-    public function changeSellingCartData(Request $request)
+    public function updateSellingProductCart(Request $request)
     {
         $selling_cart = Selling_cart::where('id', $request->cart_id)->first();
 
@@ -217,27 +204,38 @@ class SellingController extends Controller
             ]);
 
             $sub_total = 0;
-            foreach(Selling_cart::where('selling_invoice_no', $request->selling_invoice_no)
-                        ->where('selling_date', $request->selling_date)
-                        ->where('customer_id', $request->customer_id)->get() as $cart){
+            foreach(Selling_cart::where('customer_id', $request->customer_id)->get() as $cart){
                 $sub_total += ($cart->selling_quantity*$cart->selling_price);
             };
             return response()->json($sub_total);
         }
     }
 
-    public function getSubTotal(Request $request)
+    public function getSellingCartSubtotal(Request $request)
     {
         $sub_total = 0;
-        foreach(Selling_cart::where('selling_invoice_no', $request->selling_invoice_no)
-                    ->where('selling_date', $request->selling_date)
-                    ->where('customer_id', $request->customer_id)->get() as $cart){
+        foreach(Selling_cart::where('customer_id', $request->customer_id)->get() as $cart){
             $sub_total += ($cart->selling_quantity*$cart->selling_price);
         };
         return response()->json($sub_total);
     }
 
-    public function sellingProductStore(Request $request)
+    public function sellingCartProductDelete(Request $request)
+    {
+        Selling_cart::where('id', $request->cart_id)->delete();
+
+        $sub_total = 0;
+        foreach(Selling_cart::where('customer_id', $request->customer_id)->get() as $cart){
+            $sub_total += ($cart->selling_quantity*$cart->selling_price);
+        };
+
+        return response()->json([
+            'sub_total' => $sub_total,
+            'message' => 'Selling cart item delete successfully.',
+        ]);
+    }
+
+    public function sellingStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
             '*' => 'required',
@@ -251,9 +249,7 @@ class SellingController extends Controller
                 'error'=> $validator->errors()->toArray()
             ]);
         }else{
-            $products_data =  Selling_cart::where('selling_invoice_no', $request->selling_invoice_no)
-                        ->where('selling_date', $request->selling_date)
-                        ->where('customer_id', $request->customer_id);
+            $products_data =  Selling_cart::where('customer_id', $request->customer_id);
             if(!$products_data->exists()){
                 return response()->json([
                     'status' => 401,
@@ -266,9 +262,10 @@ class SellingController extends Controller
                         'message' => 'The payment_method field is required.',
                     ]);
                 }else{
-                    $selling_summery_id = Selling_summary::insertGetId([
-                        'selling_invoice_no' => $request->selling_invoice_no,
-                        'selling_date' => $request->selling_date,
+                    $selling_invoice_no = "SI-".Selling_summary::max('id')+1;
+
+                    Selling_summary::insert([
+                        'selling_invoice_no' => $selling_invoice_no,
                         'customer_id' => $request->customer_id,
                         'sub_total' => $request->sub_total,
                         'discount' => $request->discount,
@@ -282,7 +279,7 @@ class SellingController extends Controller
 
                     Customers_payment_summary::insert([
                         'customer_id' => $request->customer_id,
-                        'selling_invoice_no' => $request->selling_invoice_no,
+                        'selling_invoice_no' => $selling_invoice_no,
                         'grand_total' => $request->grand_total,
                         'payment_status' => $request->payment_status,
                         'payment_method' => $request->payment_method,
@@ -294,19 +291,20 @@ class SellingController extends Controller
                     $cart_products = $products_data->get();
                     foreach($cart_products as $cart_product){
                         Selling_details::insert([
-                            'selling_invoice_no' => $cart_product->selling_invoice_no,
+                            'selling_invoice_no' => $selling_invoice_no,
                             'product_id' => $cart_product->product_id,
                             'selling_quantity' => $cart_product->selling_quantity,
                             'selling_price' => $cart_product->selling_price,
                             'branch_id' => Auth::user()->branch_id,
-                            'created_at' => Carbon::now(),
                         ]);
 
                         Product::where('id', $cart_product->product_id)->update([
                             'selling_price' => $cart_product->selling_price,
                         ]);
+
                         Product::where('id', $cart_product->product_id)->increment('selling_quantity', $cart_product->selling_quantity);
-                        $cart_product->truncate();
+
+                        Selling_cart::find($cart_product->id)->delete();
                     }
 
                     // Send SMS
@@ -340,6 +338,7 @@ class SellingController extends Controller
 
                     return response()->json([
                         'status' => 200,
+                        'selling_invoice_no' => Crypt::encrypt($selling_invoice_no),
                         'message' => 'Product selling successfully.',
                     ]);
                 }
@@ -366,11 +365,6 @@ class SellingController extends Controller
 
             return Datatables::of($selling_summaries)
                     ->addIndexColumn()
-                    ->editColumn('selling_date', function($row){
-                        return'
-                            <span class="badge bg-success">'.date('d-M-Y h:m:s A', strtotime($row->selling_date)).'</span>
-                        ';
-                    })
                     ->editColumn('payment_status', function($row){
                         if($row->payment_status != "Paid"){
                             return'
@@ -385,12 +379,11 @@ class SellingController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $btn = '
-                            <a href="'.route('selling.invoice.download', Crypt::encrypt($row->selling_invoice_no)).'" target="_blank" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
                             <a href="'.route('selling.invoice', Crypt::encrypt($row->selling_invoice_no) ).'" target="_blank" class="btn btn-primary btn-sm"><i class="fa-solid fa-print"></i></a>
                         ';
                         return $btn;
                     })
-                    ->rawColumns(['selling_date', 'payment_status', 'action'])
+                    ->rawColumns(['payment_status', 'action'])
                     ->make(true);
         }
 
@@ -470,11 +463,6 @@ class SellingController extends Controller
                 $response = curl_exec($ch);
                 curl_close($ch);
                 // return $response;
-
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Customer payment successfully.',
-                ]);
             }
         }
     }
@@ -486,15 +474,5 @@ class SellingController extends Controller
         $selling_details = Selling_details::where('selling_invoice_no', $selling_invoice_no)->get();
         $payment_summaries = Customers_payment_summary::where('selling_invoice_no', $selling_invoice_no)->get();
         return view('admin.selling.invoice', compact('default_setting', 'selling_summary', 'selling_details', 'payment_summaries'));
-    }
-
-    public function sellingInvoiceDownload($selling_invoice_no){
-        $default_setting = DefaultSetting::first();
-        $selling_invoice_no = Crypt::decrypt($selling_invoice_no);
-        $selling_summary = Selling_summary::where('selling_invoice_no', $selling_invoice_no)->first();
-        $selling_details = Selling_details::where('selling_invoice_no', $selling_invoice_no)->get();
-        $payment_summaries = Customers_payment_summary::where('selling_invoice_no', $selling_invoice_no)->get();
-        $pdf = Pdf::loadView('admin.selling.invoice', compact('default_setting', 'selling_summary', 'selling_details', 'payment_summaries'));
-        return $pdf->stream($selling_invoice_no.'-invoice.pdf');
     }
 }
