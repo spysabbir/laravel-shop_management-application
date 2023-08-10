@@ -18,12 +18,12 @@
                 <div class="filter">
                     <div class="row mb-3">
                         <div class="col-lg-3">
-                            <label class="form-label">Gender</label>
-                            <select class="form-control filter_data" id="staff_gender">
+                            <label class="form-label">Designation</label>
+                            <select class="form-control filter_data" id="staff_designation_id">
                                 <option value="">All</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
+                                @foreach ($staffDesignations as $designation)
+                                <option value="{{ $designation->id }}">{{ $designation->designation_name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -33,10 +33,11 @@
                         <thead>
                             <tr>
                                 <th>Sl No</th>
-                                <th>Join Date</th>
                                 <th>Profile Photo</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Designation</th>
+                                <th>Salary</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -76,8 +77,8 @@
                                                     <label class="form-label">Payment Type</label>
                                                     <select name="payment_type" class="form-select" id="payment_type">
                                                         <option value="">Select Type</option>
-                                                        <option value="Salary">Salary</option>
-                                                        <option value="Bonus">Bonus</option>
+                                                        <option value="Staff Salary">Staff Salary</option>
+                                                        <option value="Staff Bonus">Staff Bonus</option>
                                                     </select>
                                                     <span class="text-danger error-text payment_type_error"></span>
                                                 </div>
@@ -154,15 +155,16 @@
             ajax: {
                 url: "{{ route('staff.payment') }}",
                 "data":function(e){
-                    e.staff_gender = $('#staff_gender').val();
+                    e.staff_designation_id = $('#staff_designation_id').val();
                 },
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'created_at', name: 'created_at'},
                 {data: 'profile_photo', name: 'profile_photo'},
                 {data: 'staff_name', name: 'staff_name'},
                 {data: 'staff_email', name: 'staff_email'},
+                {data: 'staff_designation', name: 'staff_designation'},
+                {data: 'staff_salary', name: 'staff_salary'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
         });

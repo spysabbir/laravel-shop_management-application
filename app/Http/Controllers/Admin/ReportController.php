@@ -23,6 +23,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 use DB;
+use Illuminate\Support\Facades\Crypt;
+
 class ReportController extends Controller
 {
     public function stockReport(Request $request){
@@ -211,7 +213,6 @@ class ReportController extends Controller
                         if($row->payment_status != "Paid"){
                             return'
                             <span class="badge bg-warning">'.$row->payment_status.'</span>
-                            <button type="button" id="'.$row->id.'" class="btn btn-primary btn-sm paymentBtn" data-bs-toggle="modal" data-bs-target="#paymentModal"><i class="fa-regular fa-credit-card"></i></button>
                             ';
                         }else{
                             return'
@@ -221,6 +222,7 @@ class ReportController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $btn = '
+                            <a href="'.route('purchase.invoice', Crypt::encrypt($row->purchase_invoice_no) ).'" target="_blank" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
                         ';
                         return $btn;
                     })
@@ -305,7 +307,6 @@ class ReportController extends Controller
                         if($row->payment_status != "Paid"){
                             return'
                             <span class="badge bg-warning">'.$row->payment_status.'</span>
-                            <button type="button" id="'.$row->id.'" class="btn btn-primary btn-sm paymentBtn" data-bs-toggle="modal" data-bs-target="#paymentModal"><i class="fa-regular fa-credit-card"></i></button>
                             ';
                         }else{
                             return'
@@ -315,6 +316,7 @@ class ReportController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $btn = '
+                            <a href="'.route('selling.invoice', Crypt::encrypt($row->selling_invoice_no) ).'" target="_blank" class="btn btn-primary btn-sm"><i class="fa-solid fa-print"></i></a>
                         ';
                         return $btn;
                     })

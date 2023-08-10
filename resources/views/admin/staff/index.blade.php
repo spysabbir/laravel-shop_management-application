@@ -163,13 +163,14 @@
                         <thead>
                             <tr>
                                 <th>Sl No</th>
-                                {{-- <th>Join Date</th> --}}
+                                <th>Join Date</th>
                                 <th>Profile Photo</th>
                                 <th>Name</th>
                                 <th>Position</th>
                                 <th>Email</th>
                                 <th>Gender</th>
                                 <th>Phone Number</th>
+                                <th>Salary</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -351,13 +352,14 @@
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                // {data: 'created_at', name: 'created_at'},
+                {data: 'created_at', name: 'created_at'},
                 {data: 'profile_photo', name: 'profile_photo'},
                 {data: 'staff_name', name: 'staff_name'},
                 {data: 'staff_designation', name: 'staff_designation'},
                 {data: 'staff_email', name: 'staff_email'},
                 {data: 'staff_gender', name: 'staff_gender'},
                 {data: 'staff_phone_number', name: 'staff_phone_number'},
+                {data: 'staff_salary', name: 'staff_salary'},
                 {data: 'status', name: 'status'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],

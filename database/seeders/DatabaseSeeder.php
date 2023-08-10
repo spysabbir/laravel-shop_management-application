@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             MailSettingTableSeeder::class,
             SmsSettingTableSeeder::class,
             UserTableSeeder::class,
+            ExpenseCategoryTableSeeder::class,
         ]);
     }
 }

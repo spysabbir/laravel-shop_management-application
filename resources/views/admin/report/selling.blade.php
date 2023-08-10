@@ -73,9 +73,11 @@
                                 <th>Payment Amount</th>
                                 <th>Payment Status</th>
                                 <th>Selling Agent</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
+
                         </tbody>
                     </table>
                 </div>
@@ -112,6 +114,7 @@
                 {data: 'payment_amount', name: 'payment_amount'},
                 {data: 'payment_status', name: 'payment_status'},
                 {data: 'name', name: 'name'},
+                {data: 'action', name: 'action'},
             ],
         });
 

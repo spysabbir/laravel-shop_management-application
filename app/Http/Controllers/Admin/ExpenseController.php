@@ -37,7 +37,7 @@ class ExpenseController extends Controller
             return Datatables::of($expenses)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
-                        if($row->expense_category_name != "Salary" && $row->expense_category_name != "Bonus"){
+                        if($row->expense_category_name != "Staff Salary" && $row->expense_category_name != "Staff Bonus"){
                             return'
                             <button type="button" id="'.$row->id.'" class="btn btn-primary btn-sm editBtn" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fa-regular fa-pen-to-square"></i></button>
                             <button type="button" id="'.$row->id.'" class="btn btn-danger btn-sm deleteBtn"><i class="fa-solid fa-trash-can"></i></button>

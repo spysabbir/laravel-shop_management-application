@@ -77,6 +77,12 @@ class StaffController extends Controller
                             ';
                         }
                     })
+                    ->editColumn('staff_salary', function($row){
+                        return'
+                        <span class="badge bg-info">'.$row->staff_salary.'</span>
+                        <button type="button" id="'.$row->id.'" class="btn btn-success btn-sm assignSalaryBtn" data-bs-toggle="modal" data-bs-target="#assignSalaryModal"><i class="fa-solid fa-credit-card"></i></button>
+                        ';
+                    })
                     ->editColumn('status', function($row){
                         if($row->status == "Active"){
                             return'
@@ -92,14 +98,13 @@ class StaffController extends Controller
                     })
                     ->addColumn('action', function($row){
                         $btn = '
-                            <button type="button" id="'.$row->id.'" class="btn btn-success btn-sm assignSalaryBtn" data-bs-toggle="modal" data-bs-target="#assignSalaryModal"><i class="fa-solid fa-credit-card"></i></button>
                             <button type="button" id="'.$row->id.'" class="btn btn-info btn-sm viewBtn" data-bs-toggle="modal" data-bs-target="#viewModal"><i class="fa-solid fa-eye"></i></button>
                             <button type="button" id="'.$row->id.'" class="btn btn-primary btn-sm editBtn" data-bs-toggle="modal" data-bs-target="#editModal"><i class="fa-regular fa-pen-to-square"></i></button>
                             <button type="button" id="'.$row->id.'" class="btn btn-danger btn-sm deleteBtn"><i class="fa-solid fa-trash-can"></i></button>
                         ';
                         return $btn;
                     })
-                    ->rawColumns(['created_at', 'profile_photo', 'branch_name', 'staff_designation', 'staff_gender', 'status', 'action'])
+                    ->rawColumns(['created_at', 'profile_photo', 'branch_name', 'staff_designation', 'staff_gender', 'staff_salary', 'status', 'action'])
                     ->make(true);
         }
 
@@ -396,21 +401,21 @@ class StaffController extends Controller
             $all_staff = "";
             $query = Staff::where('branch_id', Auth::user()->branch_id)->where('status', 'Active');
 
-            if($request->staff_gender){
-                $query->where('staff.staff_gender', $request->staff_gender);
+            if($request->staff_designation_id){
+                $query->where('staff.staff_designation_id', $request->staff_designation_id);
             }
 
             $all_staff = $query->select('staff.*')->get();
 
             return Datatables::of($all_staff)
                     ->addIndexColumn()
-                    ->editColumn('created_at', function($row){
-                        return'
-                        <span class="badge bg-info">'.$row->created_at->format('d-M-Y').'</span>
-                        ';
-                    })
                     ->editColumn('profile_photo', function($row){
                         return '<img src="'.asset('uploads/profile_photo').'/'.$row->profile_photo.'" width="40" >';
+                    })
+                    ->editColumn('staff_designation', function($row){
+                        return'
+                        <span class="badge bg-info">'.StaffDesignation::find($row->staff_designation_id)->designation_name.'</span>
+                        ';
                     })
                     ->addColumn('action', function($row){
                         $btn = '
@@ -419,10 +424,12 @@ class StaffController extends Controller
                         ';
                         return $btn;
                     })
-                    ->rawColumns(['created_at', 'profile_photo', 'action'])
+                    ->rawColumns(['profile_photo', 'staff_designation', 'action'])
                     ->make(true);
         }
-        return view('admin.staff.payment');
+
+        $staffDesignations = StaffDesignation::where('status', 'Active')->get();
+        return view('admin.staff.payment', compact('staffDesignations'));
     }
 
     public function staffPaymentForm($id)

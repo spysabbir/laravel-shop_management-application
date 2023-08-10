@@ -31,7 +31,7 @@
                                             <select name="expense_category_id" class="form-select">
                                                 <option value="">Select Expense Category</option>
                                                 @foreach ($expense_categories as $expense_category)
-                                                <option value="{{ $expense_category->id }}">{{ $expense_category->expense_category_name }}</option>
+                                                <option value="{{ $expense_category->id }}" {{ ($expense_category->expense_category_name == "Staff Salary" || $expense_category->expense_category_name == "Staff Bonus") ? 'disabled' : '' }} >{{ $expense_category->expense_category_name }}</option>
                                                 @endforeach
                                             </select>
                                             <span class="text-danger error-text expense_category_id_error"></span>
@@ -103,7 +103,7 @@
                     <div class="row mb-3">
                         <div class="col-lg-3">
                             <label class="form-label">Expense Category Name</label>
-                            <select class="form-select filter_data" id="expense_category_id">
+                            <select class="form-select filter_data" id="filter_expense_category_id">
                                 <option value="">All</option>
                                 @foreach ($expense_categories as $expense_category)
                                 <option value="{{ $expense_category->id }}">{{ $expense_category->expense_category_name }}</option>
@@ -112,11 +112,11 @@
                         </div>
                         <div class="col-lg-3">
                             <label class="form-label">Expense Date Start</label>
-                            <input type="date" class="form-control filter_data" id="expense_date_start">
+                            <input type="date" class="form-control filter_data" id="filter_expense_date_start">
                         </div>
                         <div class="col-lg-3">
                             <label class="form-label">Expense Date End</label>
-                            <input type="date" class="form-control filter_data" id="expense_date_end">
+                            <input type="date" class="form-control filter_data" id="filter_expense_date_end">
                         </div>
                     </div>
                 </div>
@@ -152,7 +152,7 @@
                                                     <select name="expense_category_id" id="expense_category_id" class="form-select">
                                                         <option value="">Select Expense Category</option>
                                                         @foreach ($expense_categories as $expense_category)
-                                                        <option value="{{ $expense_category->id }}">{{ $expense_category->expense_category_name }}</option>
+                                                        <option value="{{ $expense_category->id }}" {{ ($expense_category->expense_category_name == "Staff Salary" || $expense_category->expense_category_name == "Staff Bonus") ? 'disabled' : '' }}>{{ $expense_category->expense_category_name }}</option>
                                                         @endforeach
                                                     </select>
                                                     <span class="text-danger error-text update_expense_category_id_error"></span>
@@ -212,9 +212,9 @@
             ajax: {
                 url: "{{ route('expense.index') }}",
                 "data":function(e){
-                    e.expense_category_id = $('#expense_category_id').val();
-                    e.expense_date_start = $('#expense_date_start').val();
-                    e.expense_date_end = $('#expense_date_end').val();
+                    e.expense_category_id = $('#filter_expense_category_id').val();
+                    e.expense_date_start = $('#filter_expense_date_start').val();
+                    e.expense_date_end = $('#filter_expense_date_end').val();
                 },
             },
             columns: [

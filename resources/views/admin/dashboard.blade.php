@@ -38,7 +38,6 @@
                     <div class="card-body">
                         <div class="card-title d-flex align-items-start justify-content-between">
                             <div class="avatar flex-shrink-0">
-                            <img src="{{ asset('admin') }}/img/icons/unicons/chart-success.png" alt="chart success" class="rounded" />
                             </div>
                         </div>
                         <span class="fw-semibold d-block mb-1">Total Supplier</span>
@@ -51,7 +50,6 @@
                     <div class="card-body">
                         <div class="card-title d-flex align-items-start justify-content-between">
                             <div class="avatar flex-shrink-0">
-                                <img src="{{ asset('admin') }}/img/icons/unicons/wallet-info.png" alt="Credit Card" class="rounded" />
                             </div>
                         </div>
                         <span  class="fw-semibold d-block mb-1"> Total Customer</span>
@@ -196,7 +194,6 @@
             <div class="card-body">
                 <div class="card-title d-flex align-items-start justify-content-between">
                     <div class="avatar flex-shrink-0">
-                    <img src="{{ asset('admin') }}/img/icons/unicons/paypal.png" alt="Credit Card" class="rounded" />
                     </div>
                 </div>
                 <span class="d-block mb-1">Purchase Cash Total</span>
@@ -209,7 +206,6 @@
             <div class="card-body">
                 <div class="card-title d-flex align-items-start justify-content-between">
                     <div class="avatar flex-shrink-0">
-                    <img src="{{ asset('admin') }}/img/icons/unicons/paypal.png" alt="Credit Card" class="rounded" />
                     </div>
                 </div>
                 <span class="d-block mb-1">Purchase Cash Due</span>
@@ -222,7 +218,6 @@
             <div class="card-body">
             <div class="card-title d-flex align-items-start justify-content-between">
                 <div class="avatar flex-shrink-0">
-                <img src="{{ asset('admin') }}/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
                 </div>
             </div>
             <span class="fw-semibold d-block mb-1">Selling Cash Total</span>
@@ -235,7 +230,6 @@
             <div class="card-body">
             <div class="card-title d-flex align-items-start justify-content-between">
                 <div class="avatar flex-shrink-0">
-                <img src="{{ asset('admin') }}/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
                 </div>
             </div>
             <span class="fw-semibold d-block mb-1">Selling Cash Due</span>
@@ -313,9 +307,6 @@
             </div>
             <div class="card-body px-0">
                 <div class="d-flex p-4 pt-3">
-                    <div class="avatar flex-shrink-0 me-3">
-                        <img src="{{ asset('admin') }}/img/icons/unicons/wallet.png" alt="User" />
-                    </div>
                     <div>
                         <small class="text-muted d-block">Total Expense</small>
                         <div class="d-flex align-items-center">
@@ -328,9 +319,6 @@
                     </div>
                 </div>
                 <div class="d-flex p-4 pt-3">
-                    <div class="avatar flex-shrink-0 me-3">
-                        <img src="{{ asset('admin') }}/img/icons/unicons/wallet.png" alt="User" />
-                    </div>
                     <div>
                         <small class="text-muted d-block">Expenses This Year</small>
                         <div class="d-flex align-items-center">
@@ -343,9 +331,6 @@
                     </div>
                 </div>
                 <div class="d-flex p-4 pt-3">
-                    <div class="avatar flex-shrink-0 me-3">
-                        <img src="{{ asset('admin') }}/img/icons/unicons/wallet.png" alt="User" />
-                    </div>
                     <div>
                         <small class="text-muted d-block">Expenses This Month</small>
                         <div class="d-flex align-items-center">
@@ -358,9 +343,6 @@
                     </div>
                 </div>
                 <div class="d-flex p-4 pt-3">
-                    <div class="avatar flex-shrink-0 me-3">
-                        <img src="{{ asset('admin') }}/img/icons/unicons/wallet.png" alt="User" />
-                    </div>
                     <div>
                         <small class="text-muted d-block">Expenses Today</small>
                         <div class="d-flex align-items-center">
@@ -397,9 +379,6 @@
                     @endif
                     @forelse ($all_purchase_summaries->take(8) as $purchase_summary)
                     <li class="d-flex mb-4 pb-1">
-                        <div class="avatar flex-shrink-0 me-3">
-                            <img src="{{ asset('admin') }}/img/icons/unicons/paypal.png" alt="User" class="rounded" />
-                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
                                 <small class="text-muted d-block mb-1">{{ $purchase_summary->created_at }}</small>
@@ -441,9 +420,6 @@
                     @endif
                     @forelse ($all_selling_summaries->take(6) as $selling_summary)
                     <li class="d-flex mb-4 pb-1">
-                        <div class="avatar flex-shrink-0 me-3">
-                            <img src="{{ asset('admin') }}/img/icons/unicons/paypal.png" alt="User" class="rounded" />
-                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
                                 <small class="text-muted d-block mb-1">{{ $selling_summary->created_at }}</small>
