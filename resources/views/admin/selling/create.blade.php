@@ -168,7 +168,6 @@
         });
 
         $('.select_category').select2({
-            placeholder: 'Select an category'
         });
 
         $('.select_product').select2({
@@ -195,6 +194,8 @@
         // Get Product
         $(document).on('change', '.select_category', function(e){
             e.preventDefault();
+            $('#get_product_stock').val('');
+            $('#get_selling_price').val('');
             var category_id = $(this).val();
             $.ajax({
                 url: '{{ route('get.selling.product.list') }}',
@@ -209,6 +210,8 @@
         // Get Product Details
         $(document).on('change', '.select_product', function(e){
             e.preventDefault();
+            $('#get_product_stock').val('');
+            $('#get_selling_price').val('');
             var product_id = $(this).val();
             $.ajax({
                 url: '{{ route('get.selling.product.details') }}',
@@ -226,7 +229,7 @@
             e.preventDefault();
             const form_data = new FormData(this);
             $.ajax({
-                url: '{{ route('add.selling.product.cart') }}',
+                url: "{{ route('add.selling.product.cart') }}",
                 method: 'POST',
                 data: form_data,
                 cache: false,
@@ -311,10 +314,10 @@
 
         // Update Selling Cart Quantity
         $(document).on("change", ".selling_quantity, .selling_price", function () {
-            var selling_quantity = $('.selling_quantity').val();
-            var selling_price = $('.selling_price').val();
             var cart_id = $(this).attr('id');
             var customer_id = $('#get_customer_id').val();
+            var selling_quantity = $(this).closest('tr').find('.selling_quantity').val();
+            var selling_price = $(this).closest('tr').find('.selling_price').val();
             $.ajax({
                 url: '{{ route('update.selling.product.cart') }}',
                 method: 'POST',

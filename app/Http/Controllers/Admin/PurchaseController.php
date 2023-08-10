@@ -44,12 +44,12 @@ class PurchaseController extends Controller
                     })
                     ->editColumn('purchase_quantity', function($row){
                         return'
-                        <input type="text" value="'.$row->purchase_quantity.'" class="form-control purchase_quantity" id="'.$row->id.'"/>
+                        <input type="number" value="'.$row->purchase_quantity.'" class="form-control purchase_quantity" id="'.$row->id.'"/>
                         ';
                     })
                     ->editColumn('purchase_price', function($row){
                         return'
-                        <input type="text" value="'.$row->purchase_price.'" class="form-control purchase_price" id="'.$row->id.'"/>
+                        <input type="number" value="'.$row->purchase_price.'" class="form-control purchase_price" id="'.$row->id.'"/>
                         ';
                     })
                     ->editColumn('total_price', function($row){

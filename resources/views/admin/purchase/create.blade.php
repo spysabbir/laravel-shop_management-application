@@ -144,7 +144,6 @@
         });
 
         $('.select_category').select2({
-            placeholder: 'Select an category'
         });
 
         $('.select_product').select2({
@@ -159,6 +158,8 @@
         // Get Product
         $(document).on('change', '.select_category', function(e){
             e.preventDefault();
+            $('#get_product_stock').val('');
+            $('#get_purchase_price').val('');
             var category_id = $(this).val();
             $.ajax({
                 url: '{{ route('get.purchase.product.list') }}',
@@ -173,6 +174,8 @@
         // Get Product Details
         $(document).on('change', '.select_product', function(e){
             e.preventDefault();
+            $('#get_product_stock').val('');
+            $('#get_purchase_price').val('');
             var product_id = $(this).val();
             $.ajax({
                 url: '{{ route('get.purchase.product.details') }}',
@@ -190,7 +193,7 @@
             e.preventDefault();
             const form_data = new FormData(this);
             $.ajax({
-                url: '{{ route('add.purchase.product.cart') }}',
+                url: "{{ route('add.purchase.product.cart') }}",
                 method: 'POST',
                 data: form_data,
                 cache: false,
@@ -263,10 +266,10 @@
 
         // Update Purchase Cart Quantity
         $(document).on("change", ".purchase_quantity, .purchase_price", function () {
-            var purchase_quantity = $('.purchase_quantity').val();
-            var purchase_price = $('.purchase_price').val();
             var cart_id = $(this).attr('id');
             var supplier_id = $('#supplier_id').val();
+            var purchase_quantity = $(this).closest('tr').find('.purchase_quantity').val();
+            var purchase_price = $(this).closest('tr').find('.purchase_price').val();
             $.ajax({
                 url: '{{ route('update.purchase.product.cart') }}',
                 method: 'POST',

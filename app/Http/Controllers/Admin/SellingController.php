@@ -48,12 +48,12 @@ class SellingController extends Controller
                     })
                     ->editColumn('selling_quantity', function($row){
                         return'
-                        <input type="text" value="'.$row->selling_quantity.'" class="form-control selling_quantity" id="'.$row->id.'"/>
+                        <input type="number" value="'.$row->selling_quantity.'" class="form-control selling_quantity" id="'.$row->id.'"/>
                         ';
                     })
                     ->editColumn('selling_price', function($row){
                         return'
-                        <input type="text" value="'.$row->selling_price.'" class="form-control selling_price" id="'.$row->id.'" readonly/>
+                        <input type="number" value="'.$row->selling_price.'" class="form-control selling_price" id="'.$row->id.'" readonly/>
                         ';
                     })
                     ->editColumn('total_price', function($row){
