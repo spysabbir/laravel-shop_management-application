@@ -2,13 +2,9 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Admin\Auth\ConfirmablePasswordController;
-use App\Http\Controllers\Admin\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Admin\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Admin\Auth\NewPasswordController;
 use App\Http\Controllers\Admin\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Admin\Auth\RegisteredUserController;
-use App\Http\Controllers\Admin\Auth\VerifyEmailController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -27,7 +23,6 @@ use App\Http\Controllers\Admin\SellingReturnController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\StaffDesignationController;
-use App\Http\Controllers\Admin\Stock_managementController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -47,22 +42,12 @@ Route::prefix('admin')->group(function(){
         Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
         Route::post('register', [RegisteredUserController::class, 'store']);
 
-        Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])->name('verification.notice');
-        Route::get('verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])->name('verification.verify')
-                    ->middleware(['signed', 'throttle:6,1']);
-        Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])->name('verification.send')
-                    ->middleware('throttle:6,1');
-
-        Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])->name('password.confirm');
-        Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
-
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-        Route::middleware('verified')->group(function () {
-            Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-            Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-            Route::patch('/profile', [ProfileController::class, 'profileUpdate'])->name('profile.update');
-            Route::put('password', [ProfileController::class, 'passwordUpdate'])->name('password.update');
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+        Route::patch('/profile', [ProfileController::class, 'profileUpdate'])->name('profile.update');
+        Route::put('password', [ProfileController::class, 'passwordUpdate'])->name('password.update');
 
         Route::middleware(['super_admin'])->group(function(){
             Route::get('default-setting', [SettingController::class, 'defaultSetting'])->name('default.setting');
@@ -205,7 +190,6 @@ Route::prefix('admin')->group(function(){
             Route::get('stock-products', [AdminController::class, 'stockProducts'])->name('stock.products');
 
             Route::get('pos', [PosController::class, 'pos'])->name('pos');
-        });
         });
     });
 });
