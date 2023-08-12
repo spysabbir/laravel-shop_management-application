@@ -20,7 +20,7 @@
                     <form action="{{ route('stock.report.export') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
-                            {{-- <div class="col-lg-3">
+                            <div class="col-lg-3">
                                 <label class="form-label">Branch Name</label>
                                 <select class="form-control filter_data" name="branch_id" id="branch_id">
                                     <option value="">All</option>
@@ -28,7 +28,7 @@
                                     <option value="{{ $branch->id }}">{{ $branch->branch_name }}</option>
                                     @endforeach
                                 </select>
-                            </div> --}}
+                            </div>
                             <div class="col-lg-3">
                                 <label class="form-label">Category Name</label>
                                 <select class="form-control filter_data" name="category_id" id="category_id">
@@ -58,6 +58,7 @@
                         <thead>
                             <tr>
                                 <th>Sl No</th>
+                                <th>Branch Name</th>
                                 <th>Category Name</th>
                                 <th>Product Name</th>
                                 <th>Brand Name</th>
@@ -96,13 +97,14 @@
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'branch_name', name: 'branch_name'},
                 {data: 'category_name', name: 'category_name'},
                 {data: 'product_name', name: 'product_name'},
                 {data: 'brand_name', name: 'brand_name'},
                 {data: 'unit_name', name: 'unit_name'},
-                {data: 'purchase_quantity', name: 'purchase_quantity'},
-                {data: 'selling_quantity', name: 'selling_quantity'},
-                {data: 'stock', name: 'stock'},
+                {data: 'total_purchase_quantity', name: 'total_purchase_quantity'},
+                {data: 'total_selling_quantity', name: 'total_selling_quantity'},
+                {data: 'stock_quantity', name: 'stock_quantity'},
             ],
         });
 

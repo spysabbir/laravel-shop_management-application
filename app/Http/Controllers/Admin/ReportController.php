@@ -16,64 +16,85 @@ use App\Models\Expense_category;
 use App\Models\Product;
 use App\Models\Purchase_details;
 use App\Models\Purchase_summary;
+use App\Models\Selling_details;
 use App\Models\Selling_summary;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
-
-use DB;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
     public function stockReport(Request $request){
-        if ($request->ajax()) {
-            $products = "";
 
-            // $query = Product::leftJoin('purchase_details', 'products.id', 'purchase_details.product_id')
-            //     ->leftJoin('selling_details', 'products.id', 'selling_details.product_id')
-            //         ->select('products.*', 'purchase_details.purchase_quantity', 'selling_details.selling_quantity');
-            // if($request->branch_id){
-            //     $query->where('purchase_details.branch_id', $request->branch_id);
-            // }
+            if ($request->ajax()) {
+                $productStock = "";
 
-            $query = Product::select('products.*');
+                $query = Purchase_details::select(
+                    'purchase_details.product_id',
+                    'purchase_details.branch_id',
+                    'products.category_id',
+                    'products.brand_id',
+                    'products.unit_id',
+                    DB::raw('SUM(purchase_details.purchase_quantity) as total_purchase_quantity'),
+                    DB::raw('SUM(selling_details.total_selling_quantity) as total_selling_quantity'),
+                    DB::raw('(COALESCE(SUM(purchase_details.purchase_quantity), 0) - COALESCE(SUM(selling_details.total_selling_quantity), 0)) as stock_quantity')
+                )
+                ->leftJoinSub(
+                    Selling_details::select('product_id', 'branch_id', DB::raw('SUM(selling_quantity) as total_selling_quantity'))
+                        ->groupBy('product_id', 'branch_id'),
+                    'selling_details',
+                    function ($join) {
+                        $join->on('purchase_details.product_id', '=', 'selling_details.product_id')
+                            ->on('purchase_details.branch_id', '=', 'selling_details.branch_id');
+                    }
+                )
+                ->groupBy('purchase_details.product_id', 'purchase_details.branch_id', 'products.category_id', 'products.brand_id', 'products.unit_id')
+                ->leftJoin('products', 'purchase_details.product_id', '=', 'products.id');
 
-            if($request->category_id){
-                $query->where('products.category_id', $request->category_id);
-            }
+                if ($request->branch_id) {
+                    $query->where('purchase_details.branch_id', $request->branch_id);
+                }
+                if ($request->category_id) {
+                    $query->where('products.category_id', $request->category_id);
+                }
+                if ($request->brand_id) {
+                    $query->where('products.brand_id', $request->brand_id);
+                }
 
-            if($request->brand_id){
-                $query->where('products.brand_id', $request->brand_id);
-            }
+                $productStock = $query->get();
 
-            $products = $query->get();
-
-            return Datatables::of($products)
-                    ->addIndexColumn()
-                    ->editColumn('category_name', function($row){
-                        return'
-                        <span class="badge bg-info">'.$row->relationtocategory->category_name.'</span>
-                        ';
-                    })
-                    ->editColumn('brand_name', function($row){
-                        return'
-                        <span class="badge bg-info">'.$row->relationtobrand->brand_name.'</span>
-                        ';
-                    })
-                    ->editColumn('unit_name', function($row){
-                        return'
-                        <span class="badge bg-info">'.$row->relationtounit->unit_name.'</span>
-                        ';
-                    })
-                    ->editColumn('stock', function($row){
-                        return'
-                        <span class="badge bg-success">'.$row->purchase_quantity - $row->selling_quantity.'</span>
-                        ';
-                    })
-                    ->rawColumns(['category_name', 'brand_name', 'unit_name', 'stock'])
-                    ->make(true);
+                return Datatables::of($productStock)
+                            ->addIndexColumn()
+                            ->editColumn('branch_name', function($row){
+                                return'
+                                <span class="badge bg-info">'.$row->relationtobranch->branch_name.'</span>
+                                ';
+                            })
+                            ->editColumn('category_name', function($row){
+                                return'
+                                <span class="badge bg-info">'.$row->relationtocategory->category_name.'</span>
+                                ';
+                            })
+                            ->editColumn('product_name', function($row){
+                                return'
+                                <span class="badge bg-info">'.$row->relationtoproduct->product_name.'</span>
+                                ';
+                            })
+                            ->editColumn('brand_name', function($row){
+                                return'
+                                <span class="badge bg-info">'.$row->relationtobrand->brand_name.'</span>
+                                ';
+                            })
+                            ->editColumn('unit_name', function($row){
+                                return'
+                                <span class="badge bg-info">'.$row->relationtounit->unit_name.'</span>
+                                ';
+                            })
+                            ->rawColumns(['branch_name', 'category_name', 'product_name', 'brand_name', 'unit_name'])
+                            ->make(true);
         }
 
         $categories = Category::all();
@@ -84,32 +105,51 @@ class ReportController extends Controller
 
     public function stockReportExport(Request $request)
     {
-        $products = "";
-        $query = Product::select('products.*');
+        $productStock = "";
 
-        if($request->category_id){
+        $query = Purchase_details::select(
+            'purchase_details.product_id',
+            'purchase_details.branch_id',
+            'products.category_id',
+            'products.brand_id',
+            'products.unit_id',
+            DB::raw('SUM(purchase_details.purchase_quantity) as total_purchase_quantity'),
+            DB::raw('SUM(selling_details.total_selling_quantity) as total_selling_quantity'),
+            DB::raw('(COALESCE(SUM(purchase_details.purchase_quantity), 0) - COALESCE(SUM(selling_details.total_selling_quantity), 0)) as stock_quantity')
+        )
+        ->leftJoinSub(
+            Selling_details::select('product_id', 'branch_id', DB::raw('SUM(selling_quantity) as total_selling_quantity'))
+                ->groupBy('product_id', 'branch_id'),
+            'selling_details',
+            function ($join) {
+                $join->on('purchase_details.product_id', '=', 'selling_details.product_id')
+                    ->on('purchase_details.branch_id', '=', 'selling_details.branch_id');
+            }
+        )
+        ->groupBy('purchase_details.product_id', 'purchase_details.branch_id', 'products.category_id', 'products.brand_id', 'products.unit_id')
+        ->leftJoin('products', 'purchase_details.product_id', '=', 'products.id');
+
+        if ($request->branch_id) {
+            $query->where('purchase_details.branch_id', $request->branch_id);
+        }
+        if ($request->category_id) {
             $query->where('products.category_id', $request->category_id);
         }
-
-        // if($request->branch_id){
-        //     $query->where('products.branch_id', $request->branch_id);
-        // }
-
-        if($request->brand_id){
+        if ($request->brand_id) {
             $query->where('products.brand_id', $request->brand_id);
         }
 
-        $products = $query->get();
+        $productStock = $query->get();
 
-        return Excel::download(new StockExport($products), 'stock.xlsx');
+        return Excel::download(new StockExport($productStock), 'stock.xlsx');
     }
 
     public function expenseReport(Request $request){
         if ($request->ajax()) {
             $expenses = "";
-            $query = Expense::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')
+            $query = Expense::orderBy('id', 'DESC')
                     ->leftJoin('expense_categories', 'expenses.expense_category_id', 'expense_categories.id')
-                    ->leftJoin('branches', 'expenses.expense_category_id', 'branches.id');
+                    ->leftJoin('branches', 'expenses.branch_id', 'branches.id');
 
             if($request->expense_date_start){
                 $query->whereDate('expenses.created_at', '>=', $request->expense_date_start);
@@ -148,9 +188,9 @@ class ReportController extends Controller
     public function expenseReportExport(Request $request)
     {
         $expenses = "";
-        $query = Expense::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')
+        $query = Expense::orderBy('id', 'DESC')
                 ->leftJoin('expense_categories', 'expenses.expense_category_id', 'expense_categories.id')
-                ->leftJoin('branches', 'expenses.expense_category_id', 'branches.id');
+                ->leftJoin('branches', 'expenses.branch_id', 'branches.id');
 
         if($request->expense_date_start){
             $query->whereDate('expenses.created_at', '>=', $request->expense_date_start);

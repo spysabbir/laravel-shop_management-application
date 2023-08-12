@@ -12,6 +12,9 @@ class Purchase_details extends Model
 
     public $timestamps = false;
 
+    function relationtobranch(){
+        return $this->hasOne(Branch::class, 'id', 'branch_id');
+    }
     function relationtocategory(){
         return $this->hasOne(Category::class, 'id', 'category_id');
     }
@@ -20,5 +23,8 @@ class Purchase_details extends Model
     }
     function relationtoproduct(){
         return $this->hasOne(Product::class, 'id', 'product_id');
+    }
+    function relationtounit(){
+        return $this->hasOne(Unit::class, 'id', 'unit_id');
     }
 }

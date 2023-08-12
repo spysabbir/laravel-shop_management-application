@@ -8,22 +8,21 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class StockExport implements FromCollection, WithHeadings, WithMapping
 {
-    protected $products;
+    protected $productStock;
 
-    public function __construct($products)
+    public function __construct($productStock)
     {
-        $this->products = $products;
+        $this->productStock = $productStock;
     }
 
     public function collection()
     {
-        return collect($this->products);
+        return collect($this->productStock);
     }
 
     public function headings(): array
     {
         return [
-            'Id',
             'Category Name',
             'Product Name',
             'Brand Name',
@@ -34,17 +33,16 @@ class StockExport implements FromCollection, WithHeadings, WithMapping
         ];
     }
 
-    public function map($products): array
+    public function map($productStock): array
     {
         return [
-            $products->id,
-            $products->relationtocategory->category_name,
-            $products->product_name,
-            $products->relationtobrand->brand_name,
-            $products->relationtounit->unit_name,
-            $products->purchase_quantity,
-            $products->selling_quantity,
-            $products->purchase_quantity - $products->selling_quantity,
+            $productStock->relationtocategory->category_name,
+            $productStock->relationtoproduct->product_name,
+            $productStock->relationtobrand->brand_name,
+            $productStock->relationtounit->unit_name,
+            $productStock->total_purchase_quantity,
+            $productStock->total_selling_quantity,
+            $productStock->stock_quantity,
         ];
     }
 }
