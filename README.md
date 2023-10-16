@@ -8,11 +8,11 @@ This is project is the Inventory Management System. Built with `Laravel` & vario
 
 - First of all we have to `clone` the project at our local machine using below command
  ```
-git clone https://github.com/spysabbir/Laravel-Shop-Inventory-Management-Application.git
+git clone https://github.com/spysabbir/laravel-shop_inventory-application.git
 ``` 
 - Now change the command line present working directory (pwd) by
  ```
-cd Laravel-Shop-Inventory-Management-Application
+cd laravel-shop_inventory-application
 ``` 
 - Now with help of `composer` download all required packages those need to run this laravel project
  ```
