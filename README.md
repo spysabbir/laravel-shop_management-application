@@ -1,4 +1,4 @@
-<p align="center"><a href="https://shop-inventory.spysabbir.com/" target="_blank"><img src="#"></a></p>
+<p align="center"><a href="https://shop-inventory.spysabbir.com/" target="_blank"><img src="https://shop-inventory.spysabbir.com/uploads/default_photo/Logo-Photo.png"></a></p>
 
 ## About This Project
 
@@ -30,8 +30,9 @@ php artisan key:generate
 
 Variable Name | Description
 --- | ---
-DB_* | database settings to connect the database with this project
-MAIL_* | database settings to send email via SMTP
+*DB | database settings for connect the database with this project
+*MAIL | mail settings for send email via smtp server
+*SMS | sms settings for send sms via bulksmsbd api
 
 - Now migrate and seed the database using
  ```
@@ -51,5 +52,7 @@ For Admin:-
 Email: admin@email.com
 For Manager:- 
 Email: manager@email.com
+
+All account password as same
 Password: 12345678
 ``` 
