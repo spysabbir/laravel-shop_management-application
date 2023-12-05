@@ -102,6 +102,7 @@
                             <th>Email</th>
                             <th>Password</th>
                             <th>Role</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,16 +110,25 @@
                             <td>superadmin@email.com</td>
                             <td>12345678</td>
                             <td>Super Admin</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="copyUserDetails('superadmin@email.com', '12345678')">Copy</button>
+                            </td>
                         </tr>
                         <tr>
                             <td>admin@email.com</td>
                             <td>12345678</td>
                             <td>Admin</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="copyUserDetails('admin@email.com', '12345678')">Copy</button>
+                            </td>
                         </tr>
                         <tr>
                             <td>manager@email.com</td>
                             <td>12345678</td>
                             <td>Manager</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="copyUserDetails('manager@email.com', '12345678')">Copy</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -130,5 +140,10 @@
 @endsection
 
 @section('script')
-
+<script>
+    function copyUserDetails(email, password) {
+        document.getElementById('email').value = email;
+        document.getElementById('password').value = password;
+    }
+</script>
 @endsection
