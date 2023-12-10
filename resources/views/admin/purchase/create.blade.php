@@ -45,7 +45,7 @@
                             <span class="text-danger error-text product_id_error"></span>
                         </div>
                         <div class="col-lg-2 col-12 mb-3">
-                            <label class="form-label">Product Stoct</label>
+                            <label class="form-label">Product StocK</label>
                             <input type="text" id="get_product_stock" style="width: 150px" readonly>
                         </div>
                         <div class="col-lg-2 col-12 mb-3">
@@ -144,9 +144,11 @@
         });
 
         $('.select_category').select2({
+            placeholder: 'Select an category',
         });
 
         $('.select_product').select2({
+            placeholder: 'Select an product',
         });
 
         $.ajaxSetup({
@@ -225,9 +227,9 @@
 
         // Read Purchase Cart Data
         table = $('#purchase_carts_table').DataTable({
-            processing: true,
-            serverSide: true,
-            searching: true,
+            // processing: true,
+            // serverSide: true,
+            // searching: true,
             ajax: {
                 url: "{{ route('purchase') }}",
                 "data":function(e){
@@ -266,6 +268,7 @@
 
         // Update Purchase Cart Quantity
         $(document).on("change", ".purchase_quantity, .purchase_price", function () {
+            var discountValue = $('#discount').val();
             var cart_id = $(this).attr('id');
             var supplier_id = $('#supplier_id').val();
             var purchase_quantity = $(this).closest('tr').find('.purchase_quantity').val();
@@ -277,25 +280,10 @@
                 success: function(response) {
                     $('#purchase_carts_table').DataTable().ajax.reload();
                     $('#sub_total').val(response);
-                    $('#grand_total').val(response);
-                    $('#payment_amount').val(response);
+                    $('#grand_total').val(response - discountValue);
+                    $('#payment_amount').val(response - discountValue);
                 }
             });
-        })
-
-        // Change Discount
-        $(document).on('keyup', '#discount', function(e){
-            e.preventDefault();
-            var sub_total = $('#sub_total').val();
-            let discountValue = $(this).val();
-            if (discountValue != 0) {
-                var discount = $(this).val();
-            } else {
-                var discount = 0;
-            }
-            var grand_total = parseInt(sub_total) - parseInt(discount);
-            $('#grand_total').val(grand_total);
-            $('#payment_amount').val(grand_total);
         })
 
         // Purchase Item Delete
@@ -303,6 +291,7 @@
             e.preventDefault();
             var supplier_id = $('#supplier_id').val();
             var cart_id = $(this).attr('id');
+            var discountValue = $('#discount').val();
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -320,13 +309,28 @@
                         success: function(response) {
                             $('#purchase_carts_table').DataTable().ajax.reload()
                             $('#sub_total').val(response.sub_total);
-                            $('#grand_total').val(response.sub_total);
-                            $('#payment_amount').val(response.sub_total);
+                            $('#grand_total').val(response.sub_total - discountValue);
+                            $('#payment_amount').val(response.sub_total - discountValue);
                             toastr.error(response.message);
                         }
                     });
                 }
             })
+        })
+
+        // Change Discount
+        $(document).on('keyup', '#discount', function(e){
+            e.preventDefault();
+            var sub_total = $('#sub_total').val();
+            let discountValue = $(this).val();
+            if (discountValue != 0) {
+                var discount = $(this).val();
+            } else {
+                var discount = 0;
+            }
+            var grand_total = parseInt(sub_total) - parseInt(discount);
+            $('#grand_total').val(grand_total);
+            $('#payment_amount').val(grand_total);
         })
 
         // Change Payment Status

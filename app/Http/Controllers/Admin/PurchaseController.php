@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Purchase_cart;
 use App\Models\Purchase_details;
 use App\Models\Purchase_summary;
+use App\Models\Selling_details;
 use App\Models\Supplier;
 use App\Models\Suppliers_payment_summary;
 use Carbon\Carbon;
@@ -86,7 +87,11 @@ class PurchaseController extends Controller
     {
         $product = Product::where('id', $request->product_id)->first();
         $purchase_price = $product->purchase_price;
-        $product_stock = ($product->purchase_quantity-$product->selling_quantity);
+
+        $purchase_quantity = Purchase_details::where('product_id', $request->product_id)->where('branch_id', Auth::user()->branch_id)->sum('purchase_quantity');
+        $selling_quantity = Selling_details::where('product_id', $request->product_id)->where('branch_id', Auth::user()->branch_id)->sum('selling_quantity');
+        $product_stock = ($purchase_quantity-$selling_quantity);
+
         return response()->json([
             'product_stock' => $product_stock,
             'purchase_price' => $purchase_price,

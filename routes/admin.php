@@ -96,40 +96,12 @@ Route::prefix('admin')->group(function(){
             Route::get('branch-restore/{id}', [BranchController::class, 'restore'])->name('branch.restore');
             Route::get('branch-forcedelete/{id}', [BranchController::class, 'forceDelete'])->name('branch.forcedelete');
             Route::get('branch-status/{id}', [BranchController::class, 'status'])->name('branch.status');
-        });
-
-        Route::middleware(['manager'])->group(function () {
-            Route::resource('staff', StaffController::class);
-            Route::get('staff-trashed', [StaffController::class, 'trashed'])->name('staff.trashed');
-            Route::get('staff-restore/{id}', [StaffController::class, 'restore'])->name('staff.restore');
-            Route::get('staff-forcedelete/{id}', [StaffController::class, 'forceDelete'])->name('staff.forcedelete');
-            Route::get('staff-status/{id}', [StaffController::class, 'status'])->name('staff.status');
-
-            Route::get('assign-staff-salary/{id}', [StaffController::class, 'assignStaffSalary'])->name('assign.staff.salary');
-            Route::post('assign-staff-salary-store', [StaffController::class, 'assignStaffSalaryStore'])->name('assign.staff.salary.store');
-            Route::get('assign.staff.salary.destroy/{id}', [StaffController::class, 'assignStaffSalaryDestroy'])->name('assign.staff.salary.destroy');
-
-            Route::get('staff-payment', [StaffController::class, 'staffPayment'])->name('staff.payment');
-            Route::get('staff-payment-form/{id}', [StaffController::class, 'staffPaymentForm'])->name('staff.payment.form');
-            Route::post('staff-payment-store/{id}', [StaffController::class, 'staffPaymentStore'])->name('staff.payment.store');
-            Route::get('staff-payment-details/{id}', [StaffController::class, 'staffPaymentDetails'])->name('staff.payment.details');
 
             Route::resource('supplier', SupplierController::class);
             Route::get('supplier-trashed', [SupplierController::class, 'trashed'])->name('supplier.trashed');
             Route::get('supplier-restore/{id}', [SupplierController::class, 'restore'])->name('supplier.restore');
             Route::get('supplier-forcedelete/{id}', [SupplierController::class, 'forceDelete'])->name('supplier.forcedelete');
             Route::get('supplier-status/{id}', [SupplierController::class, 'status'])->name('supplier.status');
-
-            Route::resource('expense', ExpenseController::class);
-            Route::get('expense-trashed', [ExpenseController::class, 'trashed'])->name('expense.trashed');
-            Route::get('expense-restore/{id}', [ExpenseController::class, 'restore'])->name('expense.restore');
-            Route::get('expense-forcedelete/{id}', [ExpenseController::class, 'forceDelete'])->name('expense.forcedelete');
-
-            Route::resource('customer', CustomerController::class);
-            Route::get('customer-trashed', [CustomerController::class, 'trashed'])->name('customer.trashed');
-            Route::get('customer-restore/{id}', [CustomerController::class, 'restore'])->name('customer.restore');
-            Route::get('customer-forcedelete/{id}', [CustomerController::class, 'forceDelete'])->name('customer.forcedelete');
-            Route::get('customer-status/{id}', [CustomerController::class, 'status'])->name('customer.status');
 
             Route::resource('category', CategoryController::class);
             Route::get('category-trashed', [CategoryController::class, 'trashed'])->name('category.trashed');
@@ -154,6 +126,34 @@ Route::prefix('admin')->group(function(){
             Route::get('product-restore/{id}', [ProductController::class, 'restore'])->name('product.restore');
             Route::get('product-forcedelete/{id}', [ProductController::class, 'forceDelete'])->name('product.forcedelete');
             Route::get('product-status/{id}', [ProductController::class, 'status'])->name('product.status');
+        });
+
+        Route::middleware(['manager'])->group(function () {
+            Route::resource('staff', StaffController::class);
+            Route::get('staff-trashed', [StaffController::class, 'trashed'])->name('staff.trashed');
+            Route::get('staff-restore/{id}', [StaffController::class, 'restore'])->name('staff.restore');
+            Route::get('staff-forcedelete/{id}', [StaffController::class, 'forceDelete'])->name('staff.forcedelete');
+            Route::get('staff-status/{id}', [StaffController::class, 'status'])->name('staff.status');
+
+            Route::get('assign-staff-salary/{id}', [StaffController::class, 'assignStaffSalary'])->name('assign.staff.salary');
+            Route::post('assign-staff-salary-store', [StaffController::class, 'assignStaffSalaryStore'])->name('assign.staff.salary.store');
+            Route::get('assign.staff.salary.destroy/{id}', [StaffController::class, 'assignStaffSalaryDestroy'])->name('assign.staff.salary.destroy');
+
+            Route::get('staff-payment', [StaffController::class, 'staffPayment'])->name('staff.payment');
+            Route::get('staff-payment-form/{id}', [StaffController::class, 'staffPaymentForm'])->name('staff.payment.form');
+            Route::post('staff-payment-store/{id}', [StaffController::class, 'staffPaymentStore'])->name('staff.payment.store');
+            Route::get('staff-payment-details/{id}', [StaffController::class, 'staffPaymentDetails'])->name('staff.payment.details');
+
+            Route::resource('expense', ExpenseController::class);
+            Route::get('expense-trashed', [ExpenseController::class, 'trashed'])->name('expense.trashed');
+            Route::get('expense-restore/{id}', [ExpenseController::class, 'restore'])->name('expense.restore');
+            Route::get('expense-forcedelete/{id}', [ExpenseController::class, 'forceDelete'])->name('expense.forcedelete');
+
+            Route::resource('customer', CustomerController::class);
+            Route::get('customer-trashed', [CustomerController::class, 'trashed'])->name('customer.trashed');
+            Route::get('customer-restore/{id}', [CustomerController::class, 'restore'])->name('customer.restore');
+            Route::get('customer-forcedelete/{id}', [CustomerController::class, 'forceDelete'])->name('customer.forcedelete');
+            Route::get('customer-status/{id}', [CustomerController::class, 'status'])->name('customer.status');
 
             Route::get('purchase', [PurchaseController::class, 'purchase'])->name('purchase');
             Route::post('get-purchase-product-list', [PurchaseController::class, 'getPurchaseProductList'])->name('get.purchase.product.list');

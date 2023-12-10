@@ -76,8 +76,8 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Payment Type</label>
                                                     <select name="payment_type" class="form-select" id="payment_type">
-                                                        <option value="">Select Type</option>
-                                                        <option value="Staff Salary">Staff Salary</option>
+                                                        <option value="">--Select Type--</option>
+                                                        <option value="Staff Salary" selected>Staff Salary</option>
                                                         <option value="Staff Bonus">Staff Bonus</option>
                                                     </select>
                                                     <span class="text-danger error-text payment_type_error"></span>
@@ -87,7 +87,7 @@
                                                     <select name="payment_year" class="form-select">
                                                         <option value="">Select Year</option>
                                                         @for ($year = 2023; $year < date('Y')+5; $year++)
-                                                        <option value="{{ $year }}" @selected(date('Y') == ((date('m')==12) ? $year-1 : $year) )>{{ $year }}</option>
+                                                        <option value="{{ $year }}" @selected(date('Y') == ((date('m')==1) ? $year-1 : $year) )>{{ $year }}</option>
                                                         @endfor
                                                     </select>
                                                     <span class="text-danger error-text payment_year_error"></span>
@@ -202,6 +202,7 @@
                 method: 'GET',
                 success: function(response) {
                     $("#get_staff_salary").val(response.staff_salary);
+                    $('#payment_amount').val(response.staff_salary);
                     $('#staff_id').val(response.id)
                 }
             });
@@ -211,9 +212,9 @@
         $(document).on('change', '#payment_type', function(e){
             e.preventDefault();
             var staff_salary =  $("#get_staff_salary").val();
-            if($('#payment_type').find(":selected").val() == 'Salary'){
+            if($('#payment_type').find(":selected").val() == 'Staff Salary'){
                 $('#payment_amount').val(staff_salary);
-            }else if($('#payment_type').find(":selected").val() == 'Bonus'){
+            }else if($('#payment_type').find(":selected").val() == 'Staff Bonus'){
                 $('#payment_amount').val(Math.round(staff_salary / 2));
             }else{
                 $('#payment_amount').val('');
