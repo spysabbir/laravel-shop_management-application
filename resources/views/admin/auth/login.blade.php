@@ -123,11 +123,19 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>manager@email.com</td>
+                            <td>dhakamanager@email.com</td>
                             <td>12345678</td>
                             <td>Manager</td>
                             <td>
-                                <button class="btn btn-primary btn-sm" onclick="copyUserDetails('manager@email.com', '12345678')">Copy</button>
+                                <button class="btn btn-primary btn-sm" onclick="copyUserDetails('dhakamanager@email.com', '12345678')">Copy</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>khulnamanager@email.com</td>
+                            <td>12345678</td>
+                            <td>Manager</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="copyUserDetails('khulnamanager@email.com', '12345678')">Copy</button>
                             </td>
                         </tr>
                     </tbody>

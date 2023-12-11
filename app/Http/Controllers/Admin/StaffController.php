@@ -35,8 +35,8 @@ class StaffController extends Controller
                 $query->where('staff.staff_gender', $request->staff_gender);
             }
 
-            if($request->branch_id){
-                $query->where('staff.branch_id', $request->branch_id);
+            if($request->staff_designation_id){
+                $query->where('staff.staff_designation_id', $request->staff_designation_id);
             }
 
             $all_staff = $query->select('staff.*')->get();

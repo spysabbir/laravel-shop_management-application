@@ -45,7 +45,7 @@
                 <td><span class="badge bg-info">{{ $product->status }}</span></td>
             </tr>
             <tr>
-                <td>Customer Join Date</td>
+                <td>Product Added Date</td>
                 <td>{{ $product->created_at->format('D d-M-Y h:s:m A') }}</td>
             </tr>
         </tbody>

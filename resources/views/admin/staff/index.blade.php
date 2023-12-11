@@ -141,7 +141,7 @@
                     <div class="row mb-3">
                         <div class="col-lg-3">
                             <label class="form-label">Status</label>
-                            <select class="form-control filter_data" id="status">
+                            <select class="form-control filter_data" id="filter_status">
                                 <option value="">All</option>
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
@@ -149,11 +149,20 @@
                         </div>
                         <div class="col-lg-3">
                             <label class="form-label">Gender</label>
-                            <select class="form-control filter_data" id="staff_gender">
+                            <select class="form-control filter_data" id="filter_staff_gender">
                                 <option value="">All</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3">
+                            <label class="form-label">Designations</label>
+                            <select class="form-control filter_data" id="filter_staff_designation_id">
+                                <option value="">All</option>
+                                @foreach ($staff_designations as $designation)
+                                <option value="{{ $designation->id }}">{{ $designation->designation_name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -346,8 +355,9 @@
             ajax: {
                 url: "{{ route('staff.index') }}",
                 "data":function(e){
-                    e.status = $('#status').val();
-                    e.staff_gender = $('#staff_gender').val();
+                    e.status = $('#filter_status').val();
+                    e.staff_gender = $('#filter_staff_gender').val();
+                    e.staff_designation_id = $('#filter_staff_designation_id').val();
                 },
             },
             columns: [
