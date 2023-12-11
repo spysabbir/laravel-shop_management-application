@@ -158,7 +158,7 @@ class SellingController extends Controller
                 if(1 > $stock_quantity){
                     return response()->json([
                         'status' => 403,
-                        'message' => 'This quantity of stock is not available.',
+                        'message' => 'This product is stock not available..',
                     ]);
                 }else{
                     Selling_cart::insert([
@@ -170,7 +170,7 @@ class SellingController extends Controller
                     ]);
 
                     $sub_total = 0;
-                    foreach(Selling_cart::where('customer_id', $request->customer_id)->get() as $cart){
+                    foreach(Selling_cart::where('customer_id', $customer_id)->get() as $cart){
                         $sub_total += ($cart->selling_quantity*$cart->selling_price);
                     };
 

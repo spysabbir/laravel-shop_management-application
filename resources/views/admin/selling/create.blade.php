@@ -168,9 +168,11 @@
         });
 
         $('.select_category').select2({
+            placeholder: 'Select an category',
         });
 
         $('.select_product').select2({
+            placeholder: 'Select an product',
         });
 
         $.ajaxSetup({
@@ -256,12 +258,12 @@
                                 if(response.status == 403){
                                     toastr.warning(response.message);
                                 }else{
-                                    $('#selling_carts_table').DataTable().ajax.reload();
                                     $('#get_customer_id').val(response.customer_id);
                                     $('#set_customer_id').val(response.customer_id);
                                     $('#sub_total').val(response.sub_total);
                                     $('#grand_total').val(response.sub_total);
                                     $('#payment_amount').val(response.sub_total);
+                                    $('#selling_carts_table').DataTable().ajax.reload();
                                     toastr.success(response.message);
                                 }
                             }
@@ -273,9 +275,9 @@
 
         // Read Selling Cart Data
         table = $('#selling_carts_table').DataTable({
-            processing: true,
-            serverSide: true,
-            searching: true,
+            // processing: true,
+            // serverSide: true,
+            // searching: true,
             ajax: {
                 url: "{{ route('selling') }}",
                 "data":function(e){
@@ -314,6 +316,7 @@
 
         // Update Selling Cart Quantity
         $(document).on("change", ".selling_quantity, .selling_price", function () {
+            var discountValue = $('#discount').val();
             var cart_id = $(this).attr('id');
             var customer_id = $('#get_customer_id').val();
             var selling_quantity = $(this).closest('tr').find('.selling_quantity').val();
@@ -325,29 +328,15 @@
                 success: function(response) {
                     if(response.status == 400){
                         toastr.error(response.message);
+                        $('#selling_carts_table').DataTable().ajax.reload();
                     }else{
                         $('#selling_carts_table').DataTable().ajax.reload();
                         $('#sub_total').val(response);
-                        $('#grand_total').val(response);
-                        $('#payment_amount').val(response);
+                        $('#grand_total').val(response - discountValue);
+                        $('#payment_amount').val(response - discountValue);
                     }
                 }
             });
-        })
-
-        // Change Discount
-        $(document).on('keyup', '#discount', function(e){
-            e.preventDefault();
-            var sub_total = $('#sub_total').val();
-            let discountValue = $(this).val();
-            if (discountValue != 0) {
-                var discount = $(this).val();
-            } else {
-                var discount = 0;
-            }
-            var grand_total = parseInt(sub_total) - parseInt(discount);
-            $('#grand_total').val(grand_total);
-            $('#payment_amount').val(grand_total);
         })
 
         // Selling Item Delete
@@ -355,6 +344,7 @@
             e.preventDefault();
             var customer_id = $('#get_customer_id').val();
             var cart_id = $(this).attr('id');
+            var discountValue = $('#discount').val();
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -372,13 +362,28 @@
                         success: function(response) {
                             $('#selling_carts_table').DataTable().ajax.reload()
                             $('#sub_total').val(response.sub_total);
-                            $('#grand_total').val(response.sub_total);
-                            $('#payment_amount').val(response.sub_total);
+                            $('#grand_total').val(response.sub_total - discountValue);
+                            $('#payment_amount').val(response.sub_total - discountValue);
                             toastr.error(response.message);
                         }
                     });
                 }
             })
+        })
+
+        // Change Discount
+        $(document).on('keyup', '#discount', function(e){
+            e.preventDefault();
+            var sub_total = $('#sub_total').val();
+            let discountValue = $(this).val();
+            if (discountValue != 0) {
+                var discount = $(this).val();
+            } else {
+                var discount = 0;
+            }
+            var grand_total = parseInt(sub_total) - parseInt(discount);
+            $('#grand_total').val(grand_total);
+            $('#payment_amount').val(grand_total);
         })
 
         // Change Payment Status
