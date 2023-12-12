@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2023 at 11:35 AM
+-- Generation Time: Dec 12, 2023 at 05:08 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -127,7 +127,7 @@ CREATE TABLE `contact_messages` (
 --
 
 INSERT INTO `contact_messages` (`id`, `name`, `email`, `phone_number`, `subject`, `message`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'a', 'a', 'a', 'a', 'a', 'Read', '2023-05-15 10:35:55', '2023-08-09 23:46:58');
+(1, 'a', 'a', 'a', 'a', 'a', 'Read', '2023-05-15 10:35:55', '2023-12-10 21:30:06');
 
 -- --------------------------------------------------------
 
@@ -155,7 +155,9 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `customer_name`, `customer_email`, `customer_phone_number`, `customer_address`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Sovon', 'sovon@email.com', '01878136530', 'Dhaka, Bd', 'Active', 3, NULL, NULL, '2023-05-15 05:10:06', NULL, NULL);
+(1, 'Sovon', 'sovon@email.com', '01878136530', 'Dhaka, Bd', 'Active', 3, NULL, NULL, '2023-05-15 05:10:06', NULL, NULL),
+(2, 'Alif', 'alif@gmail.com', '01517805999', 'Dhaka bD', 'Active', 4, NULL, NULL, '2023-12-10 21:56:24', NULL, NULL),
+(12, 'Alif', 'alifkhan@gmail.com', '01517805999', 'dsfdsfds', 'Active', 3, NULL, NULL, '2023-12-10 22:56:40', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -181,11 +183,7 @@ CREATE TABLE `customers_payment_summaries` (
 --
 
 INSERT INTO `customers_payment_summaries` (`id`, `customer_id`, `selling_invoice_no`, `grand_total`, `payment_status`, `payment_method`, `payment_amount`, `payment_agent_id`, `created_at`, `updated_at`) VALUES
-(1, 1, 'SI-1', 500.00, 'Unpaid', NULL, 0.00, 3, '2023-06-22 22:11:50', NULL),
-(2, 1, 'SI-2', 2600.00, 'Partially Paid', 'Hand Cash', 200.00, 3, '2023-06-22 23:17:03', NULL),
-(3, 1, 'SI-3', 1300.00, 'Unpaid', NULL, 0.00, 3, '2023-06-22 23:18:25', NULL),
-(4, 1, 'SI-4', 260.00, 'Paid', 'Hand Cash', 260.00, 3, '2023-06-22 23:19:31', NULL),
-(5, 1, 'SI-5', 760.00, 'Paid', 'Hand Cash', 760.00, 3, '2023-08-10 05:40:18', NULL);
+(1, 2, 'SI-1', 260.00, 'Paid', 'Hand Cash', 260.00, 3, '2023-12-10 23:02:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -250,9 +248,9 @@ CREATE TABLE `expenses` (
 --
 
 INSERT INTO `expenses` (`id`, `branch_id`, `expense_category_id`, `expense_date`, `expense_title`, `expense_cost`, `expense_description`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(4, 1, 1, '2023-08-10', '2023 July Payment', 700.00, '2023 July Payment', 3, NULL, NULL, '2023-08-10 00:26:52', '2023-08-10 00:27:54', NULL),
-(5, 1, 5, '2023-08-10', '2023 July Payment', 500.00, '2023 July Payment', 3, NULL, NULL, '2023-08-10 00:28:22', NULL, NULL),
-(6, 1, 2, '2023-08-10', 'April Bill', 500.00, 'Test', 3, 3, NULL, '2023-08-10 00:35:44', '2023-08-10 00:36:40', NULL);
+(1, 1, 2, '2023-12-10', '2023 November Payment', 600.00, '2023 November Payment', 3, NULL, NULL, '2023-12-10 04:29:16', '2023-12-10 04:29:22', NULL),
+(2, 1, 1, '2023-12-10', '2023 November Payment', 600.00, '2023 November Payment', 3, NULL, NULL, '2023-12-10 04:30:32', NULL, NULL),
+(3, 2, 1, '2023-12-11', '2023 November Payment', 15000.00, '2023 November Payment', 4, NULL, NULL, '2023-12-10 21:55:53', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -277,12 +275,8 @@ CREATE TABLE `expense_categories` (
 --
 
 INSERT INTO `expense_categories` (`id`, `expense_category_name`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Staff Salary', 'Active', 1, NULL, NULL, '2023-08-10 00:44:15', NULL, NULL),
-(2, 'Gas Bill', 'Active', 2, 2, NULL, '2023-05-15 04:37:02', '2023-05-15 04:37:38', NULL),
-(3, 'Electric Bill', 'Active', 2, NULL, NULL, '2023-05-15 04:37:48', NULL, NULL),
-(4, 'Internet Bill', 'Active', 2, NULL, NULL, '2023-05-15 04:37:59', NULL, NULL),
-(5, 'Staff Bonus', 'Active', 1, NULL, NULL, '2023-08-10 00:44:15', NULL, NULL),
-(6, 'Shop Rant Bill', 'Active', 1, NULL, NULL, '2023-06-18 22:40:07', NULL, NULL);
+(1, 'Staff Salary', 'Active', 1, NULL, NULL, '2023-12-10 04:14:35', NULL, NULL),
+(2, 'Staff Bonus', 'Active', 1, NULL, NULL, '2023-12-10 04:14:35', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -438,8 +432,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `product_name`, `product_code`, `brand_id`, `unit_id`, `purchase_quantity`, `selling_quantity`, `purchase_price`, `selling_price`, `product_photo`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'A Product', 'uW2xAliEB3', 2, 1, 13, 2, 450.00, 500.00, 'default_product_photo.jpg', 'Active', 3, 3, NULL, '2023-05-15 05:12:33', '2023-08-10 05:40:18', NULL),
-(2, 2, 'B Product', 'khisv99sXT', 1, 2, 24, 17, 250.00, 260.00, '2-B Product-Photo.webp', 'Active', 3, 3, NULL, '2023-06-22 22:09:19', '2023-08-10 05:40:18', NULL);
+(1, 1, 'A Product', 'uW2xAliEB3', 2, 1, 16, 2, 450.00, 500.00, 'default_product_photo.jpg', 'Active', 3, 3, NULL, '2023-05-15 05:12:33', '2023-12-10 21:57:05', NULL),
+(2, 2, 'B Product', 'khisv99sXT', 1, 2, 27, 18, 250.00, 260.00, '2-B Product-Photo.webp', 'Active', 3, 3, NULL, '2023-06-22 22:09:19', '2023-12-10 23:02:24', NULL);
 
 -- --------------------------------------------------------
 
@@ -477,12 +471,10 @@ CREATE TABLE `purchase_details` (
 --
 
 INSERT INTO `purchase_details` (`id`, `purchase_invoice_no`, `product_id`, `purchase_quantity`, `purchase_price`, `branch_id`) VALUES
-(1, 'PI-1', 1, 10, 450.00, 1),
-(2, 'PI-2', 2, 20, 250.00, 1),
-(3, 'PI-3', 1, 2, 450.00, 1),
-(4, 'PI-3', 2, 3, 250.00, 1),
-(5, 'PI-4', 2, 1, 250.00, 1),
-(6, 'PI-4', 1, 1, 450.00, 1);
+(1, 'PI-1', 1, 2, 450.00, 1),
+(2, 'PI-2', 1, 1, 450.00, 2),
+(3, 'PI-3', 2, 2, 250.00, 2),
+(4, 'PI-4', 2, 1, 250.00, 1);
 
 -- --------------------------------------------------------
 
@@ -510,10 +502,10 @@ CREATE TABLE `purchase_summaries` (
 --
 
 INSERT INTO `purchase_summaries` (`id`, `purchase_invoice_no`, `supplier_id`, `sub_total`, `discount`, `grand_total`, `payment_status`, `payment_amount`, `purchase_agent_id`, `branch_id`, `created_at`, `updated_at`) VALUES
-(1, 'PI-1', 1, 4500.00, 0.00, 4500.00, 'Paid', 4500.00, 3, 1, '2023-06-22 22:10:53', NULL),
-(2, 'PI-2', 1, 5000.00, 0.00, 5000.00, 'Paid', 5000.00, 3, 1, '2023-06-22 23:14:35', NULL),
-(3, 'PI-3', 1, 1650.00, 50.00, 1600.00, 'Paid', 1600.00, 3, 1, '2023-08-10 04:49:31', NULL),
-(4, 'PI-4', 1, 700.00, 0.00, 700.00, 'Unpaid', 0.00, 3, 1, '2023-08-10 05:33:38', NULL);
+(1, 'PI-1', 1, 900.00, 100.00, 800.00, 'Partially Paid', 700.00, 3, 1, '2023-12-10 21:35:53', NULL),
+(2, 'PI-2', 1, 450.00, 0.00, 450.00, 'Paid', 450.00, 4, 2, '2023-12-10 21:57:04', NULL),
+(3, 'PI-3', 2, 500.00, 0.00, 500.00, 'Paid', 500.00, 4, 2, '2023-12-10 21:58:14', NULL),
+(4, 'PI-4', 2, 250.00, 0.00, 250.00, 'Unpaid', 0.00, 3, 1, '2023-12-10 22:00:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -530,6 +522,14 @@ CREATE TABLE `selling_carts` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `selling_carts`
+--
+
+INSERT INTO `selling_carts` (`id`, `customer_id`, `product_id`, `selling_quantity`, `selling_price`, `created_at`, `updated_at`) VALUES
+(16, 12, 1, 1, 500.00, '2023-12-10 22:56:40', NULL),
+(18, 1, 1, 2, 500.00, '2023-12-10 23:07:55', '2023-12-10 23:12:23');
 
 -- --------------------------------------------------------
 
@@ -553,12 +553,7 @@ CREATE TABLE `selling_details` (
 --
 
 INSERT INTO `selling_details` (`id`, `selling_invoice_no`, `product_id`, `selling_quantity`, `selling_price`, `branch_id`, `created_at`, `updated_at`) VALUES
-(1, 'SI-1', 1, 1, 500.00, 1, NULL, NULL),
-(2, 'SI-2', 2, 10, 260.00, 1, NULL, NULL),
-(3, 'SI-3', 2, 5, 260.00, 1, NULL, NULL),
-(4, 'SI-4', 2, 1, 260.00, 1, NULL, NULL),
-(5, 'SI-5', 2, 1, 260.00, 1, NULL, NULL),
-(6, 'SI-5', 1, 1, 500.00, 1, NULL, NULL);
+(1, 'SI-1', 2, 1, 260.00, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -586,11 +581,7 @@ CREATE TABLE `selling_summaries` (
 --
 
 INSERT INTO `selling_summaries` (`id`, `selling_invoice_no`, `customer_id`, `sub_total`, `discount`, `grand_total`, `payment_status`, `payment_amount`, `selling_agent_id`, `branch_id`, `created_at`, `updated_at`) VALUES
-(1, 'SI-1', 1, 500.00, 0.00, 500.00, 'Unpaid', 0.00, 3, 1, '2023-06-22 22:11:50', NULL),
-(2, 'SI-2', 1, 2600.00, 0.00, 2600.00, 'Partially Paid', 200.00, 3, 1, '2023-06-22 23:17:03', NULL),
-(3, 'SI-3', 1, 1300.00, 0.00, 1300.00, 'Unpaid', 0.00, 3, 1, '2023-06-22 23:18:25', NULL),
-(4, 'SI-4', 1, 260.00, 0.00, 260.00, 'Paid', 260.00, 3, 1, '2023-06-22 23:19:31', NULL),
-(5, 'SI-5', 1, 760.00, 0.00, 760.00, 'Paid', 760.00, 3, 1, '2023-08-10 05:40:18', NULL);
+(1, 'SI-1', 2, 260.00, 0.00, 260.00, 'Paid', 260.00, 3, 1, '2023-12-10 23:02:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -648,7 +639,8 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`id`, `branch_id`, `profile_photo`, `staff_name`, `staff_designation_id`, `staff_email`, `staff_phone_number`, `staff_gender`, `staff_nid_no`, `staff_date_of_birth`, `staff_address`, `staff_salary`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, '1-Sovon-Photo.jpg', 'Sovon', 1, 'sovon@mailinator.com', '01878136530', 'Male', '123456789', '2023-06-21', 'Dhaka BD', 700.00, 'Active', 3, 3, NULL, '2023-06-21 04:56:46', '2023-06-23 00:02:54', NULL);
+(1, 1, '1-Sovon-Photo.jpg', 'Sovon', 1, 'sovon@mailinator.com', '01878136530', 'Male', '123456789', '2023-06-21', 'Dhaka BD', 600.00, 'Active', 3, 3, NULL, '2023-06-21 04:56:46', '2023-12-10 04:16:43', NULL),
+(2, 2, '2-Alif-Photo.jpg', 'Alif', 1, 'alif@gmail.com', '0151780599', 'Male', '123456789', '2023-12-11', 'Khulna', 15000.00, 'Active', 4, 4, NULL, '2023-12-10 21:48:40', '2023-12-10 21:48:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -698,9 +690,10 @@ CREATE TABLE `staff_payments` (
 --
 
 INSERT INTO `staff_payments` (`id`, `staff_id`, `payment_type`, `payment_year`, `payment_month`, `payment_amount`, `payment_note`, `payment_by`, `payment_at`) VALUES
-(4, 1, 'Staff Salary', '2023', 'July', 500.00, NULL, 3, '2023-08-10 06:26:52'),
-(5, 1, 'Staff Salary', '2023', 'July', 200.00, NULL, 3, '2023-08-10 06:27:54'),
-(6, 1, 'Staff Bonus', '2023', 'July', 500.00, NULL, 3, '2023-08-10 06:28:22');
+(1, 1, 'Staff Bonus', '2023', 'November', 300.00, NULL, 3, '2023-12-10 10:29:16'),
+(2, 1, 'Staff Bonus', '2023', 'November', 300.00, NULL, 3, '2023-12-10 10:29:22'),
+(3, 1, 'Staff Salary', '2023', 'November', 600.00, NULL, 3, '2023-12-10 10:30:31'),
+(4, 2, 'Staff Salary', '2023', 'November', 15000.00, NULL, 4, '2023-12-11 03:55:53');
 
 -- --------------------------------------------------------
 
@@ -722,9 +715,8 @@ CREATE TABLE `staff_salaries` (
 --
 
 INSERT INTO `staff_salaries` (`id`, `staff_id`, `new_salary`, `assign_date`, `assign_by`, `assign_at`) VALUES
-(1, 1, 500.00, '2023-06-21', 3, '2023-06-21 10:56:46'),
-(2, 1, 600.00, '2023-06-23', 3, '2023-06-23 05:43:59'),
-(3, 1, 700.00, '2023-06-24', 3, '2023-06-23 06:02:54');
+(1, 1, 600.00, '2024-01-01', 3, '2023-12-10 10:16:43'),
+(2, 2, 15000.00, '2023-12-11', 4, '2023-12-11 03:48:40');
 
 -- --------------------------------------------------------
 
@@ -752,7 +744,8 @@ CREATE TABLE `suppliers` (
 --
 
 INSERT INTO `suppliers` (`id`, `supplier_name`, `supplier_email`, `supplier_phone_number`, `supplier_address`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Alif International', 'alif@email.com', '01878136530', 'Dhaka, BD', 'Active', 3, 3, NULL, '2023-05-15 05:09:30', '2023-06-18 23:10:46', NULL);
+(1, 'Alif International', 'alif@email.com', '01878136530', 'Dhaka, BD', 'Active', 3, 3, NULL, '2023-05-15 05:09:30', '2023-06-18 23:10:46', NULL),
+(2, 'Sovon Ltd', 'sovon@gmail.com', '01953321402', 'Khulna', 'Active', 1, NULL, NULL, '2023-12-10 21:44:19', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -778,10 +771,10 @@ CREATE TABLE `suppliers_payment_summaries` (
 --
 
 INSERT INTO `suppliers_payment_summaries` (`id`, `supplier_id`, `purchase_invoice_no`, `grand_total`, `payment_status`, `payment_method`, `payment_amount`, `payment_agent_id`, `created_at`, `updated_at`) VALUES
-(1, 1, 'PI-1', 4500.00, 'Paid', 'Hand Cash', 4500.00, 3, '2023-06-22 22:10:53', NULL),
-(2, 1, 'PI-2', 5000.00, 'Paid', 'Online', 5000.00, 3, '2023-06-22 23:14:35', NULL),
-(3, 1, 'PI-3', 1600.00, 'Paid', 'Hand Cash', 1600.00, 3, '2023-08-10 04:49:31', NULL),
-(4, 1, 'PI-4', 700.00, 'Unpaid', NULL, 0.00, 3, '2023-08-10 05:33:38', NULL);
+(1, 1, 'PI-1', 800.00, 'Partially Paid', 'Online', 700.00, 3, '2023-12-10 21:35:53', NULL),
+(2, 1, 'PI-2', 450.00, 'Paid', 'Hand Cash', 450.00, 4, '2023-12-10 21:57:05', NULL),
+(3, 2, 'PI-3', 500.00, 'Paid', 'Hand Cash', 500.00, 4, '2023-12-10 21:58:15', NULL),
+(4, 2, 'PI-4', 250.00, 'Unpaid', NULL, 0.00, 3, '2023-12-10 22:00:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -839,9 +832,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role`, `name`, `email`, `phone_number`, `gender`, `date_of_birth`, `address`, `profile_photo`, `status`, `last_active`, `password`, `branch_id`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Super Admin', 'Super Admin', 'superadmin@email.com', '01878136530', 'Male', '2023-05-15', 'Dhaka, BD', 'default_profile_photo.png', 'Active', '2023-08-09 23:45:20', '$2y$10$r2pYwcGnBhRuPKpgQMHUj..f/KoPRDWNBl9cJu.z6ncB6Qr0D4Vti', NULL, 'ZNvBHAACy3nDX5CAmRcUq1wq43GUNSiXnDVhHVdGbE5F5HdP1icoegWXVNwc', '2023-05-15 06:21:36', '2023-08-09 23:45:20'),
-(2, 'Admin', 'Admin', 'admin@email.com', NULL, NULL, NULL, NULL, 'default_profile_photo.png', 'Active', '2023-08-09 23:47:24', '$2y$10$qM5IJZbPpdUq8hB5j00FIe1Aem6I0tQU/oyzXtweMVVWFtztkpm1S', NULL, NULL, '2023-05-15 06:21:36', '2023-08-09 23:47:24'),
-(3, 'Manager', 'Manager', 'manager@email.com', '01878136530', 'Male', '2023-05-09', 'Dhaka BD', 'default_profile_photo.png', 'Active', '2023-08-10 05:40:45', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 1, 'GcEVMSDgxZOEFoCj0c0dyluBjg5m300moXHbB596TkFGJMbedTFXnssj7EHK', '2023-05-15 06:21:36', '2023-08-10 05:40:45');
+(1, 'Super Admin', 'Super Admin', 'superadmin@email.com', '01878136530', 'Male', '2023-05-15', 'Dhaka, BD', 'default_profile_photo.png', 'Active', '2023-12-10 22:02:28', '$2y$10$r2pYwcGnBhRuPKpgQMHUj..f/KoPRDWNBl9cJu.z6ncB6Qr0D4Vti', NULL, 'GCf77dC1FDQI2uMTbIL8h0byOKJX70cHFrROplyVy20CAaGbMCNNhMnpcQi5', '2023-05-15 06:21:36', '2023-12-10 22:02:28'),
+(2, 'Admin', 'Admin', 'admin@email.com', NULL, NULL, NULL, NULL, 'default_profile_photo.png', 'Active', '2023-12-10 21:44:35', '$2y$10$qM5IJZbPpdUq8hB5j00FIe1Aem6I0tQU/oyzXtweMVVWFtztkpm1S', NULL, NULL, '2023-05-15 06:21:36', '2023-12-10 21:44:35'),
+(3, 'Manager', 'Dhaka Manager', 'dhakamanager@email.com', '01878136530', 'Male', '2023-05-09', 'Dhaka BD', 'default_profile_photo.png', 'Active', '2023-12-10 23:20:37', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 1, '1cvImjwxAf0ianBWdUoKEmAaO9OMN8uptPj0rz6h74gcpRYCBKdSoJ33WjH3', '2023-05-15 06:21:36', '2023-12-10 23:20:37'),
+(4, 'Manager', 'Khulna Manager', 'khulnamanager@email.com', '01878136530', 'Male', '2023-05-09', 'KhulnaBD', 'default_profile_photo.png', 'Active', '2023-12-10 21:59:29', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 2, '2S3JDYcaZu5yTp9vleLLglcvoiXL4NfMEoN2lS53uYSOHsR9VPqzNLpBCvVu', '2023-05-15 06:21:36', '2023-12-10 21:59:29');
 
 --
 -- Indexes for dumped tables
@@ -1063,13 +1057,13 @@ ALTER TABLE `contact_messages`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `customers_payment_summaries`
 --
 ALTER TABLE `customers_payment_summaries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `default_settings`
@@ -1081,13 +1075,13 @@ ALTER TABLE `default_settings`
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `expense_categories`
 --
 ALTER TABLE `expense_categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1123,13 +1117,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `purchase_carts`
 --
 ALTER TABLE `purchase_carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `purchase_details`
 --
 ALTER TABLE `purchase_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `purchase_summaries`
@@ -1141,19 +1135,19 @@ ALTER TABLE `purchase_summaries`
 -- AUTO_INCREMENT for table `selling_carts`
 --
 ALTER TABLE `selling_carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `selling_details`
 --
 ALTER TABLE `selling_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `selling_summaries`
 --
 ALTER TABLE `selling_summaries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sms_settings`
@@ -1165,7 +1159,7 @@ ALTER TABLE `sms_settings`
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `staff_designations`
@@ -1177,19 +1171,19 @@ ALTER TABLE `staff_designations`
 -- AUTO_INCREMENT for table `staff_payments`
 --
 ALTER TABLE `staff_payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `staff_salaries`
 --
 ALTER TABLE `staff_salaries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `suppliers_payment_summaries`
@@ -1207,7 +1201,7 @@ ALTER TABLE `units`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
