@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2023 at 05:08 AM
+-- Generation Time: Jan 11, 2024 at 05:32 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -74,8 +74,9 @@ CREATE TABLE `brands` (
 --
 
 INSERT INTO `brands` (`id`, `brand_name`, `brand_photo`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'BBB', 'bbb-photo.png', 'Active', 3, NULL, NULL, '2023-05-15 05:11:53', NULL, NULL),
-(2, 'AAA', 'aaa-photo.webp', 'Active', 3, NULL, NULL, '2023-06-22 22:08:24', NULL, NULL);
+(1, 'Canon', 'canon-photo.jpg', 'Active', 3, 2, NULL, '2023-05-15 05:11:53', '2024-01-10 22:19:35', NULL),
+(2, 'Xiaomi', 'xiaomi-photo.png', 'Active', 3, 2, NULL, '2023-06-22 22:08:24', '2024-01-10 22:21:22', NULL),
+(3, 'Addidas', 'ddidas-photo.png', 'Active', 2, 2, NULL, '2024-01-10 22:22:37', '2024-01-10 22:25:19', NULL);
 
 -- --------------------------------------------------------
 
@@ -101,8 +102,10 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `category_name`, `category_photo`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'AAA', 'aaa-photo.png', 'Active', 3, NULL, NULL, '2023-05-15 05:11:37', NULL, NULL),
-(2, 'BBB', 'bbb-photo.webp', 'Active', 3, NULL, NULL, '2023-06-22 22:08:05', NULL, NULL);
+(1, 'Camera', 'camera-photo.jpg', 'Active', 3, 2, NULL, '2023-05-15 05:11:37', '2024-01-10 22:15:28', NULL),
+(2, 'Watch', 'watch-photo.jpg', 'Active', 3, 2, NULL, '2023-06-22 22:08:05', '2024-01-10 22:15:04', NULL),
+(3, 'Headphone', 'headphone-photo.jpg', 'Active', 2, NULL, NULL, '2024-01-10 22:14:53', NULL, NULL),
+(4, 'Man Shoes', 'man-shoe-photo.jpg', 'Active', 2, 2, NULL, '2024-01-10 22:18:01', '2024-01-10 22:25:01', NULL);
 
 -- --------------------------------------------------------
 
@@ -432,8 +435,10 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `product_name`, `product_code`, `brand_id`, `unit_id`, `purchase_quantity`, `selling_quantity`, `purchase_price`, `selling_price`, `product_photo`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'A Product', 'uW2xAliEB3', 2, 1, 16, 2, 450.00, 500.00, 'default_product_photo.jpg', 'Active', 3, 3, NULL, '2023-05-15 05:12:33', '2023-12-10 21:57:05', NULL),
-(2, 2, 'B Product', 'khisv99sXT', 1, 2, 27, 18, 250.00, 260.00, '2-B Product-Photo.webp', 'Active', 3, 3, NULL, '2023-06-22 22:09:19', '2023-12-10 23:02:24', NULL);
+(1, 1, 'Camera', 'TyJxpfoVOh', 1, 3, 16, 2, 450000.00, 50000.00, '1-A Product-Photo.jpg', 'Active', 3, 2, NULL, '2023-05-15 05:12:33', '2024-01-10 22:23:15', NULL),
+(2, 4, 'Shoes', 'ZPHxN219wT', 3, 3, 27, 18, 2500.00, 2800.00, '2-Shoes-Photo.jpg', 'Active', 3, 2, NULL, '2023-06-22 22:09:19', '2024-01-10 22:27:05', NULL),
+(3, 2, 'Watch', 'H7wwLbTSpB', 2, 3, 0, 0, 3000.00, 3200.00, '3-BB Product-Photo.jpg', 'Active', 2, 2, NULL, '2024-01-10 22:09:22', '2024-01-10 22:23:58', NULL),
+(4, 3, 'Headphone', 'zHXlauAFTH', 2, 3, 0, 0, 500.00, 530.00, '4-AA Product-Photo.jpg', 'Active', 2, 2, NULL, '2024-01-10 22:09:52', '2024-01-10 22:24:13', NULL);
 
 -- --------------------------------------------------------
 
@@ -800,7 +805,8 @@ CREATE TABLE `units` (
 
 INSERT INTO `units` (`id`, `unit_name`, `status`, `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Kg', 'Active', 3, NULL, NULL, '2023-05-15 05:12:00', NULL, NULL),
-(2, 'Gram', 'Active', 3, NULL, NULL, '2023-05-15 05:12:04', NULL, NULL);
+(2, 'Gram', 'Active', 3, NULL, NULL, '2023-05-15 05:12:04', NULL, NULL),
+(3, 'Pcs', 'Active', 2, NULL, NULL, '2024-01-10 22:10:42', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -833,8 +839,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `role`, `name`, `email`, `phone_number`, `gender`, `date_of_birth`, `address`, `profile_photo`, `status`, `last_active`, `password`, `branch_id`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Super Admin', 'Super Admin', 'superadmin@email.com', '01878136530', 'Male', '2023-05-15', 'Dhaka, BD', 'default_profile_photo.png', 'Active', '2023-12-10 22:02:28', '$2y$10$r2pYwcGnBhRuPKpgQMHUj..f/KoPRDWNBl9cJu.z6ncB6Qr0D4Vti', NULL, 'GCf77dC1FDQI2uMTbIL8h0byOKJX70cHFrROplyVy20CAaGbMCNNhMnpcQi5', '2023-05-15 06:21:36', '2023-12-10 22:02:28'),
-(2, 'Admin', 'Admin', 'admin@email.com', NULL, NULL, NULL, NULL, 'default_profile_photo.png', 'Active', '2023-12-10 21:44:35', '$2y$10$qM5IJZbPpdUq8hB5j00FIe1Aem6I0tQU/oyzXtweMVVWFtztkpm1S', NULL, NULL, '2023-05-15 06:21:36', '2023-12-10 21:44:35'),
-(3, 'Manager', 'Dhaka Manager', 'dhakamanager@email.com', '01878136530', 'Male', '2023-05-09', 'Dhaka BD', 'default_profile_photo.png', 'Active', '2023-12-10 23:20:37', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 1, '1cvImjwxAf0ianBWdUoKEmAaO9OMN8uptPj0rz6h74gcpRYCBKdSoJ33WjH3', '2023-05-15 06:21:36', '2023-12-10 23:20:37'),
+(2, 'Admin', 'Admin', 'admin@email.com', NULL, NULL, NULL, NULL, 'Profile-Photo-2.jpg', 'Active', '2024-01-10 22:31:44', '$2y$10$qM5IJZbPpdUq8hB5j00FIe1Aem6I0tQU/oyzXtweMVVWFtztkpm1S', NULL, NULL, '2023-05-15 06:21:36', '2024-01-10 22:31:44'),
+(3, 'Manager', 'Dhaka Manager', 'dhakamanager@email.com', '01878136530', 'Male', '2023-05-09', 'Dhaka BD', 'default_profile_photo.png', 'Active', '2024-01-10 21:46:26', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 1, '4lhxt5Ja04HM8mqBLjSPYwGoBha2sv5lH7Y8eW0MhliHiqTyfktCwqsukCay', '2023-05-15 06:21:36', '2024-01-10 21:46:26'),
 (4, 'Manager', 'Khulna Manager', 'khulnamanager@email.com', '01878136530', 'Male', '2023-05-09', 'KhulnaBD', 'default_profile_photo.png', 'Active', '2023-12-10 21:59:29', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 2, '2S3JDYcaZu5yTp9vleLLglcvoiXL4NfMEoN2lS53uYSOHsR9VPqzNLpBCvVu', '2023-05-15 06:21:36', '2023-12-10 21:59:29');
 
 --
@@ -1039,13 +1045,13 @@ ALTER TABLE `branches`
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `contact_messages`
@@ -1111,7 +1117,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `purchase_carts`
@@ -1195,7 +1201,7 @@ ALTER TABLE `suppliers_payment_summaries`
 -- AUTO_INCREMENT for table `units`
 --
 ALTER TABLE `units`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
