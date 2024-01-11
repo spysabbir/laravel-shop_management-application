@@ -117,7 +117,7 @@ class StaffController extends Controller
         $validator = Validator::make($request->all(), [
             '*' => 'required',
             'staff_gender' => 'required',
-            'profile_photo' => 'nullable|image|mimes:png,jpg,jpeg,webp,svg'
+            'profile_photo' => 'nullable|image|mimes:png,jpg,jpeg'
         ]);
 
         if($validator->fails()){
@@ -186,7 +186,7 @@ class StaffController extends Controller
         $validator = Validator::make($request->all(), [
             '*' => 'required',
             'staff_gender' => 'required',
-            'profile_photo' => 'nullable|image|mimes:png,jpg,jpeg,webp,svg'
+            'profile_photo' => 'nullable|image|mimes:png,jpg,jpeg'
         ]);
 
         if($validator->fails()){

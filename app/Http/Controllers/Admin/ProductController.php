@@ -69,7 +69,7 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             '*' => 'required',
             'product_name' => 'required|unique:products',
-            'product_photo' => 'nullable|image|mimes:png,jpg,jpeg,svg,webp',
+            'product_photo' => 'nullable|image|mimes:png,jpg,jpeg',
         ]);
 
         if($validator->fails()){

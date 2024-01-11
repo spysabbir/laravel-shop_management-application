@@ -25,7 +25,7 @@ class ProfileController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'profile_photo' => 'nullable|image|mimes:png,jpg,jpeg,webp,svg',
+            'profile_photo' => 'nullable|image|mimes:png,jpg,jpeg',
         ]);
 
         $user->update([
@@ -38,12 +38,12 @@ class ProfileController extends Controller
 
         // Profile Photo Upload
         if($request->hasFile('profile_photo')){
-            if($user->profile_photo != 'default_news_thumbnail_photo.jpg'){
+            if($user->profile_photo != 'default_profile_photo.png'){
                 unlink(base_path("public/uploads/profile_photo/").$user->profile_photo);
             }
             $profile_photo_name =  "Profile-Photo-".$user->id.".". $request->file('profile_photo')->getClientOriginalExtension();
             $upload_link = base_path("public/uploads/profile_photo/").$profile_photo_name;
-            Image::make($request->file('profile_photo'))->resize(120, 100)->save($upload_link);
+            Image::make($request->file('profile_photo'))->resize(360, 360)->save($upload_link);
             $user->update([
                 'profile_photo' => $profile_photo_name,
             ]);
