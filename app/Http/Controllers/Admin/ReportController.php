@@ -39,7 +39,7 @@ class ReportController extends Controller
                     'products.brand_id',
                     'products.unit_id',
                     DB::raw('SUM(purchase_details.purchase_quantity) as total_purchase_quantity'),
-                    DB::raw('SUM(selling_details.total_selling_quantity) as total_selling_quantity'),
+                    DB::raw('COALESCE(SUM(selling_details.total_selling_quantity), 0) as total_selling_quantity'),
                     DB::raw('(COALESCE(SUM(purchase_details.purchase_quantity), 0) - COALESCE(SUM(selling_details.total_selling_quantity), 0)) as stock_quantity')
                 )
                 ->leftJoinSub(
