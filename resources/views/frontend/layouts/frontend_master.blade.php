@@ -2,27 +2,27 @@
 <html lang="en" class="light-theme">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <!--favicon-->
-  <link rel="icon" href="{{ asset('uploads/default_photo')}}/{{ $default_setting->favicon }}" type="image/webp" />
+    <!--favicon-->
+    <link rel="icon" href="{{ asset('uploads/default_photo')}}/{{ $default_setting->favicon }}" type="image/webp" />
 
-  <!-- CSS files -->
-  <link href="{{ asset('frontend')}}/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-  <!-- Plugins -->
-  <link rel="stylesheet" type="text/css" href="{{ asset('frontend')}}/plugins/slick/slick.css" />
-  <link rel="stylesheet" type="text/css" href="{{ asset('frontend')}}/plugins/slick/slick-theme.css" />
+    <!-- CSS files -->
+    <link href="{{ asset('frontend')}}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <!-- Plugins -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontend')}}/plugins/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontend')}}/plugins/slick/slick-theme.css" />
 
-  <link href="{{ asset('frontend')}}/css/style.css" rel="stylesheet">
-  <link href="{{ asset('frontend')}}/css/dark-theme.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('frontend/plugins/sweetalert2/sweetalert2.min.css')}}">
+    <link href="{{ asset('frontend')}}/css/style.css" rel="stylesheet">
+    <link href="{{ asset('frontend')}}/css/dark-theme.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('frontend/plugins/sweetalert2/sweetalert2.min.css')}}">
 
-  <title>{{ env('APP_NAME') }} || @yield('title')</title>
+    <title>{{ env('APP_NAME') }} || @yield('title')</title>
 </head>
 
 <body>
@@ -71,7 +71,6 @@
         </nav>
     </header>
     <!--end top header-->
-
 
     <!--start page content-->
     <div class="page-content">
@@ -135,24 +134,21 @@
     @endforeach
     <!--end quick view-->
 
+    <!--Start Back To Top Button-->
+    <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!--End Back To Top Button-->
 
-  <!--Start Back To Top Button-->
-  <a href="javaScript:;" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
-  <!--End Back To Top Button-->
+    <!-- JavaScript files -->
+    <script src="{{ asset('frontend')}}/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('frontend')}}/js/jquery.min.js"></script>
+    <script src="{{ asset('frontend')}}/plugins/slick/slick.min.js"></script>
+    <script src="{{ asset('frontend')}}/js/main.js"></script>
+    <script src="{{ asset('frontend')}}/js/index.js"></script>
+    <script src="{{ asset('frontend')}}/js/loader.js"></script>
 
+    <script src="{{ asset('frontend/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
 
-  <!-- JavaScript files -->
-  <script src="{{ asset('frontend')}}/js/bootstrap.bundle.min.js"></script>
-  <script src="{{ asset('frontend')}}/js/jquery.min.js"></script>
-  <script src="{{ asset('frontend')}}/plugins/slick/slick.min.js"></script>
-  <script src="{{ asset('frontend')}}/js/main.js"></script>
-  <script src="{{ asset('frontend')}}/js/index.js"></script>
-  <script src="{{ asset('frontend')}}/js/loader.js"></script>
-
-  <script src="{{ asset('frontend/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
-
-
-  @yield('script')
+    @yield('script')
 
 </body>
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 11, 2024 at 05:32 AM
+-- Generation Time: Apr 23, 2024 at 01:19 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `shop_inventory-application`
+-- Database: `shop_management-application`
 --
 
 -- --------------------------------------------------------
@@ -222,7 +222,7 @@ CREATE TABLE `default_settings` (
 --
 
 INSERT INTO `default_settings` (`id`, `app_name`, `app_url`, `time_zone`, `favicon`, `logo_photo`, `main_phone`, `support_phone`, `main_email`, `support_email`, `address`, `facebook_link`, `twitter_link`, `instagram_link`, `linkedin_link`, `youtube_link`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 'Spy Market', 'http://127.0.0.1:8000', 'UTC', 'Favicon.png', 'Logo-Photo.png', '01878136530', '01878136530', 'info@market.com', 'support@market.com', 'Dhaka, BD', 'market', 'market', 'market', 'market', 'market', 1, 1, '2023-05-15 06:21:35', '2023-05-15 00:56:51');
+(1, 'Spy Shop', 'http://127.0.0.1:8000', 'UTC', 'Favicon.png', 'Logo-Photo.png', '01878136530', '01878136530', 'info@market.com', 'support@market.com', 'Dhaka, BD', 'market', 'market', 'market', 'market', 'market', 1, 1, '2023-05-15 06:21:35', '2023-05-15 00:56:51');
 
 -- --------------------------------------------------------
 
@@ -838,10 +838,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role`, `name`, `email`, `phone_number`, `gender`, `date_of_birth`, `address`, `profile_photo`, `status`, `last_active`, `password`, `branch_id`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Super Admin', 'Super Admin', 'superadmin@email.com', '01878136530', 'Male', '2023-05-15', 'Dhaka, BD', 'default_profile_photo.png', 'Active', '2023-12-10 22:02:28', '$2y$10$r2pYwcGnBhRuPKpgQMHUj..f/KoPRDWNBl9cJu.z6ncB6Qr0D4Vti', NULL, 'GCf77dC1FDQI2uMTbIL8h0byOKJX70cHFrROplyVy20CAaGbMCNNhMnpcQi5', '2023-05-15 06:21:36', '2023-12-10 22:02:28'),
-(2, 'Admin', 'Admin', 'admin@email.com', NULL, NULL, NULL, NULL, 'Profile-Photo-2.jpg', 'Active', '2024-01-10 22:31:44', '$2y$10$qM5IJZbPpdUq8hB5j00FIe1Aem6I0tQU/oyzXtweMVVWFtztkpm1S', NULL, NULL, '2023-05-15 06:21:36', '2024-01-10 22:31:44'),
-(3, 'Manager', 'Dhaka Manager', 'dhakamanager@email.com', '01878136530', 'Male', '2023-05-09', 'Dhaka BD', 'default_profile_photo.png', 'Active', '2024-01-10 21:46:26', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 1, '4lhxt5Ja04HM8mqBLjSPYwGoBha2sv5lH7Y8eW0MhliHiqTyfktCwqsukCay', '2023-05-15 06:21:36', '2024-01-10 21:46:26'),
-(4, 'Manager', 'Khulna Manager', 'khulnamanager@email.com', '01878136530', 'Male', '2023-05-09', 'KhulnaBD', 'default_profile_photo.png', 'Active', '2023-12-10 21:59:29', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 2, '2S3JDYcaZu5yTp9vleLLglcvoiXL4NfMEoN2lS53uYSOHsR9VPqzNLpBCvVu', '2023-05-15 06:21:36', '2023-12-10 21:59:29');
+(1, 'Super Admin', 'Super Admin', 'superadmin@email.com', '01878136530', 'Male', '2023-05-15', 'Dhaka, BD', 'default_profile_photo.png', 'Active', '2024-03-30 01:57:23', '$2y$10$r2pYwcGnBhRuPKpgQMHUj..f/KoPRDWNBl9cJu.z6ncB6Qr0D4Vti', NULL, 'QNlaAvqUg8OzaWV612z7DtOmBfM8LrJPKWesAhXJzX7wmA95LNLXDZ6Wszno', '2023-05-15 06:21:36', '2024-03-30 01:57:23'),
+(2, 'Admin', 'Admin', 'admin@email.com', NULL, NULL, NULL, NULL, 'Profile-Photo-2.jpg', 'Active', '2024-03-30 01:54:55', '$2y$10$qM5IJZbPpdUq8hB5j00FIe1Aem6I0tQU/oyzXtweMVVWFtztkpm1S', NULL, NULL, '2023-05-15 06:21:36', '2024-03-30 01:54:55'),
+(3, 'Manager', 'Dhaka Manager', 'dhakamanager@email.com', '01878136530', 'Male', '2023-05-09', 'Dhaka BD', 'default_profile_photo.png', 'Active', '2024-03-30 01:56:51', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 1, 'n5Kbq5AgbjztUpvUzTyESAkuUh3tfBD8hrGr1sM6X6o7aAOc7mnM3xFwuooP', '2023-05-15 06:21:36', '2024-03-30 01:56:51'),
+(4, 'Manager', 'Khulna Manager', 'khulnamanager@email.com', '01878136530', 'Male', '2023-05-09', 'KhulnaBD', 'default_profile_photo.png', 'Active', '2024-03-30 01:56:12', '$2y$10$IJYTqudMGEwUGX/lyrEoaOPXVAUtNykrg1V6edLv6e3HDZSYUuyxa', 2, 'byB4OINvFAKY260JrSTp5Pz6czpy8SBjGN21qQ246vARMegCgEof1a1Ip7Fs', '2023-05-15 06:21:36', '2024-03-30 01:56:12');
 
 --
 -- Indexes for dumped tables
